@@ -12,9 +12,9 @@ Fixes #issue_number
 Resolves #issue_number
 
 # CheckList
-- [ ] Commit Convention 준수 여부
-- [ ] 코드에 대해서 주석 작성 여부
-- [ ] 불필요 주석, import, Test Log 삭제 여부
+- [ ] Commit Convention 준수 여부 확인
+- [ ] 코드에 대해서 주석 작성 여부 확인
+- [ ] 불필요 주석, import, Test Log 삭제 여부 확인
 
 # ETC
 코드에 대한 설명이나 후처리에 관해 기록할 사항을 적을 것
