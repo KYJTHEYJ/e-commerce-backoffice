@@ -2,7 +2,7 @@ package e3i2.ecommerce_backoffice.domain.admin.controller;
 
 import e3i2.ecommerce_backoffice.domain.admin.dto.SignupRequest;
 import e3i2.ecommerce_backoffice.domain.admin.dto.SignupResponse;
-import e3i2.ecommerce_backoffice.domain.admin.dto.common.ApiResponse;
+import e3i2.ecommerce_backoffice.domain.admin.dto.common.AdminApiResponse;
 import e3i2.ecommerce_backoffice.domain.admin.service.AdminService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -19,12 +19,12 @@ public class AdminController {
 
     //관리자 회원가입
     @PostMapping("/api/admins/signup")
-    public ResponseEntity<ApiResponse<SignupResponse>> signup(
+    public ResponseEntity<AdminApiResponse<SignupResponse>> signup(
             @Valid @RequestBody SignupRequest request
     ) {
         SignupResponse response =  adminService.signup(request);
 
-        return ResponseEntity.status(HttpStatus.CREATED).body( ApiResponse.success(
+        return ResponseEntity.status(HttpStatus.CREATED).body( AdminApiResponse.success(
                 "CREATED",
                 "회원가입 신청이 완료되었습니다. 관리자 승인을 기다려주세요.",
                 response
