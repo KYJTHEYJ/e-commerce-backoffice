@@ -3,6 +3,7 @@ package e3i2.ecommerce_backoffice.domain.admin.service;
 import e3i2.ecommerce_backoffice.common.config.PasswordEncoder;
 import e3i2.ecommerce_backoffice.domain.admin.dto.*;
 import e3i2.ecommerce_backoffice.domain.admin.entity.Admin;
+import e3i2.ecommerce_backoffice.domain.admin.entity.AdminStatus;
 import e3i2.ecommerce_backoffice.domain.admin.repository.AdminRepository;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -84,5 +85,25 @@ public class AdminService {
                 () -> new IllegalStateException("해당 관리자를 찾을 수 없습니다.")
         );
         admin.changeAdminStatus(request.getStatus());
+    }
+
+    public void acceptAdmin(Long adminId) {
+        Admin admin = adminRepository.findById(adminId).orElseThrow(
+                () -> new IllegalStateException("해당 관리자를 찾을 수 없습니다.")
+        );
+        if(!admin.getStatus().equals(AdminStatus.WAIT)) {
+            throw new IllegalArgumentException("승인 대기 상태가 아닙니다.");
+        }
+        admin.accept();
+    }
+
+    public void denyAdmin(AdminDenyRequest request, Long adminId) {
+        Admin admin = adminRepository.findById(adminId).orElseThrow(
+                () -> new IllegalStateException("해당 관리자를 찾을 수 없습니다.")
+        );
+        if(!admin.getStatus().equals(AdminStatus.WAIT)) {
+            throw new IllegalArgumentException("승인 대기 상태가 아닙니다.");
+        }
+        admin.deny(request.getReason());
     }
 }

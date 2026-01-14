@@ -8,12 +8,14 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.context.request.RequestAttributes;
 
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/admins")
 public class AdminController {
     private final AdminService adminService;
+    private final RequestAttributes requestAttributes;
 
     // 내 프로필 조회
     @GetMapping("/me")
@@ -62,5 +64,23 @@ public class AdminController {
             throw new IllegalStateException("로그인이 필요합니다.");
         }
         adminService.ChangeAdminStatus(request, adminId);
+    }
+
+    // 관리자 승인
+    @PutMapping("{adminId}/accept")
+    public void acceptAdmin(@PathVariable Long adminId, HttpSession session) {
+        if (session.getAttribute("adminId") == null) {
+            throw new IllegalStateException("로그인이 필요합니다.");
+        }
+        adminService.acceptAdmin(adminId);
+    }
+
+    // 관리자 거부
+    @PutMapping("{adminId}/deny")
+    public void denyAdmin(@PathVariable Long adminId, @Valid @RequestBody AdminDenyRequest request, HttpSession session) {
+        if (session.getAttribute("adminId") == null) {
+            throw new IllegalStateException("로그인이 필요합니다.");
+        }
+        adminService.denyAdmin(request, adminId);
     }
 }

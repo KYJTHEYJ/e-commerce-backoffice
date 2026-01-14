@@ -90,6 +90,17 @@ public class Admin extends Base {
     public void changeAdminStatus(AdminStatus status) {
         this.status = status;
     }
+
+    public void accept() {
+        this.status = AdminStatus.ACT;
+        this.acceptedAt = LocalDateTime.now();
+    }
+
+    public void deny(String reason) {
+        this.status = AdminStatus.DENY;
+        this.deniedAt = LocalDateTime.now();
+        this.deniedReason = reason;
+    }
 }
 
 
