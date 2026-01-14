@@ -23,4 +23,7 @@ public class SignupRequest {
 
     @NotNull(message = "관리자 역할은 필수값입니다.")
     private AdminRole role;
+
+    @NotBlank(message = "지원사유를 입력해주세요.")
+    private String requestMessage;
 }

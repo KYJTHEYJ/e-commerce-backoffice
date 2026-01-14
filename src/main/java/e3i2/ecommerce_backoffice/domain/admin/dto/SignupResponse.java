@@ -18,8 +18,9 @@ public class SignupResponse {
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
     private final LocalDateTime createdAt;
     private final AdminStatus status;
+    private final String requestMessage;
 
-    public SignupResponse(Long adminId, String adminName, String email, String phone, AdminRole role, LocalDateTime createdAt, AdminStatus status) {
+    public SignupResponse(Long adminId, String adminName, String email, String phone, AdminRole role, LocalDateTime createdAt, AdminStatus status, String requestMessage) {
         this.adminId = adminId;
         this.adminName = adminName;
         this.email = email;
@@ -27,5 +28,6 @@ public class SignupResponse {
         this.role = role;
         this.createdAt = createdAt;
         this.status = status;
+        this.requestMessage = requestMessage;
     }
 }
