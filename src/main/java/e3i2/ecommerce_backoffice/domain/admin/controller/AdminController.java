@@ -37,7 +37,7 @@ public class AdminController {
 
     // 내 비밀번호 변경
     @PutMapping("/me/password")
-    public ResponseEntity<Void> changeMyPassword(ChangeMyPasswordRequest request, HttpSession session) {
+    public ResponseEntity<Void> changeMyPassword(@Valid @RequestBody ChangeMyPasswordRequest request, HttpSession session) {
         Long adminId = (Long) session.getAttribute("adminId");
         if (adminId == null) {
             throw new IllegalStateException("로그인이 필요합니다.");
