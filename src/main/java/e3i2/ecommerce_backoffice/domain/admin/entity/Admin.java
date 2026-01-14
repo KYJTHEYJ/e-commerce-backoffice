@@ -1,7 +1,6 @@
 package e3i2.ecommerce_backoffice.domain.admin.entity;
 
 import e3i2.ecommerce_backoffice.common.entity.Base;
-import e3i2.ecommerce_backoffice.domain.admin.dto.ChangeAdminRoleRequest;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
