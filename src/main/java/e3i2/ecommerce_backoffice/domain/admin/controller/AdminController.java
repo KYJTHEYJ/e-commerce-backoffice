@@ -39,7 +39,7 @@ public class AdminController {
     }
 
     //관리자 회원 가입 요청 승인
-    @PutMapping("/{adminId}/approve")
+    @PutMapping("/{adminId}/accept")
     public ResponseEntity<AdminApiResponse<ApproveAdminResponse>> approveAdmin(
             @PathVariable Long adminId,
             @SessionAttribute("loginAdmin") SessionAdmin loginAdmin
@@ -155,23 +155,5 @@ public class AdminController {
             throw new IllegalStateException("로그인이 필요합니다.");
         }
         adminService.ChangeAdminStatus(request, adminId);
-    }
-
-    // 관리자 승인
-    @PutMapping("{adminId}/accept")
-    public void acceptAdmin(@PathVariable Long adminId, HttpSession session) {
-        if (session.getAttribute("adminId") == null) {
-            throw new IllegalStateException("로그인이 필요합니다.");
-        }
-        adminService.acceptAdmin(adminId);
-    }
-
-    // 관리자 거부
-    @PutMapping("{adminId}/deny")
-    public void denyAdmin(@PathVariable Long adminId, @Valid @RequestBody AdminDenyRequest request, HttpSession session) {
-        if (session.getAttribute("adminId") == null) {
-            throw new IllegalStateException("로그인이 필요합니다.");
-        }
-        adminService.denyAdmin(request, adminId);
     }
 }
