@@ -1,9 +1,13 @@
 package e3i2.ecommerce_backoffice.domain.admin.controller;
 
+import e3i2.ecommerce_backoffice.domain.admin.dto.LoginRequest;
+import e3i2.ecommerce_backoffice.domain.admin.dto.LoginResponse;
 import e3i2.ecommerce_backoffice.domain.admin.dto.SignupRequest;
 import e3i2.ecommerce_backoffice.domain.admin.dto.SignupResponse;
 import e3i2.ecommerce_backoffice.domain.admin.dto.common.AdminApiResponse;
+import e3i2.ecommerce_backoffice.domain.admin.dto.common.SessionAdmin;
 import e3i2.ecommerce_backoffice.domain.admin.service.AdminService;
+import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -31,4 +35,18 @@ public class AdminController {
             )
         );
     }
+    
+    //관리자 로그인
+    @PostMapping("/api/admins/signin")
+    public ResponseEntity<AdminApiResponse<LoginResponse>> signin(
+            @Valid @RequestBody LoginRequest request,
+            HttpSession session
+    ) {
+        SessionAdmin sessionAdmin = adminService.login(request);
+        session.setAttribute("loginAdmin", sessionAdmin);
+        return ResponseEntity.status(HttpStatus.OK).build();
+    }
+
+
+
 }
