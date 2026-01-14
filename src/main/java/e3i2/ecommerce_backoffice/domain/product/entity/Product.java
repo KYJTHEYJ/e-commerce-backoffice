@@ -17,9 +17,9 @@ public class Product extends Base {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long productId;
 
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "admin_id", nullable = false, foreignKey = @ForeignKey(name = "fk_admin_id", value = ConstraintMode.NO_CONSTRAINT))
-    private Admin admin;
+    //@ManyToOne(fetch = FetchType.LAZY, optional = false)
+    //@JoinColumn(name = "admin_id", nullable = false, foreignKey = @ForeignKey(name = "fk_admin_id", value = ConstraintMode.NO_CONSTRAINT))
+    //private Admin admin;
 
     @Column(nullable = false)
     private String productName;
@@ -28,10 +28,10 @@ public class Product extends Base {
     private ProductCategory category;
 
     @Column(nullable = false)
-    private Integer price;
+    private Long price;
 
     @Column(nullable = false)
-    private Integer quantity;
+    private Long quantity;
 
     @Enumerated(EnumType.STRING)
     private ProductStatus status;
@@ -40,9 +40,9 @@ public class Product extends Base {
     private Boolean deleted = false;
     private LocalDateTime deletedAt;
 
-    public static Product regist(Admin admin, String productName, ProductCategory category, Integer price, Integer quantity, ProductStatus status) {
+    public static Product regist(/*Admin admin,*/ String productName, ProductCategory category, Long price, Long quantity, ProductStatus status) {
         Product product = new Product();
-        product.admin = admin;
+        //product.admin = admin;
         product.productName = productName;
         product.category = category;
         product.price = price;
