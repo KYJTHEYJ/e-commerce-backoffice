@@ -23,6 +23,7 @@ public class CustomerDataInitializer implements ApplicationRunner {
     @Value("${spring.jpa.hibernate.ddl-auto}")
     private String ddlAuto;
 
+    // 고객 데이터 초기화
     @Override
     @Transactional
     public void run(ApplicationArguments args) {
