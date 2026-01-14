@@ -9,7 +9,7 @@ public class ProductApiResponse2 {
     public String code;
     public String message;
 
-    private static ProductApiResponse2 register(Boolean success, String code, String message) {
+    private static ProductApiResponse2 regist(Boolean success, String code, String message) {
         ProductApiResponse2 response = new ProductApiResponse2();
         response.success = success;
         response.code = code;
@@ -19,6 +19,6 @@ public class ProductApiResponse2 {
     }
 
     public static ProductApiResponse2 deleted() {
-        return register(true, HttpStatus.OK.name(), "상품이 삭제되었습니다");
+        return regist(true, HttpStatus.OK.name(), "상품이 삭제되었습니다");
     }
 }

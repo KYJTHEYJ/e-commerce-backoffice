@@ -24,7 +24,7 @@ public class ProductService {
 
     @Transactional
     public CreateProductResponse createProduct(@Valid CreateProductRequest request) {
-        Product product = Product.register(
+        Product product = Product.regist(
                 request.getName()
                 , request.getCategory()
                 , request.getPrice()
@@ -34,7 +34,7 @@ public class ProductService {
 
         Product saveProduct = productRepository.save(product);
 
-        return CreateProductResponse.register(
+        return CreateProductResponse.regist(
                 saveProduct.getProductId()
                 , saveProduct.getProductName()
                 , saveProduct.getCategory().getCategoryCode()
@@ -56,7 +56,7 @@ public class ProductService {
                         , status,
                         PageRequest.of(page - 1, limit, Sort.by(sortOrder.equals("asc") ? Sort.Direction.ASC : Sort.Direction.DESC, sortBy)))
                 .stream()
-                .map(product -> SearchProductResponse.register(
+                .map(product -> SearchProductResponse.regist(
                         product.getProductId()
                         , product.getProductName()
                         , product.getCategory().getCategoryCode()
@@ -69,13 +69,13 @@ public class ProductService {
                         //, saveProduct.getAdmin().getEmail()
                 )).toList();
 
-        return ProductsWithPagination.register(items, page, limit, (long) items.size());
+        return ProductsWithPagination.regist(items, page, limit, (long) items.size());
     }
 
     @Transactional(readOnly = true, propagation = Propagation.SUPPORTS)
     public SearchProductResponse searchProduct(Long productId) {
         Product product = productRepository.findByProductIdAndDeletedFalse(productId).orElseThrow(() -> new IllegalStateException("상품을 찾을 수 없습니다"));
-        return SearchProductResponse.register(
+        return SearchProductResponse.regist(
                 product.getProductId()
                 , product.getProductName()
                 , product.getCategory().getCategoryCode()
@@ -93,7 +93,7 @@ public class ProductService {
     public UpdateInfoProductResponse updateInfoProduct(Long productId, UpdateInfoProductRequest request) {
         Product product = productRepository.findByProductIdAndDeletedFalse(productId).orElseThrow(() -> new IllegalStateException("상품을 찾을 수 없습니다"));
         product.updateInfo(request.getProductName(), request.getCategory(), request.getPrice());
-        return UpdateInfoProductResponse.register(
+        return UpdateInfoProductResponse.regist(
                 product.getProductId()
                 , product.getProductName()
                 , product.getCategory().getCategoryCode()
@@ -111,7 +111,7 @@ public class ProductService {
     public UpdateQuantityProductResponse updateQuantityProduct(Long productId, UpdateQuantityProductRequest request) {
         Product product = productRepository.findByProductIdAndDeletedFalse(productId).orElseThrow(() -> new IllegalStateException("상품을 찾을 수 없습니다"));
         product.updateQunatity(request.getQuantity());
-        return UpdateQuantityProductResponse.register(
+        return UpdateQuantityProductResponse.regist(
                 product.getProductId()
                 , product.getProductName()
                 , product.getCategory().getCategoryCode()
@@ -129,7 +129,7 @@ public class ProductService {
     public UpdateStatusProductResponse updateStatusProduct(Long productId, UpdateStatusProductRequest request) {
         Product product = productRepository.findByProductIdAndDeletedFalse(productId).orElseThrow(() -> new IllegalStateException("상품을 찾을 수 없습니다"));
         product.updateStatus(request.getStatus());
-        return UpdateStatusProductResponse.register(
+        return UpdateStatusProductResponse.regist(
                 product.getProductId()
                 , product.getProductName()
                 , product.getCategory().getCategoryCode()

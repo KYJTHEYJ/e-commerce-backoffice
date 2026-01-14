@@ -23,7 +23,7 @@ public class CreateProductResponse {
     //private String adminName;
     //private String adminEmail;
 
-    public static CreateProductResponse register(Long id, String productName, String category, Long price, Long quantity, String status, LocalDateTime createdAt
+    public static CreateProductResponse regist(Long id, String productName, String category, Long price, Long quantity, String status, LocalDateTime createdAt
             /*, Long adminId, String adminName, String adminEmail*/) {
         CreateProductResponse response = new CreateProductResponse();
         response.id = id;

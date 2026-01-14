@@ -9,7 +9,7 @@ public class ProductApiResponse<T> {
     public String code;
     public T data;
 
-    private static <T> ProductApiResponse<T> register(Boolean success, String code, T data) {
+    private static <T> ProductApiResponse<T> regist(Boolean success, String code, T data) {
         ProductApiResponse<T> response = new ProductApiResponse<>();
         response.success = success;
         response.code = code;
@@ -19,10 +19,10 @@ public class ProductApiResponse<T> {
     }
 
     public static <T> ProductApiResponse<T> created(T data) {
-        return register(true, HttpStatus.CREATED.name(), data);
+        return regist(true, HttpStatus.CREATED.name(), data);
     }
 
     public static <T> ProductApiResponse<T> ok(T data) {
-        return register(true, HttpStatus.OK.name(), data);
+        return regist(true, HttpStatus.OK.name(), data);
     }
 }

@@ -13,10 +13,10 @@ public class ProductsWithPagination {
     private List<SearchProductResponse> items;
     private Pagination pagination;
 
-    public static ProductsWithPagination register(List<SearchProductResponse> items, Integer page, Integer limit, Long total) {
+    public static ProductsWithPagination regist(List<SearchProductResponse> items, Integer page, Integer limit, Long total) {
         ProductsWithPagination productsWithPagination = new ProductsWithPagination();
         productsWithPagination.items = items;
-        productsWithPagination.pagination = Pagination.register(
+        productsWithPagination.pagination = Pagination.regist(
                 page
                 , limit
                 , total

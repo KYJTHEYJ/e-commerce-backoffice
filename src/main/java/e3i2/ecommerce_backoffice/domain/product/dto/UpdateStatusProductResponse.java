@@ -21,7 +21,7 @@ public class UpdateStatusProductResponse {
     //private String adminName;
     //private String adminEmail;
 
-    public static UpdateStatusProductResponse register(Long id, String productName, String category, Long price, Long quantity, String status, LocalDateTime createdAt) {
+    public static UpdateStatusProductResponse regist(Long id, String productName, String category, Long price, Long quantity, String status, LocalDateTime createdAt) {
         UpdateStatusProductResponse response = new UpdateStatusProductResponse();
         response.id = id;
         response.productName = productName;
