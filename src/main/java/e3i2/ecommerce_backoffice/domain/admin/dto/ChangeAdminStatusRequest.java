@@ -6,6 +6,5 @@ import lombok.Getter;
 
 @Getter
 public class ChangeAdminStatusRequest {
-    @NotBlank
     private AdminStatus status;
 }

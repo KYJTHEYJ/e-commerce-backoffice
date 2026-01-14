@@ -6,6 +6,5 @@ import lombok.Getter;
 
 @Getter
 public class ChangeAdminRoleRequest {
-    @NotBlank
     private AdminRole role;
 }
