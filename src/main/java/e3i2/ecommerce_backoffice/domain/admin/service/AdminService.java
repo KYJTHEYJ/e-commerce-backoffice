@@ -22,7 +22,7 @@ public class AdminService {
     @Transactional
     public SignupResponse signup(@Valid SignupRequest request) {
         String encodePassword = passwordEncoder.encode(request.getPassword());
-        Admin admin = Admin.regist(request.getEmail(), encodePassword, request.getAdminName(), request.getPhone(), request.getRole());
+        Admin admin = Admin.regist(request.getEmail(), encodePassword, request.getAdminName(), request.getPhone(), request.getRole(), request.getRequestMessage());
         Admin saveAdmin = adminRepository.save(admin);
         return new SignupResponse(
                 saveAdmin.getAdminId(),

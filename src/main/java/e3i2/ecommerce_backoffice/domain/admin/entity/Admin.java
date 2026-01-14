@@ -50,7 +50,7 @@ public class Admin extends Base {
     @Column(length = 500)
     private String requestMessage;  // 승인대기 시 요청메세지
 
-    public static Admin regist(String email, String password, String adminName, String phone, AdminRole role) {
+    public static Admin regist(String email, String password, String adminName, String phone, AdminRole role, String requestMessage) {
         Admin admin = new Admin();
         admin.email = email;
         admin.password = password;
@@ -59,6 +59,7 @@ public class Admin extends Base {
         admin.role = role;
         admin.status = AdminStatus.WAIT;
         admin.deleted = false;
+        admin.requestMessage = requestMessage;
 
         return admin;
     }
