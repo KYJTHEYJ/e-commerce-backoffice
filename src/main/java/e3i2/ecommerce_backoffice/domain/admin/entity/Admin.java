@@ -44,6 +44,13 @@ public class Admin extends Base {
     private Boolean deleted;
     private LocalDateTime deletedAt;
 
+    private String requestMessage;
+
+    private LocalDateTime deniedAt;
+
+    private String deniedReason;
+
+
     public static Admin regist(String email, String password, String adminName, String phone, AdminRole role) {
         Admin admin = new Admin();
         admin.email = email;
@@ -65,6 +72,25 @@ public class Admin extends Base {
     public void restore() {
         deleted = false;
         deletedAt = null;
+    }
+
+    public void approve() {
+        if (this.status != AdminStatus.WAIT) {
+            throw new IllegalStateException("해당 계정은 승인 대기 상태가 아닙니다.");
+        }
+
+        this.status = AdminStatus.ACT;
+        this.acceptedAt = LocalDateTime.now();
+    }
+
+    public void deny(String reason) {
+        if (this.status != AdminStatus.WAIT) {
+            throw new IllegalStateException("해당 계정은 승인 대기 상태가 아닙니다.");
+        }
+
+        this.status = AdminStatus.DENY;
+        this.deniedReason = reason;
+        this.deniedAt = LocalDateTime.now();
     }
 }
 

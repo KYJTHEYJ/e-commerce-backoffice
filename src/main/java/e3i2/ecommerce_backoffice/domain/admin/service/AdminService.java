@@ -1,9 +1,7 @@
 package e3i2.ecommerce_backoffice.domain.admin.service;
 
 import e3i2.ecommerce_backoffice.common.config.PasswordEncoder;
-import e3i2.ecommerce_backoffice.domain.admin.dto.LoginRequest;
-import e3i2.ecommerce_backoffice.domain.admin.dto.SignupRequest;
-import e3i2.ecommerce_backoffice.domain.admin.dto.SignupResponse;
+import e3i2.ecommerce_backoffice.domain.admin.dto.*;
 import e3i2.ecommerce_backoffice.domain.admin.dto.common.SessionAdmin;
 import e3i2.ecommerce_backoffice.domain.admin.entity.Admin;
 import e3i2.ecommerce_backoffice.domain.admin.entity.AdminRole;
@@ -67,4 +65,40 @@ public class AdminService {
                 admin.getAcceptedAt()
         );
     }
+
+    @Transactional
+    public ApproveAdminResponse approveAdmin(Long targetAdminId, SessionAdmin loginAdmin) {
+        //슈퍼 관리자 권한 확인
+        if (loginAdmin.getRole() != AdminRole.SUPER_ADMIN) {
+            throw new IllegalAccessError("슈퍼 관리자만 승인/거부할 수 있습니다.");
+        }
+        //승인 대상 관리자 조회
+        Admin admin = adminRepository.findById(targetAdminId)
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 관리자입니다."));
+
+        //상태 변경
+        admin.approve();
+
+        return new ApproveAdminResponse(admin);
+    }
+
+    @Transactional
+    public DeniedAdminResponse denyAdmin(
+            Long targetAdminId,
+            SessionAdmin loginAdmin,
+            @Valid DeniedAdminRequest request
+    ) {
+
+        if (loginAdmin.getRole() != AdminRole.SUPER_ADMIN) {
+            throw new IllegalAccessError("슈퍼 관리자만 승인/거부할 수 있습니다.");
+        }
+
+        Admin admin = adminRepository.findById(targetAdminId)
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 관리자입니다."));
+
+        admin.deny(request.getDeniedReason());
+
+        return new DeniedAdminResponse(admin);
+    }
+
 }
