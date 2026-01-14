@@ -44,14 +44,14 @@ public class Admin extends Base {
     private Boolean deleted;
     private LocalDateTime deletedAt;
 
-    public static Admin regist(String email, String password, String adminName, String phone, AdminRole role, AdminStatus status) {
+    public static Admin regist(String email, String password, String adminName, String phone, AdminRole role) {
         Admin admin = new Admin();
         admin.email = email;
         admin.password = password;
         admin.adminName = adminName;
         admin.phone = phone;
         admin.role = role;
-        admin.status = status;
+        admin.status = AdminStatus.WAIT;
         admin.deleted = false;
 
         return admin;
