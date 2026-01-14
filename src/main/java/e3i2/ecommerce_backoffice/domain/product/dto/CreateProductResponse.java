@@ -7,30 +7,12 @@ import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
 
-/*
-{
-    "success": true,
-    "code": "CREATED",
-    "data": {
-        "name": "테스트 상품",
-        "category": "ELECTRONICS",
-        "price": 90000,
-        "stock": 10,
-        "status": "AVAILABLE",
-        "id": "P101",
-        "createdAt": "2026-01-14",
-        "createdBy": "0",
-        "createdByName": "admin",
-        "createdByEmail": "admin@sparta.com"
-    }
-}
-*/
-
+//TODO admin 기능 구현시, 주석 단위 교체 필요
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class CreateProductResponse {
     private Long id;
-    private String name;
+    private String productName;
     private String category;
     private Long price;
     private Long quantity;
@@ -41,11 +23,11 @@ public class CreateProductResponse {
     //private String adminName;
     //private String adminEmail;
 
-    public static CreateProductResponse register(Long id, String name, String category, Long price, Long quantity, String status, LocalDateTime createdAt
+    public static CreateProductResponse register(Long id, String productName, String category, Long price, Long quantity, String status, LocalDateTime createdAt
             /*, Long adminId, String adminName, String adminEmail*/) {
         CreateProductResponse response = new CreateProductResponse();
         response.id = id;
-        response.name = name;
+        response.productName = productName;
         response.category = category;
         response.price = price;
         response.quantity = quantity;

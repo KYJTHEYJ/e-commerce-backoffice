@@ -1,8 +1,6 @@
 package e3i2.ecommerce_backoffice.domain.product.service;
 
-import e3i2.ecommerce_backoffice.domain.product.dto.CreateProductRequest;
-import e3i2.ecommerce_backoffice.domain.product.dto.CreateProductResponse;
-import e3i2.ecommerce_backoffice.domain.product.dto.SearchProductResponse;
+import e3i2.ecommerce_backoffice.domain.product.dto.*;
 import e3i2.ecommerce_backoffice.domain.product.dto.common.ProductsWithPagination;
 import e3i2.ecommerce_backoffice.domain.product.entity.Product;
 import e3i2.ecommerce_backoffice.domain.product.entity.ProductCategory;
@@ -18,6 +16,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
+//TODO admin 기능 구현시, 주석 단위 교체 필요
 @Service
 @RequiredArgsConstructor
 public class ProductService {
@@ -50,7 +49,7 @@ public class ProductService {
     }
 
     @Transactional(readOnly = true, propagation = Propagation.SUPPORTS)
-    public ProductsWithPagination searchProduct(String productName, ProductCategory category, ProductStatus status, Integer page, Integer limit, String sortBy, String sortOrder) {
+    public ProductsWithPagination searchAllProduct(String productName, ProductCategory category, ProductStatus status, Integer page, Integer limit, String sortBy, String sortOrder) {
         List<SearchProductResponse> items = productRepository.findProducts(
                         productName
                         , category
@@ -71,5 +70,82 @@ public class ProductService {
                 )).toList();
 
         return ProductsWithPagination.register(items, page, limit, (long) items.size());
+    }
+
+    @Transactional(readOnly = true, propagation = Propagation.SUPPORTS)
+    public SearchProductResponse searchProduct(Long productId) {
+        Product product = productRepository.findByProductIdAndDeletedFalse(productId).orElseThrow(() -> new IllegalStateException("상품을 찾을 수 없습니다"));
+        return SearchProductResponse.register(
+                product.getProductId()
+                , product.getProductName()
+                , product.getCategory().getCategoryCode()
+                , product.getPrice()
+                , product.getQuantity()
+                , product.getStatus().getStatusCode()
+                , product.getCreatedAt()
+                //, saveProduct.getAdmin().getAdminId()
+                //, saveProduct.getAdmin().getAdminName()
+                //, saveProduct.getAdmin().getEmail()
+        );
+    }
+
+    @Transactional
+    public UpdateInfoProductResponse updateInfoProduct(Long productId, UpdateInfoProductRequest request) {
+        Product product = productRepository.findByProductIdAndDeletedFalse(productId).orElseThrow(() -> new IllegalStateException("상품을 찾을 수 없습니다"));
+        product.updateInfo(request.getProductName(), request.getCategory(), request.getPrice());
+        return UpdateInfoProductResponse.register(
+                product.getProductId()
+                , product.getProductName()
+                , product.getCategory().getCategoryCode()
+                , product.getPrice()
+                , product.getQuantity()
+                , product.getStatus().getStatusCode()
+                , product.getCreatedAt()
+                //, saveProduct.getAdmin().getAdminId()
+                //, saveProduct.getAdmin().getAdminName()
+                //, saveProduct.getAdmin().getEmail()
+        );
+    }
+
+    @Transactional
+    public UpdateQuantityProductResponse updateQuantityProduct(Long productId, UpdateQuantityProductRequest request) {
+        Product product = productRepository.findByProductIdAndDeletedFalse(productId).orElseThrow(() -> new IllegalStateException("상품을 찾을 수 없습니다"));
+        product.updateQunatity(request.getQuantity());
+        return UpdateQuantityProductResponse.register(
+                product.getProductId()
+                , product.getProductName()
+                , product.getCategory().getCategoryCode()
+                , product.getPrice()
+                , product.getQuantity()
+                , product.getStatus().getStatusCode()
+                , product.getCreatedAt()
+                //, saveProduct.getAdmin().getAdminId()
+                //, saveProduct.getAdmin().getAdminName()
+                //, saveProduct.getAdmin().getEmail()
+        );
+    }
+
+    @Transactional
+    public UpdateStatusProductResponse updateStatusProduct(Long productId, UpdateStatusProductRequest request) {
+        Product product = productRepository.findByProductIdAndDeletedFalse(productId).orElseThrow(() -> new IllegalStateException("상품을 찾을 수 없습니다"));
+        product.updateStatus(request.getStatus());
+        return UpdateStatusProductResponse.register(
+                product.getProductId()
+                , product.getProductName()
+                , product.getCategory().getCategoryCode()
+                , product.getPrice()
+                , product.getQuantity()
+                , product.getStatus().getStatusCode()
+                , product.getCreatedAt()
+                //, saveProduct.getAdmin().getAdminId()
+                //, saveProduct.getAdmin().getAdminName()
+                //, saveProduct.getAdmin().getEmail()
+        );
+    }
+
+    @Transactional
+    public void deleteProduct(Long productId) {
+        Product product = productRepository.findByProductIdAndDeletedFalse(productId).orElseThrow(() -> new IllegalStateException("상품을 찾을 수 없습니다"));
+        product.delete();
     }
 }

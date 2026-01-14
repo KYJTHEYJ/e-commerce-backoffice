@@ -51,6 +51,28 @@ public class Product extends Base {
         return product;
     }
 
+    public void updateInfo(String productName, ProductCategory category, Long price) {
+        this.productName = productName;
+        this.category = category;
+        this.price = price;
+    }
+
+    public void updateQunatity(Long quantity) {
+        this.quantity = quantity;
+
+        if(!status.equals(ProductStatus.DISCONTINUE)) {
+            if(quantity <= 0) {
+                status = ProductStatus.SOLD_OUT;
+            } else {
+                status = ProductStatus.ON_SALE;
+            }
+        }
+    }
+
+    public void updateStatus(ProductStatus status) {
+        this.status = status;
+    }
+
     public void delete() {
         deleted = true;
         deletedAt = LocalDateTime.now();

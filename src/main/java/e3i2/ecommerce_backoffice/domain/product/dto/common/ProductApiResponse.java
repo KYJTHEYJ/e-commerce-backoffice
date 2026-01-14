@@ -22,7 +22,7 @@ public class ProductApiResponse<T> {
         return register(true, HttpStatus.CREATED.name(), data);
     }
 
-    public static <T> ProductApiResponse<T> search(T data) {
+    public static <T> ProductApiResponse<T> ok(T data) {
         return register(true, HttpStatus.OK.name(), data);
     }
 }
