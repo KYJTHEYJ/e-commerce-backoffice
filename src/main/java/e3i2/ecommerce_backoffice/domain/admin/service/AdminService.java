@@ -6,6 +6,7 @@ import e3i2.ecommerce_backoffice.domain.admin.dto.SignupRequest;
 import e3i2.ecommerce_backoffice.domain.admin.dto.SignupResponse;
 import e3i2.ecommerce_backoffice.domain.admin.dto.common.SessionAdmin;
 import e3i2.ecommerce_backoffice.domain.admin.entity.Admin;
+import e3i2.ecommerce_backoffice.domain.admin.entity.AdminRole;
 import e3i2.ecommerce_backoffice.domain.admin.entity.AdminStatus;
 import e3i2.ecommerce_backoffice.domain.admin.repository.AdminRepository;
 import jakarta.validation.Valid;
@@ -38,7 +39,7 @@ public class AdminService {
     @Transactional
     public SessionAdmin login(@Valid LoginRequest request) {
         Admin admin = adminRepository.findByEmail(request.getEmail()).orElseThrow(
-                () -> new IllegalAccessError("이메일 또는 비밀번호가 틀렸습니다.")
+                () -> new IllegalAccessError("이메일이 틀렸습니다.")  //TODO: 추후 전역 예외처리 필요
         );
 
         //암호화된 기존의 비밀번호와 입력한 비밀번호 비교
@@ -47,7 +48,7 @@ public class AdminService {
                 admin.getPassword() //기존에 저장되어 있던 암호화된 비밀번호(암호문)
         );
         if (!matches){
-            throw new IllegalAccessError("이메일 또는 비밀번호가 틀렸습니다.");
+            throw new IllegalAccessError("비밀번호가 틀렸습니다.");
         }
 
         //활성 상태가 아닐 경우 예외 처리
@@ -58,7 +59,12 @@ public class AdminService {
         return new SessionAdmin(
                 admin.getAdminId(),
                 admin.getEmail(),
-                admin.getAdminName()
+                admin.getAdminName(),
+                admin.getPhone(),
+                admin.getRole(),
+                admin.getStatus(),
+                admin.getCreatedAt(),
+                admin.getAcceptedAt()
         );
     }
 }

@@ -12,17 +12,16 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequiredArgsConstructor
+@RequestMapping("/api/admins")
 public class AdminController {
     private final AdminService adminService;
 
     //관리자 회원가입
-    @PostMapping("/api/admins/signup")
+    @PostMapping("/signup")
     public ResponseEntity<AdminApiResponse<SignupResponse>> signup(
             @Valid @RequestBody SignupRequest request
     ) {
@@ -35,18 +34,24 @@ public class AdminController {
             )
         );
     }
-    
+
     //관리자 로그인
-    @PostMapping("/api/admins/signin")
-    public ResponseEntity<AdminApiResponse<LoginResponse>> signin(
+    @PostMapping("/login")
+    public ResponseEntity<AdminApiResponse<LoginResponse>> login(
             @Valid @RequestBody LoginRequest request,
             HttpSession session
     ) {
         SessionAdmin sessionAdmin = adminService.login(request);
         session.setAttribute("loginAdmin", sessionAdmin);
-        return ResponseEntity.status(HttpStatus.OK).build();
+
+        LoginResponse response = new LoginResponse(sessionAdmin);
+
+        return ResponseEntity.status(HttpStatus.OK).body(
+                AdminApiResponse.success(
+                        "OK",
+                        "로그인 성공",
+                        response
+                )
+        );
     }
-
-
-
 }
