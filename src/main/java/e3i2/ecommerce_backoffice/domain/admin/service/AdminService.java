@@ -119,7 +119,19 @@ public class AdminService {
         if (admin.getDeleted()) {
             throw new IllegalStateException("삭제된 관리자입니다.");
         }
-        return new SearchAdminDetailResponse(admin);
+        return SearchAdminDetailResponse.regist(
+                admin.getAdminId(),
+                admin.getAdminName(),
+                admin.getEmail(),
+                admin.getPhone(),
+                admin.getRole(),
+                admin.getStatus(),
+                admin.getCreatedAt(),
+                admin.getAcceptedAt(),
+                admin.getDeniedAt(),
+                admin.getRequestMessage(),
+                admin.getDeniedReason()
+        );
     }
 
     // 관리자 정보 수정
