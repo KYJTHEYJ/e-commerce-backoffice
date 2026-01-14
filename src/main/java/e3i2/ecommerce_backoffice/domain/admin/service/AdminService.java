@@ -104,6 +104,7 @@ public class AdminService {
     }
 
     // 관리자 상세 조회
+    @Transactional(readOnly = true)
     public SearchAdminDetailResponse getAdminDetail(Long adminId) {
         Admin admin = adminRepository.findById(adminId).orElseThrow(
                 () -> new IllegalStateException("존재하지 않는 관리자입니다.")
