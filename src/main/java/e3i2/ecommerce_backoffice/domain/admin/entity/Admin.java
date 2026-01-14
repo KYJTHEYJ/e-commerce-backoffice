@@ -85,6 +85,13 @@ public class Admin extends Base {
         this.deniedAt = LocalDateTime.now();
     }
 
+    // 관리자 정보 수정
+    public void updateInfo(String adminName, String email, String phone) {
+        this.adminName = adminName;
+        this.email = email;
+        this.phone = phone;
+    }
+
 }
 
 
