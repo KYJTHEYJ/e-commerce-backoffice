@@ -44,6 +44,13 @@ public class Admin extends Base {
     private Boolean deleted;
     private LocalDateTime deletedAt;
 
+    @Column(nullable = false)
+    private String deniedReason;  // 거부 이유
+    private LocalDateTime deniedAt;  // 거부된 시간
+
+    @Column(length = 500)
+    private String requestMessage;  // 승인대기 시 요청메세지
+
     public static Admin regist(String email, String password, String adminName, String phone, AdminRole role) {
         Admin admin = new Admin();
         admin.email = email;
@@ -66,6 +73,18 @@ public class Admin extends Base {
         deleted = false;
         deletedAt = null;
     }
+
+    public void accept() {
+        this.status = AdminStatus.ACT;
+        this.acceptedAt = LocalDateTime.now();
+    }
+
+    public void deny(String reason) {
+        this.status = AdminStatus.DENY;
+        this.deniedReason = reason;
+        this.deniedAt = LocalDateTime.now();
+    }
+
 }
 
 
