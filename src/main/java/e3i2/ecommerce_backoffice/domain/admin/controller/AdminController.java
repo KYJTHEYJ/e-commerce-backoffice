@@ -221,15 +221,18 @@ public class AdminController {
     @LoginSessionCheck
     public void changeAdminRole(
             @PathVariable Long adminId,
-            @RequestBody ChangeAdminRoleRequest request) {
-        adminService.changeAdminRole(request, adminId);
+            @RequestBody ChangeAdminRoleRequest request,
+            @SessionAttribute(value = ADMIN_SESSION_NAME, required = false) SessionAdmin loginAdmin) {
+        adminService.changeAdminRole(request, adminId, loginAdmin);
     }
 
     // 관리자 상태 변경
     @PutMapping("/{adminId}/status")
     @LoginSessionCheck
     public void changeAdminStatus(
-            @PathVariable Long adminId, @RequestBody ChangeAdminStatusRequest request) {
-        adminService.changeAdminStatus(request, adminId);
+            @PathVariable Long adminId,
+            @RequestBody ChangeAdminStatusRequest request,
+            @SessionAttribute(value = ADMIN_SESSION_NAME, required = false) SessionAdmin loginAdmin) {
+        adminService.changeAdminStatus(request, adminId, loginAdmin);
     }
 }
