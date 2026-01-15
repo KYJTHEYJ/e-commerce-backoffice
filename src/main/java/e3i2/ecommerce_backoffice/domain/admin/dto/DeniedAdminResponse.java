@@ -8,6 +8,7 @@ import lombok.Getter;
 
 import java.time.LocalDateTime;
 
+// 생성자 정적 팩토리 메서드로 권장
 @Getter
 public class DeniedAdminResponse {
     private final Long adminId;

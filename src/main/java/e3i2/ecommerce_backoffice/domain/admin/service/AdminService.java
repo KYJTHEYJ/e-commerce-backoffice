@@ -26,11 +26,11 @@ public class AdminService {
     private final PasswordEncoder passwordEncoder;
 
     @Transactional
-    public SignupResponse signup(@Valid SignupRequest request) {
+    public SignUpResponse signup(@Valid SignUpRequest request) {
         String encodePassword = passwordEncoder.encode(request.getPassword());
         Admin admin = Admin.regist(request.getEmail(), encodePassword, request.getAdminName(), request.getPhone(), request.getRole(), request.getRequestMessage());
         Admin saveAdmin = adminRepository.save(admin);
-        return new SignupResponse(
+        return new SignUpResponse(
                 saveAdmin.getAdminId(),
                 saveAdmin.getAdminName(),
                 saveAdmin.getEmail(),
@@ -48,11 +48,11 @@ public class AdminService {
                 () -> new IllegalAccessError("이메일이 틀렸습니다.")  //TODO: 추후 전역 예외처리 필요
         );
 
-        //암호화된 기존의 비밀번호와 입력한 비밀번호 비교
         boolean matches = passwordEncoder.matches(
-                request.getPassword(), //request로 받은 비밀번호(평문)
-                admin.getPassword() //기존에 저장되어 있던 암호화된 비밀번호(암호문)
+                request.getPassword(),
+                admin.getPassword()
         );
+
         if (!matches){
             throw new IllegalAccessError("비밀번호가 틀렸습니다.");
         }
@@ -88,15 +88,13 @@ public class AdminService {
 
     @Transactional
     public AcceptAdminResponse acceptAdmin(Long targetAdminId, SessionAdmin loginAdmin) {
-        //슈퍼 관리자 권한 확인
         if (loginAdmin.getRole() != AdminRole.SUPER_ADMIN) {
             throw new IllegalAccessError("슈퍼 관리자만 승인/거부할 수 있습니다.");
         }
-        //승인 대상 관리자 조회
+
         Admin admin = adminRepository.findById(targetAdminId)
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 관리자입니다."));
 
-        //상태 변경
         admin.accept();
 
         return new AcceptAdminResponse(admin);
@@ -190,15 +188,11 @@ public class AdminService {
             throw new IllegalAccessError("슈퍼 관리자만 접근할 수 있습니다.");
         }
 
-        Admin admin = adminRepository.findById(adminId).orElseThrow(
+        Admin admin = adminRepository.findByAdminIdAndDeletedFalse(adminId).orElseThrow(
                 () -> new IllegalStateException("존재하지 않는 관리자입니다.")
         );
 
-        if (admin.getDeleted()) {
-            throw new IllegalStateException("삭제된 관리자는 수정할 수 없습니다.");
-        }
-
-        // 이메일 중복 체크(본인 제외)
+        // 이메일 중복 체크 (본인 제외)
         if (!admin.getEmail().equals(request.getEmail())) {
             if (adminRepository.existsByEmailAndAdminIdNot(request.getEmail(), adminId)){
                 throw new IllegalStateException("이미 사용 중인 이메일입니다.");
@@ -206,7 +200,6 @@ public class AdminService {
         }
 
         admin.update(request.getAdminName(), request.getEmail(), request.getPhone());
-        adminRepository.flush();
 
         return UpdateAdminResponse.regist(
                 admin.getAdminId(),
@@ -228,12 +221,11 @@ public class AdminService {
         if (loginAdmin.getRole() != AdminRole.SUPER_ADMIN) {
             throw new IllegalAccessError("슈퍼 관리자만 접근할 수 있습니다.");
         }
-        //삭제되지 않은 관리자만 조회
+
         Admin admin = adminRepository.findByAdminIdAndDeletedFalse(adminId).orElseThrow(
                 () -> new IllegalStateException("존재하지 않는 관리자입니다.")
         );
 
-        // 본인 삭제 방지
         if (admin.getAdminId().equals(loginAdmin.getAdminId())) {
             throw new IllegalStateException("본인 계정은 삭제할 수 없습니다.");
         }
@@ -261,17 +253,21 @@ public class AdminService {
         Admin admin = adminRepository.findById(adminId).orElseThrow(
                 () -> new IllegalArgumentException("해당 관리자를 찾을 수 없습니다.")
         );
+
         if (admin.getDeleted().equals(true)) {
             throw new IllegalStateException("삭제된 관리자입니다.");
         }
+
         if (adminRepository.existsByEmailAndAdminIdNot(request.getEmail(), adminId)) {
             throw new IllegalArgumentException("이미 사용중인 이메일입니다.");
         }
+
         admin.update(
                 request.getAdminName(),
                 request.getEmail(),
                 request.getPhone()
         );
+
         return new UpdateMyProfileResponse(
                 admin.getAdminName(),
                 admin.getEmail(),
@@ -280,20 +276,21 @@ public class AdminService {
     }
 
     @Transactional
-    public Void changeMyPassword(ChangeMyPasswordRequest request, Long adminId) {
+    public void changeMyPassword(ChangeMyPasswordRequest request, Long adminId) {
         Admin admin = adminRepository.findById(adminId).orElseThrow(
                 () -> new IllegalStateException("해당 관리자를 찾을 수 없습니다.")
         );
+
         if (!passwordEncoder.matches(request.getCurrentPassword(), admin.getPassword())) {
             throw new IllegalArgumentException("현재 비밀번호가 일치하지 않습니다.");
         }
+
         if (passwordEncoder.matches(request.getNewPassword(), admin.getPassword())) {
             throw new IllegalArgumentException("새 비밀번호가 기존 비밀번호와 같습니다.");
         }
 
         String encodedPassword = passwordEncoder.encode(request.getNewPassword());
         admin.changePassword(encodedPassword);
-        return null;
     }
 
     @Transactional
@@ -301,6 +298,7 @@ public class AdminService {
         Admin admin = adminRepository.findById(adminId).orElseThrow(
                 () -> new IllegalStateException("해당 관리자를 찾을 수 없습니다.")
         );
+
         admin.changeAdminRole(request.getRole());
     }
 
@@ -309,6 +307,7 @@ public class AdminService {
         Admin admin = adminRepository.findById(adminId).orElseThrow(
                 () -> new IllegalStateException("해당 관리자를 찾을 수 없습니다.")
         );
+
         admin.changeAdminStatus(request.getStatus());
     }
 }
