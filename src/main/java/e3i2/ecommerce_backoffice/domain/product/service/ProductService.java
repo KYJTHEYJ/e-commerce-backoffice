@@ -11,6 +11,7 @@ import e3i2.ecommerce_backoffice.domain.product.entity.ProductStatus;
 import e3i2.ecommerce_backoffice.domain.product.repository.ProductRepository;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
@@ -19,7 +20,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
-//TODO admin 기능 구현시, 주석 단위 교체 필요
 @Service
 @RequiredArgsConstructor
 public class ProductService {
@@ -57,26 +57,22 @@ public class ProductService {
 
     @Transactional(readOnly = true, propagation = Propagation.SUPPORTS)
     public ProductsWithPagination searchAllProduct(String productName, ProductCategory category, ProductStatus status, Integer page, Integer limit, String sortBy, String sortOrder) {
-        List<SearchProductResponse> items = productRepository.findProducts(
-                        productName
-                        , category
-                        , status,
-                        PageRequest.of(page - 1, limit, Sort.by(sortOrder.equals("asc") ? Sort.Direction.ASC : Sort.Direction.DESC, sortBy)))
-                .stream()
-                .map(product -> SearchProductResponse.regist(
-                        product.getProductId()
-                        , product.getProductName()
-                        , product.getCategory().getCategoryCode()
-                        , product.getPrice()
-                        , product.getQuantity()
-                        , product.getStatus().getStatusCode()
-                        , product.getCreatedAt()
-                        , product.getAdmin().getAdminId()
-                        , product.getAdmin().getAdminName()
-                        , product.getAdmin().getEmail()
-                )).toList();
+        Page<Product> products = productRepository.findProducts(productName, category, status, PageRequest.of(page - 1, limit, Sort.by(sortOrder.equals("asc") ? Sort.Direction.ASC : Sort.Direction.DESC, sortBy)));
 
-        return ProductsWithPagination.regist(items, page, limit, (long) items.size());
+        List<SearchProductResponse> items = products.stream().map(product -> SearchProductResponse.regist(
+                product.getProductId()
+                , product.getProductName()
+                , product.getCategory().getCategoryCode()
+                , product.getPrice()
+                , product.getQuantity()
+                , product.getStatus().getStatusCode()
+                , product.getCreatedAt()
+                , product.getAdmin().getAdminId()
+                , product.getAdmin().getAdminName()
+                , product.getAdmin().getEmail()
+        )).toList();
+
+        return ProductsWithPagination.regist(items, page, limit, products.getTotalElements());
     }
 
     @Transactional(readOnly = true, propagation = Propagation.SUPPORTS)
@@ -161,7 +157,7 @@ public class ProductService {
 
     @Transactional
     public void deleteProduct(Long productId, SessionAdmin sessionAdmin) {
-        Admin admin = adminRepository.findById(sessionAdmin.getAdminId()).orElseThrow(() -> new IllegalStateException("로그인 계정의 관리자 정보를 찾을 수 없습니다"));
+        adminRepository.findById(sessionAdmin.getAdminId()).orElseThrow(() -> new IllegalStateException("로그인 계정의 관리자 정보를 찾을 수 없습니다"));
         Product product = productRepository.findByProductIdAndDeletedFalse(productId).orElseThrow(() -> new IllegalStateException("상품을 찾을 수 없습니다"));
 
         product.delete();
