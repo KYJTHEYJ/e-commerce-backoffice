@@ -255,6 +255,7 @@ public class AdminService {
         admin.delete();
     }
 
+    // 내 프로필 조회 (로그인 사용자)
     @Transactional(readOnly = true)
     public GetMyProfileResponse getMyProfile(Long adminId) {
         Admin admin = adminRepository.findById(adminId).orElseThrow(
@@ -264,12 +265,19 @@ public class AdminService {
             throw new IllegalStateException("삭제된 관리자입니다");
         }
         return GetMyProfileResponse.regist(
+                admin.getAdminId(),
                 admin.getAdminName(),
                 admin.getEmail(),
-                admin.getPhone()
+                admin.getPhone(),
+                admin.getRole(),
+                admin.getStatus(),
+                admin.getCreatedAt(),
+                admin.getAcceptedAt(),
+                admin.getDeniedAt()
         );
     }
 
+    // 내 프로필 수정 (로그인 사용자)
     @Transactional
     public UpdateMyProfileResponse updateMyProfile(UpdateMyProfileRequest request, Long adminId) {
         Admin admin = adminRepository.findById(adminId).orElseThrow(
@@ -303,6 +311,7 @@ public class AdminService {
         );
     }
 
+    // 내 비밀번호 변경 (로그인 사용자)
     @Transactional
     public void changeMyPassword(ChangeMyPasswordRequest request, Long adminId) {
         Admin admin = adminRepository.findById(adminId).orElseThrow(
@@ -321,6 +330,7 @@ public class AdminService {
         admin.changePassword(encodedPassword);
     }
 
+    // 관리자 역할 변경
     @Transactional
     public void changeAdminRole(ChangeAdminRoleRequest request, Long adminId, SessionAdmin loginAdmin) {
         if (loginAdmin.getRole() != AdminRole.SUPER_ADMIN) {
@@ -334,6 +344,7 @@ public class AdminService {
         admin.changeAdminRole(request.getRole());
     }
 
+    //관리자 상태 변경
     @Transactional
     public void changeAdminStatus(ChangeAdminStatusRequest request, Long adminId, SessionAdmin loginAdmin) {
         if (loginAdmin.getRole() != AdminRole.SUPER_ADMIN) {

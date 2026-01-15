@@ -6,6 +6,8 @@ import e3i2.ecommerce_backoffice.domain.admin.dto.SearchAdminDetailResponse;
 import e3i2.ecommerce_backoffice.domain.admin.dto.UpdateAdminRequest;
 import e3i2.ecommerce_backoffice.domain.admin.dto.UpdateAdminResponse;
 import e3i2.ecommerce_backoffice.domain.admin.dto.common.AdminApiResponse;
+import e3i2.ecommerce_backoffice.domain.admin.dto.common.AdminApiResponse2;
+import e3i2.ecommerce_backoffice.domain.admin.dto.common.AdminApiResponse3;
 import e3i2.ecommerce_backoffice.domain.admin.dto.common.SessionAdmin;
 import e3i2.ecommerce_backoffice.domain.admin.entity.AdminRole;
 import e3i2.ecommerce_backoffice.domain.admin.entity.AdminStatus;
@@ -201,10 +203,12 @@ public class AdminController {
     // 내 프로필 조회
     @GetMapping("/me")
     @LoginSessionCheck
-    public ResponseEntity<GetMyProfileResponse> getMyProfile(
+    public ResponseEntity<AdminApiResponse2<GetMyProfileResponse>> getMyProfile(
             @SessionAttribute(value = ADMIN_SESSION_NAME, required = false) SessionAdmin loginAdmin
     ) {
-        return ResponseEntity.status(HttpStatus.OK).body(adminService.getMyProfile(loginAdmin.getAdminId()));
+        GetMyProfileResponse response = adminService.getMyProfile(loginAdmin.getAdminId());
+
+        return ResponseEntity.status(HttpStatus.OK).body(AdminApiResponse2.success("OK", response));
     }
 
     // 내 프로필 수정
@@ -222,13 +226,13 @@ public class AdminController {
     // 내 비밀번호 변경
     @PutMapping("/me/password")
     @LoginSessionCheck
-    public ResponseEntity<Void> changeMyPassword(
+    public ResponseEntity<AdminApiResponse3> changeMyPassword(
             @Valid @RequestBody ChangeMyPasswordRequest request,
             @SessionAttribute(value = ADMIN_SESSION_NAME, required = false) SessionAdmin loginAdmin
     ) {
-
         adminService.changeMyPassword(request, loginAdmin.getAdminId());
-        return ResponseEntity.status(HttpStatus.OK).build();
+
+        return ResponseEntity.status(HttpStatus.OK).body(AdminApiResponse3.success("OK", "비밀번호가 성공적으로 변경되었습니다."));
     }
 
     // 관리자 역할 변경
