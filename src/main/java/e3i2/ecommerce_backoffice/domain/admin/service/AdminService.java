@@ -51,9 +51,21 @@ public class AdminService {
             throw new IllegalAccessError("비밀번호가 틀렸습니다.");
         }
 
-        //활성 상태가 아닐 경우 예외 처리
-        if(admin.getStatus() != AdminStatus.ACT){
-            throw new IllegalAccessError("해당 계정은 활성 상태가 아닙니다.");
+        // 관리자 상태별 로그인 제한
+        switch (admin.getStatus()) {
+            case WAIT:
+                throw new IllegalAccessError("해당 계정은 승인 대기 중입니다.");
+            case DENY:
+                throw new IllegalAccessError("해당 계정은 관리자 신청이 거부되었습니다.");
+            case SUSPEND:
+                throw new IllegalAccessError("해당 계정은 정지된 상태입니다.");
+            case IN_ACT:
+                throw new IllegalAccessError("해당 계정은 비활성화된 상태입니다.");
+            case ACT:
+                // 정상 로그인 → 통과
+                break;
+            default:
+                throw new IllegalAccessError("알 수 없는 계정 상태입니다.");
         }
 
         return new SessionAdmin(
