@@ -64,16 +64,6 @@ public class Admin extends Base {
         return admin;
     }
 
-    public void delete() {
-        deleted = true;
-        deletedAt = LocalDateTime.now();
-    }
-
-    public void restore() {
-        deleted = false;
-        deletedAt = null;
-    }
-
     public void update(String adminName, String email, String phone) {
         this.adminName = adminName;
         this.email = email;
@@ -109,6 +99,16 @@ public class Admin extends Base {
         this.status = AdminStatus.DENY;
         this.deniedReason = reason;
         this.deniedAt = LocalDateTime.now();
+    }
+
+    public void delete() {
+        deleted = true;
+        deletedAt = LocalDateTime.now();
+    }
+
+    public void restore() {
+        deleted = false;
+        deletedAt = null;
     }
 }
 

@@ -7,8 +7,9 @@ import lombok.Getter;
 
 import java.time.LocalDateTime;
 
+// 생성자 정적 팩토리 메서드로 권장
 @Getter
-public class SignupResponse {
+public class SignUpResponse {
     private final Long adminId;
     private final String adminName;
     private final String email;
@@ -20,7 +21,7 @@ public class SignupResponse {
     private final AdminStatus status;
     private final String requestMessage;
 
-    public SignupResponse(Long adminId, String adminName, String email, String phone, AdminRole role, LocalDateTime createdAt, AdminStatus status, String requestMessage) {
+    public SignUpResponse(Long adminId, String adminName, String email, String phone, AdminRole role, LocalDateTime createdAt, AdminStatus status, String requestMessage) {
         this.adminId = adminId;
         this.adminName = adminName;
         this.email = email;
