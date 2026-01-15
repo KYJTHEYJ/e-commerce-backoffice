@@ -1,5 +1,7 @@
 package e3i2.ecommerce_backoffice.domain.product.controller;
 
+import e3i2.ecommerce_backoffice.common.annotation.LoginSessionCheck;
+import e3i2.ecommerce_backoffice.domain.admin.dto.common.SessionAdmin;
 import e3i2.ecommerce_backoffice.domain.product.dto.*;
 import e3i2.ecommerce_backoffice.domain.product.dto.common.ProductApiResponse;
 import e3i2.ecommerce_backoffice.domain.product.dto.common.ProductApiResponse2;
@@ -12,19 +14,25 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import static e3i2.ecommerce_backoffice.common.util.Constants.ADMIN_SESSION_NAME;
+
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/products")
 public class ProductController {
     private final ProductService productService;
 
-    // TODO 세션 관련 후처리 예정
     @PostMapping
-    public ResponseEntity<ProductApiResponse<CreateProductResponse>> createProduct(@RequestBody CreateProductRequest request) {
-        return ResponseEntity.status(HttpStatus.CREATED).body(ProductApiResponse.created(productService.createProduct(request)));
+    @LoginSessionCheck
+    public ResponseEntity<ProductApiResponse<CreateProductResponse>> createProduct(
+            @RequestBody CreateProductRequest request
+            , @SessionAttribute(name = ADMIN_SESSION_NAME) SessionAdmin sessionAdmin
+    ) {
+        return ResponseEntity.status(HttpStatus.CREATED).body(ProductApiResponse.created(productService.createProduct(request, sessionAdmin)));
     }
 
     @GetMapping
+    @LoginSessionCheck
     public ResponseEntity<ProductApiResponse<ProductsWithPagination>> searchProducts(
             @RequestParam(required = false) String productName
             , @RequestParam(defaultValue = "1") Integer page
@@ -37,32 +45,49 @@ public class ProductController {
         return ResponseEntity.status(HttpStatus.OK).body(ProductApiResponse.ok(productService.searchAllProduct(productName, category, status, page, limit, sortBy, sortOrder)));
     }
 
-    @GetMapping("/{product_id}")
-    public ResponseEntity<ProductApiResponse<SearchProductResponse>> serachProduct(@PathVariable Long product_id) {
-        return ResponseEntity.status(HttpStatus.OK).body(ProductApiResponse.ok(productService.searchProduct(product_id)));
+    @GetMapping("/{productId}")
+    @LoginSessionCheck
+    public ResponseEntity<ProductApiResponse<SearchProductResponse>> searchProduct(@PathVariable Long productId) {
+        return ResponseEntity.status(HttpStatus.OK).body(ProductApiResponse.ok(productService.searchProduct(productId)));
     }
 
-    @PutMapping("/{product_id}")
+    @PutMapping("/{productId}")
+    @LoginSessionCheck
     public ResponseEntity<ProductApiResponse<UpdateInfoProductResponse>> updateInfoProduct(
-            @PathVariable Long product_id, @RequestBody UpdateInfoProductRequest request) {
-        return ResponseEntity.status(HttpStatus.OK).body(ProductApiResponse.ok(productService.updateInfoProduct(product_id, request)));
+            @PathVariable Long productId
+            , @RequestBody UpdateInfoProductRequest request
+            , @SessionAttribute(name = ADMIN_SESSION_NAME) SessionAdmin sessionAdmin
+    ) {
+        return ResponseEntity.status(HttpStatus.OK).body(ProductApiResponse.ok(productService.updateInfoProduct(productId, request, sessionAdmin)));
     }
 
-    @PutMapping("/{product_id}/quantity")
+    @PutMapping("/{productId}/quantity")
+    @LoginSessionCheck
     public ResponseEntity<ProductApiResponse<UpdateQuantityProductResponse>> updateQuantityProduct(
-            @PathVariable Long product_id, @RequestBody UpdateQuantityProductRequest request) {
-        return ResponseEntity.status(HttpStatus.OK).body(ProductApiResponse.ok(productService.updateQuantityProduct(product_id, request)));
+            @PathVariable Long productId
+            , @RequestBody UpdateQuantityProductRequest request
+            , @SessionAttribute(name = ADMIN_SESSION_NAME) SessionAdmin sessionAdmin
+    ) {
+        return ResponseEntity.status(HttpStatus.OK).body(ProductApiResponse.ok(productService.updateQuantityProduct(productId, request, sessionAdmin)));
     }
 
-    @PutMapping("/{product_id}/status")
+    @PutMapping("/{productId}/status")
+    @LoginSessionCheck
     public ResponseEntity<ProductApiResponse<UpdateStatusProductResponse>> updateStatusProduct(
-            @PathVariable Long product_id, @RequestBody UpdateStatusProductRequest request) {
-        return ResponseEntity.status(HttpStatus.OK).body(ProductApiResponse.ok(productService.updateStatusProduct(product_id, request)));
+            @PathVariable Long productId
+            , @RequestBody UpdateStatusProductRequest request
+            , @SessionAttribute(name = ADMIN_SESSION_NAME) SessionAdmin sessionAdmin
+    ) {
+        return ResponseEntity.status(HttpStatus.OK).body(ProductApiResponse.ok(productService.updateStatusProduct(productId, request, sessionAdmin)));
     }
 
-    @DeleteMapping("/{product_id}")
-    public ResponseEntity<ProductApiResponse2> deleteInfoProduct(@PathVariable Long product_id) {
-        productService.deleteProduct(product_id);
+    @DeleteMapping("/{productId}")
+    @LoginSessionCheck
+    public ResponseEntity<ProductApiResponse2> deleteInfoProduct(
+            @PathVariable Long productId
+            , @SessionAttribute(name = ADMIN_SESSION_NAME) SessionAdmin sessionAdmin
+    ) {
+        productService.deleteProduct(productId, sessionAdmin);
         return ResponseEntity.status(HttpStatus.OK).body(ProductApiResponse2.deleted());
     }
 }

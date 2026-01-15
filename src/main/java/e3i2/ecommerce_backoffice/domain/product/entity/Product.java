@@ -1,6 +1,7 @@
 package e3i2.ecommerce_backoffice.domain.product.entity;
 
 import e3i2.ecommerce_backoffice.common.entity.Base;
+import e3i2.ecommerce_backoffice.domain.admin.entity.Admin;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -8,7 +9,6 @@ import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
 
-//TODO 관리자 관련 후처리 예정
 @Getter
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -17,9 +17,9 @@ public class Product extends Base {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long productId;
 
-    //@ManyToOne(fetch = FetchType.LAZY, optional = false)
-    //@JoinColumn(name = "admin_id", nullable = false, foreignKey = @ForeignKey(name = "fk_admin_id", value = ConstraintMode.NO_CONSTRAINT))
-    //private Admin admin;
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "admin_id", nullable = false, foreignKey = @ForeignKey(name = "fk_admin_id", value = ConstraintMode.NO_CONSTRAINT))
+    private Admin admin;
 
     @Column(nullable = false)
     private String productName;
@@ -40,9 +40,9 @@ public class Product extends Base {
     private Boolean deleted = false;
     private LocalDateTime deletedAt;
 
-    public static Product regist(/*Admin admin,*/ String productName, ProductCategory category, Long price, Long quantity, ProductStatus status) {
+    public static Product regist(Admin admin, String productName, ProductCategory category, Long price, Long quantity, ProductStatus status) {
         Product product = new Product();
-        //product.admin = admin;
+        product.admin = admin;
         product.productName = productName;
         product.category = category;
         product.price = price;
@@ -58,7 +58,7 @@ public class Product extends Base {
         this.price = price;
     }
 
-    public void updateQunatity(Long quantity) {
+    public void updateQuantity(Long quantity) {
         this.quantity = quantity;
 
         if(!status.equals(ProductStatus.DISCONTINUE)) {

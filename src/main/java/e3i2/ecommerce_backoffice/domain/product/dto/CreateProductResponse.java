@@ -7,7 +7,6 @@ import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
 
-//TODO admin 기능 구현시, 주석 단위 교체 필요
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class CreateProductResponse {
@@ -19,12 +18,12 @@ public class CreateProductResponse {
     private String status;
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
     private LocalDateTime createdAt;
-    //private Long adminId;
-    //private String adminName;
-    //private String adminEmail;
+    private Long adminId;
+    private String adminName;
+    private String adminEmail;
 
     public static CreateProductResponse regist(Long id, String productName, String category, Long price, Long quantity, String status, LocalDateTime createdAt
-            /*, Long adminId, String adminName, String adminEmail*/) {
+            , Long adminId, String adminName, String adminEmail) {
         CreateProductResponse response = new CreateProductResponse();
         response.id = id;
         response.productName = productName;
@@ -33,9 +32,9 @@ public class CreateProductResponse {
         response.quantity = quantity;
         response.status = status;
         response.createdAt = createdAt;
-        //response.adminId = adminId;
-        //response.adminName = adminName;
-        //response.adminEmail = adminEmail;
+        response.adminId = adminId;
+        response.adminName = adminName;
+        response.adminEmail = adminEmail;
 
         return response;
     }

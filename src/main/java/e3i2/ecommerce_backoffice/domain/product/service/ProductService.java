@@ -1,5 +1,8 @@
 package e3i2.ecommerce_backoffice.domain.product.service;
 
+import e3i2.ecommerce_backoffice.domain.admin.dto.common.SessionAdmin;
+import e3i2.ecommerce_backoffice.domain.admin.entity.Admin;
+import e3i2.ecommerce_backoffice.domain.admin.repository.AdminRepository;
 import e3i2.ecommerce_backoffice.domain.product.dto.*;
 import e3i2.ecommerce_backoffice.domain.product.dto.common.ProductsWithPagination;
 import e3i2.ecommerce_backoffice.domain.product.entity.Product;
@@ -21,11 +24,15 @@ import java.util.List;
 @RequiredArgsConstructor
 public class ProductService {
     private final ProductRepository productRepository;
+    private final AdminRepository adminRepository;
 
     @Transactional
-    public CreateProductResponse createProduct(@Valid CreateProductRequest request) {
+    public CreateProductResponse createProduct(@Valid CreateProductRequest request, SessionAdmin sessionAdmin) {
+        Admin admin = adminRepository.findById(sessionAdmin.getAdminId()).orElseThrow(() -> new IllegalStateException("로그인 계정의 관리자 정보를 찾을 수 없습니다"));
+
         Product product = Product.regist(
-                request.getName()
+                admin
+                , request.getName()
                 , request.getCategory()
                 , request.getPrice()
                 , request.getQuantity()
@@ -42,9 +49,9 @@ public class ProductService {
                 , saveProduct.getQuantity()
                 , saveProduct.getStatus().getStatusCode()
                 , saveProduct.getCreatedAt()
-                //, saveProduct.getAdmin().getAdminId()
-                //, saveProduct.getAdmin().getAdminName()
-                //, saveProduct.getAdmin().getEmail()
+                , admin.getAdminId()
+                , admin.getAdminName()
+                , admin.getEmail()
         );
     }
 
@@ -64,9 +71,9 @@ public class ProductService {
                         , product.getQuantity()
                         , product.getStatus().getStatusCode()
                         , product.getCreatedAt()
-                        //, saveProduct.getAdmin().getAdminId()
-                        //, saveProduct.getAdmin().getAdminName()
-                        //, saveProduct.getAdmin().getEmail()
+                        , product.getAdmin().getAdminId()
+                        , product.getAdmin().getAdminName()
+                        , product.getAdmin().getEmail()
                 )).toList();
 
         return ProductsWithPagination.regist(items, page, limit, (long) items.size());
@@ -83,16 +90,19 @@ public class ProductService {
                 , product.getQuantity()
                 , product.getStatus().getStatusCode()
                 , product.getCreatedAt()
-                //, saveProduct.getAdmin().getAdminId()
-                //, saveProduct.getAdmin().getAdminName()
-                //, saveProduct.getAdmin().getEmail()
+                , product.getAdmin().getAdminId()
+                , product.getAdmin().getAdminName()
+                , product.getAdmin().getEmail()
         );
     }
 
     @Transactional
-    public UpdateInfoProductResponse updateInfoProduct(Long productId, UpdateInfoProductRequest request) {
+    public UpdateInfoProductResponse updateInfoProduct(Long productId, UpdateInfoProductRequest request, SessionAdmin sessionAdmin) {
+        Admin admin = adminRepository.findById(sessionAdmin.getAdminId()).orElseThrow(() -> new IllegalStateException("로그인 계정의 관리자 정보를 찾을 수 없습니다"));
         Product product = productRepository.findByProductIdAndDeletedFalse(productId).orElseThrow(() -> new IllegalStateException("상품을 찾을 수 없습니다"));
+
         product.updateInfo(request.getProductName(), request.getCategory(), request.getPrice());
+
         return UpdateInfoProductResponse.regist(
                 product.getProductId()
                 , product.getProductName()
@@ -101,16 +111,19 @@ public class ProductService {
                 , product.getQuantity()
                 , product.getStatus().getStatusCode()
                 , product.getCreatedAt()
-                //, saveProduct.getAdmin().getAdminId()
-                //, saveProduct.getAdmin().getAdminName()
-                //, saveProduct.getAdmin().getEmail()
+                , admin.getAdminId()
+                , admin.getAdminName()
+                , admin.getEmail()
         );
     }
 
     @Transactional
-    public UpdateQuantityProductResponse updateQuantityProduct(Long productId, UpdateQuantityProductRequest request) {
+    public UpdateQuantityProductResponse updateQuantityProduct(Long productId, UpdateQuantityProductRequest request, SessionAdmin sessionAdmin) {
+        Admin admin = adminRepository.findById(sessionAdmin.getAdminId()).orElseThrow(() -> new IllegalStateException("로그인 계정의 관리자 정보를 찾을 수 없습니다"));
         Product product = productRepository.findByProductIdAndDeletedFalse(productId).orElseThrow(() -> new IllegalStateException("상품을 찾을 수 없습니다"));
-        product.updateQunatity(request.getQuantity());
+
+        product.updateQuantity(request.getQuantity());
+
         return UpdateQuantityProductResponse.regist(
                 product.getProductId()
                 , product.getProductName()
@@ -119,16 +132,19 @@ public class ProductService {
                 , product.getQuantity()
                 , product.getStatus().getStatusCode()
                 , product.getCreatedAt()
-                //, saveProduct.getAdmin().getAdminId()
-                //, saveProduct.getAdmin().getAdminName()
-                //, saveProduct.getAdmin().getEmail()
+                , admin.getAdminId()
+                , admin.getAdminName()
+                , admin.getEmail()
         );
     }
 
     @Transactional
-    public UpdateStatusProductResponse updateStatusProduct(Long productId, UpdateStatusProductRequest request) {
+    public UpdateStatusProductResponse updateStatusProduct(Long productId, UpdateStatusProductRequest request, SessionAdmin sessionAdmin) {
+        Admin admin = adminRepository.findById(sessionAdmin.getAdminId()).orElseThrow(() -> new IllegalStateException("로그인 계정의 관리자 정보를 찾을 수 없습니다"));
         Product product = productRepository.findByProductIdAndDeletedFalse(productId).orElseThrow(() -> new IllegalStateException("상품을 찾을 수 없습니다"));
+
         product.updateStatus(request.getStatus());
+
         return UpdateStatusProductResponse.regist(
                 product.getProductId()
                 , product.getProductName()
@@ -137,15 +153,17 @@ public class ProductService {
                 , product.getQuantity()
                 , product.getStatus().getStatusCode()
                 , product.getCreatedAt()
-                //, saveProduct.getAdmin().getAdminId()
-                //, saveProduct.getAdmin().getAdminName()
-                //, saveProduct.getAdmin().getEmail()
+                , admin.getAdminId()
+                , admin.getAdminName()
+                , admin.getEmail()
         );
     }
 
     @Transactional
-    public void deleteProduct(Long productId) {
+    public void deleteProduct(Long productId, SessionAdmin sessionAdmin) {
+        Admin admin = adminRepository.findById(sessionAdmin.getAdminId()).orElseThrow(() -> new IllegalStateException("로그인 계정의 관리자 정보를 찾을 수 없습니다"));
         Product product = productRepository.findByProductIdAndDeletedFalse(productId).orElseThrow(() -> new IllegalStateException("상품을 찾을 수 없습니다"));
+
         product.delete();
     }
 }
