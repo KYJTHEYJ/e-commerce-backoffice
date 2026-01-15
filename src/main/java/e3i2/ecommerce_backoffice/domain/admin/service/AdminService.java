@@ -27,6 +27,9 @@ public class AdminService {
 
     @Transactional
     public SignUpResponse signup(@Valid SignUpRequest request) {
+        if (adminRepository.existsByEmail(request.getEmail())) {
+            throw new IllegalArgumentException("이미 존재하는 이메일입니다");
+        }
         String encodePassword = passwordEncoder.encode(request.getPassword());
         Admin admin = Admin.regist(request.getEmail(), encodePassword, request.getAdminName(), request.getPhone(), request.getRole(), request.getRequestMessage());
         Admin saveAdmin = adminRepository.save(admin);
@@ -45,7 +48,7 @@ public class AdminService {
     @Transactional
     public SessionAdmin login(@Valid LoginRequest request) {
         Admin admin = adminRepository.findByEmail(request.getEmail()).orElseThrow(
-                () -> new IllegalAccessError("이메일이 틀렸습니다.")  //TODO: 추후 전역 예외처리 필요
+                () -> new IllegalAccessError("이메일이 틀렸습니다")  //TODO: 추후 전역 예외처리 필요
         );
 
         boolean matches = passwordEncoder.matches(
@@ -54,24 +57,24 @@ public class AdminService {
         );
 
         if (!matches){
-            throw new IllegalAccessError("비밀번호가 틀렸습니다.");
+            throw new IllegalAccessError("비밀번호가 틀렸습니다");
         }
 
         // 관리자 상태별 로그인 제한
         switch (admin.getStatus()) {
             case WAIT:
-                throw new IllegalAccessError("해당 계정은 승인 대기 중입니다.");
+                throw new IllegalAccessError("해당 계정은 승인 대기 중입니다");
             case DENY:
-                throw new IllegalAccessError("해당 계정은 관리자 신청이 거부되었습니다.");
+                throw new IllegalAccessError("해당 계정은 관리자 신청이 거부되었습니다");
             case SUSPEND:
-                throw new IllegalAccessError("해당 계정은 정지된 상태입니다.");
+                throw new IllegalAccessError("해당 계정은 정지된 상태입니다");
             case IN_ACT:
-                throw new IllegalAccessError("해당 계정은 비활성화된 상태입니다.");
+                throw new IllegalAccessError("해당 계정은 비활성화된 상태입니다");
             case ACT:
                 // 정상 로그인 → 통과
                 break;
             default:
-                throw new IllegalAccessError("알 수 없는 계정 상태입니다.");
+                throw new IllegalAccessError("알 수 없는 계정 상태입니다");
         }
 
         return new SessionAdmin(
@@ -89,11 +92,11 @@ public class AdminService {
     @Transactional
     public AcceptAdminResponse acceptAdmin(Long targetAdminId, SessionAdmin loginAdmin) {
         if (loginAdmin.getRole() != AdminRole.SUPER_ADMIN) {
-            throw new IllegalAccessError("슈퍼 관리자만 승인/거부할 수 있습니다.");
+            throw new IllegalAccessError("슈퍼 관리자만 승인/거부할 수 있습니다");
         }
 
         Admin admin = adminRepository.findById(targetAdminId)
-                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 관리자입니다."));
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 관리자입니다"));
 
         admin.accept();
 
@@ -119,11 +122,11 @@ public class AdminService {
     ) {
 
         if (loginAdmin.getRole() != AdminRole.SUPER_ADMIN) {
-            throw new IllegalAccessError("슈퍼 관리자만 승인/거부할 수 있습니다.");
+            throw new IllegalAccessError("슈퍼 관리자만 승인/거부할 수 있습니다");
         }
 
         Admin admin = adminRepository.findById(targetAdminId)
-                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 관리자입니다."));
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 관리자입니다"));
 
         admin.deny(request.getDeniedReason());
 

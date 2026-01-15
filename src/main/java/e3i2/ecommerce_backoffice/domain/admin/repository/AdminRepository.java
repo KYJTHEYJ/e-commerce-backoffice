@@ -37,4 +37,6 @@ public interface AdminRepository extends JpaRepository<Admin, Long> {
             @Param("status") AdminStatus status,
             Pageable pageable
     );
+
+    boolean existsByEmail(@Email(message = "이메일 형식으로 작성해야 합니다") String email);
 }
