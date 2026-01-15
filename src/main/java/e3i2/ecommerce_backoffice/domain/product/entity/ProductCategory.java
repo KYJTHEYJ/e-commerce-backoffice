@@ -4,13 +4,15 @@ import lombok.Getter;
 
 @Getter
 public enum ProductCategory {
-    ELECTRONICS("전자")
-    , FOOD("음식")
-    , CLOTH("의류");
+    ELECTRONICS("ELECTRONICS", "전자")
+    , FOOD("FOOD", "음식")
+    , CLOTH("CLOTH","의류");
 
+    private final String categoryCode;
     private final String categoryDescription;
 
-    ProductCategory(String categoryDescription) {
+    ProductCategory(String categoryCode, String categoryDescription) {
+        this.categoryCode = categoryCode;
         this.categoryDescription = categoryDescription;
     }
 }

@@ -28,10 +28,10 @@ public class Product extends Base {
     private ProductCategory category;
 
     @Column(nullable = false)
-    private Integer price;
+    private Long price;
 
     @Column(nullable = false)
-    private Integer quantity;
+    private Long quantity;
 
     @Enumerated(EnumType.STRING)
     private ProductStatus status;
@@ -40,7 +40,7 @@ public class Product extends Base {
     private Boolean deleted = false;
     private LocalDateTime deletedAt;
 
-    public static Product regist(Admin admin, String productName, ProductCategory category, Integer price, Integer quantity, ProductStatus status) {
+    public static Product regist(Admin admin, String productName, ProductCategory category, Long price, Long quantity, ProductStatus status) {
         Product product = new Product();
         product.admin = admin;
         product.productName = productName;
@@ -50,6 +50,28 @@ public class Product extends Base {
         product.status = status;
 
         return product;
+    }
+
+    public void updateInfo(String productName, ProductCategory category, Long price) {
+        this.productName = productName;
+        this.category = category;
+        this.price = price;
+    }
+
+    public void updateQuantity(Long quantity) {
+        this.quantity = quantity;
+
+        if(!status.equals(ProductStatus.DISCONTINUE)) {
+            if(quantity <= 0) {
+                status = ProductStatus.SOLD_OUT;
+            } else {
+                status = ProductStatus.ON_SALE;
+            }
+        }
+    }
+
+    public void updateStatus(ProductStatus status) {
+        this.status = status;
     }
 
     public void delete() {
