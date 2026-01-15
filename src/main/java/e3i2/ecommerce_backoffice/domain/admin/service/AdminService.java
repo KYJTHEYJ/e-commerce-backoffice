@@ -316,7 +316,11 @@ public class AdminService {
     }
 
     @Transactional
-    public void changeAdminRole(ChangeAdminRoleRequest request, Long adminId) {
+    public void changeAdminRole(ChangeAdminRoleRequest request, Long adminId, SessionAdmin loginAdmin) {
+        if (loginAdmin.getRole() != AdminRole.SUPER_ADMIN) {
+            throw new IllegalAccessError("슈퍼 관리자만 접근할 수 있습니다.");
+        }
+
         Admin admin = adminRepository.findById(adminId).orElseThrow(
                 () -> new IllegalStateException("해당 관리자를 찾을 수 없습니다.")
         );
@@ -325,7 +329,11 @@ public class AdminService {
     }
 
     @Transactional
-    public void changeAdminStatus(ChangeAdminStatusRequest request, Long adminId) {
+    public void changeAdminStatus(ChangeAdminStatusRequest request, Long adminId, SessionAdmin loginAdmin) {
+        if (loginAdmin.getRole() != AdminRole.SUPER_ADMIN) {
+            throw new IllegalAccessError("슈퍼 관리자만 접근할 수 있습니다.");
+        }
+
         Admin admin = adminRepository.findById(adminId).orElseThrow(
                 () -> new IllegalStateException("해당 관리자를 찾을 수 없습니다.")
         );
