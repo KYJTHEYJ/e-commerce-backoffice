@@ -56,11 +56,11 @@ public class CustomerService {
         );
         boolean emailExists = customerRepository.existsByEmail(request.getEmail());
         if (emailExists) {
-            throw new IllegalArgumentException("사용 불가능한 이메일입니다.");
+            throw new IllegalArgumentException("사용 불가능한 이메일입니다");
         }
         boolean phoneExists = customerRepository.existsByPhone(request.getPhone());
         if (phoneExists) {
-            throw new IllegalArgumentException("사용 불가능한 전화번호입니다.");
+            throw new IllegalArgumentException("사용 불가능한 전화번호입니다");
         }
         customer.update(request.getCustomerName(), request.getEmail(), request.getPhone());
 

@@ -1,5 +1,6 @@
 package e3i2.ecommerce_backoffice.domain.customer.dto;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Getter;
 
 import java.time.LocalDateTime;
@@ -11,6 +12,7 @@ public class GetCustomerResponse {
     private final String email;
     private final String phone;
     private final String status;
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
     private final LocalDateTime createdAt;
 
     public GetCustomerResponse(Long customerId, String customerName, String email, String phone, String status, LocalDateTime createdAt) {
