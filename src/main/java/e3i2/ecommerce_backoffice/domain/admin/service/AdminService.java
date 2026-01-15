@@ -1,9 +1,9 @@
 package e3i2.ecommerce_backoffice.domain.admin.service;
 
 import e3i2.ecommerce_backoffice.common.config.PasswordEncoder;
+import e3i2.ecommerce_backoffice.common.util.pagination.ItemsWithPagination;
+import e3i2.ecommerce_backoffice.common.util.pagination.Pagination;
 import e3i2.ecommerce_backoffice.domain.admin.dto.*;
-import e3i2.ecommerce_backoffice.domain.admin.dto.common.AdminListDataResponse;
-import e3i2.ecommerce_backoffice.domain.admin.dto.common.Pagination;
 import e3i2.ecommerce_backoffice.domain.admin.dto.common.SessionAdmin;
 import e3i2.ecommerce_backoffice.domain.admin.dto.SearchAdminDetailResponse;
 import e3i2.ecommerce_backoffice.domain.admin.dto.UpdateAdminRequest;
@@ -31,12 +31,12 @@ public class AdminService {
     private final PasswordEncoder passwordEncoder;
 
     @Transactional
-    public SignUpResponse signup(@Valid SignUpRequest request) {
+    public SignUpResponse signUp(@Valid SignUpRequest request) {
         if (adminRepository.existsByEmail(request.getEmail())) {
             throw new IllegalArgumentException("이미 존재하는 이메일입니다");
         }
         String encodePassword = passwordEncoder.encode(request.getPassword());
-        Admin admin = Admin.regist(request.getEmail(), encodePassword, request.getAdminName(), request.getPhone(), request.getRole(), request.getRequestMessage());
+        Admin admin = Admin.regist(request.getEmail(), encodePassword, request.getAdminName(), request.getPhone(), request.getRole(), AdminStatus.WAIT, request.getRequestMessage());
         Admin saveAdmin = adminRepository.save(admin);
         return SignUpResponse.regist(
                 saveAdmin.getAdminId(),
@@ -151,7 +151,9 @@ public class AdminService {
 
     //관리자 리스트 조회
     @Transactional(readOnly = true)
-    public AdminListDataResponse getAdminList(String keyword, int page, int size, String sortBy, String sortOrder, AdminRole role, AdminStatus status, SessionAdmin loginAdmin) {
+    public ItemsWithPagination<SearchAdminDetailResponse> getAdminList (
+            String keyword, int page, int limit, String sortBy, String sortOrder, AdminRole role, AdminStatus status, SessionAdmin loginAdmin
+    ) {
         if (loginAdmin.getRole() != AdminRole.SUPER_ADMIN) {
             throw new IllegalAccessError("슈퍼 관리자만 관리자 리스트 조회가 가능합니다");
         }
@@ -160,7 +162,7 @@ public class AdminService {
                 ? Sort.by(sortBy).ascending()
                 : Sort.by(sortBy).descending();
 
-        Pageable pageable = PageRequest.of(page - 1, size, sort);
+        Pageable pageable = PageRequest.of(page - 1, limit, sort);
 
         Page<Admin> admins = adminRepository.findAdmins(
                 (keyword == null || keyword.isBlank()) ? null : keyword,
@@ -171,9 +173,8 @@ public class AdminService {
 
         DateTimeFormatter fmt = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 
-        List<SearchAdminDetailResponse> items = admins.getContent().stream()
+        List<SearchAdminDetailResponse> items = admins.stream()
                 .map(a -> {
-
                     String acceptedAt = a.getAcceptedAt() == null ? "" : a.getAcceptedAt().format(fmt);
                     String deniedAt = a.getDeniedAt() == null ? "" : a.getDeniedAt().format(fmt);
 
@@ -203,15 +204,7 @@ public class AdminService {
                 })
                 .toList();
 
-        Pagination pagination = Pagination.regist(
-                page,
-                size,
-                admins.getTotalElements(),
-                admins.getTotalPages()
-        );
-
-        return AdminListDataResponse.regist(items, pagination);
-
+        return ItemsWithPagination.register(items, page, limit, admins.getTotalElements());
     }
 
     // 관리자 상세 조회

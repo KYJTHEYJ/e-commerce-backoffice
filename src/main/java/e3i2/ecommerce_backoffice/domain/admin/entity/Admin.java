@@ -1,6 +1,8 @@
 package e3i2.ecommerce_backoffice.domain.admin.entity;
 
 import e3i2.ecommerce_backoffice.common.entity.Base;
+import e3i2.ecommerce_backoffice.common.exception.ErrorEnum;
+import e3i2.ecommerce_backoffice.common.exception.ServiceErrorException;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -44,20 +46,20 @@ public class Admin extends Base {
     private Boolean deleted;
     private LocalDateTime deletedAt;
 
-    private String deniedReason;  // 거부 이유
-    private LocalDateTime deniedAt;  // 거부된 시간
+    private String deniedReason;
+    private LocalDateTime deniedAt;
 
     @Column(length = 500)
-    private String requestMessage;  // 승인대기 시 요청메세지
+    private String requestMessage;
 
-    public static Admin regist(String email, String password, String adminName, String phone, AdminRole role, String requestMessage) {
+    public static Admin regist(String email, String password, String adminName, String phone, AdminRole role, AdminStatus status, String requestMessage) {
         Admin admin = new Admin();
         admin.email = email;
         admin.password = password;
         admin.adminName = adminName;
         admin.phone = phone;
         admin.role = role;
-        admin.status = AdminStatus.WAIT;
+        admin.status = status;
         admin.deleted = false;
         admin.requestMessage = requestMessage;
 
@@ -84,7 +86,7 @@ public class Admin extends Base {
 
     public void accept() {
         if (this.status != AdminStatus.WAIT) {
-            throw new IllegalStateException("해당 계정은 승인 대기 상태가 아닙니다.");
+            throw new ServiceErrorException(ErrorEnum.NOT_ADMIN_STATUS_WAIT);
         }
 
         this.status = AdminStatus.ACT;
@@ -93,7 +95,7 @@ public class Admin extends Base {
 
     public void deny(String reason) {
         if (this.status != AdminStatus.WAIT) {
-            throw new IllegalStateException("해당 계정은 승인 대기 상태가 아닙니다.");
+            throw new IllegalStateException("해당 계정은 승인 대기 상태가 아닙니다");
         }
 
         this.status = AdminStatus.DENY;

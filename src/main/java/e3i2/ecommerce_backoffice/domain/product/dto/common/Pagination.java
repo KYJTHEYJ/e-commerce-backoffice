@@ -14,6 +14,7 @@ public class Pagination {
 
     public static Pagination regist(Integer page, Integer limit, Long total, Integer totalPages) {
         Pagination pagination = new Pagination();
+
         pagination.page = page;
         pagination.limit = limit;
         pagination.total = total;
