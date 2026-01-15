@@ -238,22 +238,26 @@ public class AdminController {
     // 관리자 역할 변경
     @PutMapping("/{adminId}/role")
     @LoginSessionCheck
-    public void changeAdminRole(
+    public ResponseEntity<AdminApiResponse2<ChangeAdminRoleResponse>> changeAdminRole(
             @PathVariable Long adminId,
             @RequestBody ChangeAdminRoleRequest request,
             @SessionAttribute(value = ADMIN_SESSION_NAME, required = false) SessionAdmin loginAdmin
     ) {
-        adminService.changeAdminRole(request, adminId, loginAdmin);
+        ChangeAdminRoleResponse response = adminService.changeAdminRole(request, adminId, loginAdmin);
+
+        return ResponseEntity.status(HttpStatus.OK).body(AdminApiResponse2.success("OK", response));
     }
 
     // 관리자 상태 변경
     @PutMapping("/{adminId}/status")
     @LoginSessionCheck
-    public void changeAdminStatus(
+    public ResponseEntity<AdminApiResponse2<ChangeAdminStatusResponse>> changeAdminStatus(
             @PathVariable Long adminId,
             @RequestBody ChangeAdminStatusRequest request,
             @SessionAttribute(value = ADMIN_SESSION_NAME, required = false) SessionAdmin loginAdmin
     ) {
-        adminService.changeAdminStatus(request, adminId, loginAdmin);
+        ChangeAdminStatusResponse response = adminService.changeAdminStatus(request, adminId, loginAdmin);
+
+        return ResponseEntity.status(HttpStatus.OK).body(AdminApiResponse2.success("OK", response));
     }
 }

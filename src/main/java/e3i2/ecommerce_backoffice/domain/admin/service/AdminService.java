@@ -332,7 +332,7 @@ public class AdminService {
 
     // 관리자 역할 변경
     @Transactional
-    public void changeAdminRole(ChangeAdminRoleRequest request, Long adminId, SessionAdmin loginAdmin) {
+    public ChangeAdminRoleResponse changeAdminRole(ChangeAdminRoleRequest request, Long adminId, SessionAdmin loginAdmin) {
         if (loginAdmin.getRole() != AdminRole.SUPER_ADMIN) {
             throw new IllegalAccessError("슈퍼 관리자만 접근할 수 있습니다");
         }
@@ -342,11 +342,23 @@ public class AdminService {
         );
 
         admin.changeAdminRole(request.getRole());
+
+        return ChangeAdminRoleResponse.regist(
+                admin.getAdminId(),
+                admin.getAdminName(),
+                admin.getEmail(),
+                admin.getPhone(),
+                admin.getRole(),
+                admin.getStatus(),
+                admin.getCreatedAt(),
+                admin.getAcceptedAt(),
+                admin.getDeniedAt()
+        );
     }
 
     //관리자 상태 변경
     @Transactional
-    public void changeAdminStatus(ChangeAdminStatusRequest request, Long adminId, SessionAdmin loginAdmin) {
+    public ChangeAdminStatusResponse changeAdminStatus(ChangeAdminStatusRequest request, Long adminId, SessionAdmin loginAdmin) {
         if (loginAdmin.getRole() != AdminRole.SUPER_ADMIN) {
             throw new IllegalAccessError("슈퍼 관리자만 접근할 수 있습니다");
         }
@@ -356,5 +368,17 @@ public class AdminService {
         );
 
         admin.changeAdminStatus(request.getStatus());
+
+        return ChangeAdminStatusResponse.regist(
+                admin.getAdminId(),
+                admin.getAdminName(),
+                admin.getEmail(),
+                admin.getPhone(),
+                admin.getRole(),
+                admin.getStatus(),
+                admin.getCreatedAt(),
+                admin.getAcceptedAt(),
+                admin.getDeniedAt()
+        );
     }
 }
