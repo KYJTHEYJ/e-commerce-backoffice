@@ -1,7 +1,7 @@
 package e3i2.ecommerce_backoffice.domain.admin.dto.common;
 
 import lombok.Getter;
-
+// 응답 형식 success, code, data
 @Getter
 public class AdminApiResponse2<T> {
     private final boolean success;

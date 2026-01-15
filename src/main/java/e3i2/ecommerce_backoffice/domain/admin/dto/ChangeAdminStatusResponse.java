@@ -11,7 +11,7 @@ import java.time.LocalDateTime;
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class GetMyProfileResponse {
+public class ChangeAdminStatusResponse {
 
     private Long adminId;
     private String adminName;
@@ -29,7 +29,7 @@ public class GetMyProfileResponse {
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
     private LocalDateTime deniedAt;
 
-    public static GetMyProfileResponse regist(
+    public static ChangeAdminStatusResponse regist(
             Long adminId,
             String adminName,
             String email,
@@ -40,7 +40,7 @@ public class GetMyProfileResponse {
             LocalDateTime acceptedAt,
             LocalDateTime deniedAt
     ) {
-        GetMyProfileResponse response = new GetMyProfileResponse();
+        ChangeAdminStatusResponse response = new ChangeAdminStatusResponse();
 
         response.adminId = adminId;
         response.adminName = adminName;

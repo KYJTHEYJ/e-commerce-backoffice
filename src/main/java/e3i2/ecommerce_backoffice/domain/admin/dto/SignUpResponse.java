@@ -36,6 +36,7 @@ public class SignUpResponse {
             String requestMessage
     ) {
         SignUpResponse response = new SignUpResponse();
+
         response.adminId = adminId;
         response.adminName = adminName;
         response.email = email;
