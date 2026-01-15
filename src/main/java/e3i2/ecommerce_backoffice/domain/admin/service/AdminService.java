@@ -4,12 +4,18 @@ import e3i2.ecommerce_backoffice.common.config.PasswordEncoder;
 import e3i2.ecommerce_backoffice.domain.admin.dto.*;
 import e3i2.ecommerce_backoffice.domain.admin.dto.common.SessionAdmin;
 import e3i2.ecommerce_backoffice.domain.admin.dto.SearchAdminDetailResponse;
+import e3i2.ecommerce_backoffice.domain.admin.dto.UpdateAdminRequest;
+import e3i2.ecommerce_backoffice.domain.admin.dto.UpdateAdminResponse;
 import e3i2.ecommerce_backoffice.domain.admin.entity.Admin;
 import e3i2.ecommerce_backoffice.domain.admin.entity.AdminRole;
 import e3i2.ecommerce_backoffice.domain.admin.entity.AdminStatus;
 import e3i2.ecommerce_backoffice.domain.admin.repository.AdminRepository;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -115,17 +121,124 @@ public class AdminService {
         return new DeniedAdminResponse(admin);
     }
 
+    //관리자 리스트 조회
+    @Transactional(readOnly = true)
+    public Page<SearchAdminListResponse> getAdminList(String keyword, int page, int size, String sortBy, String direction, AdminRole role, AdminStatus status, SessionAdmin loginAdmin) {
+        if (loginAdmin.getRole() != AdminRole.SUPER_ADMIN) {
+            throw new IllegalAccessError("슈퍼 관리자만 관리자 리스트 조회가 가능합니다.");
+        }
+
+        Sort sort = direction.equalsIgnoreCase("asc")
+                ? Sort.by(sortBy).ascending()
+                : Sort.by(sortBy).descending();
+
+        Pageable pageable = PageRequest.of(page - 1, size, sort);
+
+        Page<Admin> admins = adminRepository.findAdmins(
+                (keyword == null || keyword.isBlank()) ? null : keyword,
+                role,
+                status,
+                pageable
+        );
+
+        return admins.map(a -> SearchAdminListResponse.regist(
+                a.getAdminId(),
+                a.getAdminName(),
+                a.getEmail(),
+                a.getPhone(),
+                a.getRole(),
+                a.getStatus(),
+                a.getCreatedAt(),
+                a.getAcceptedAt()
+        ));
+
+    }
+
     // 관리자 상세 조회
     @Transactional(readOnly = true)
-    public SearchAdminDetailResponse getAdminDetail(Long adminId) {
+    public SearchAdminDetailResponse getAdminDetail(Long adminId, SessionAdmin loginAdmin) {
+        if (loginAdmin.getRole() != AdminRole.SUPER_ADMIN) {
+            throw new IllegalAccessError("슈퍼 관리자만 접근할 수 있습니다.");
+        }
+
         Admin admin = adminRepository.findById(adminId).orElseThrow(
                 () -> new IllegalStateException("존재하지 않는 관리자입니다.")
         );
 
         if (admin.getDeleted()) {
-            throw new IllegalArgumentException("삭제된 관리자입니다.");
+            throw new IllegalStateException("삭제된 관리자입니다.");
         }
-        return new SearchAdminDetailResponse(admin);
+        return SearchAdminDetailResponse.regist(
+                admin.getAdminId(),
+                admin.getAdminName(),
+                admin.getEmail(),
+                admin.getPhone(),
+                admin.getRole(),
+                admin.getStatus(),
+                admin.getCreatedAt(),
+                admin.getAcceptedAt(),
+                admin.getDeniedAt(),
+                admin.getRequestMessage(),
+                admin.getDeniedReason()
+        );
+    }
+
+    // 관리자 정보 수정
+    @Transactional
+    public UpdateAdminResponse updateAdmin(Long adminId, @Valid UpdateAdminRequest request, SessionAdmin loginAdmin) {
+        if (loginAdmin.getRole() != AdminRole.SUPER_ADMIN) {
+            throw new IllegalAccessError("슈퍼 관리자만 접근할 수 있습니다.");
+        }
+
+        Admin admin = adminRepository.findById(adminId).orElseThrow(
+                () -> new IllegalStateException("존재하지 않는 관리자입니다.")
+        );
+
+        if (admin.getDeleted()) {
+            throw new IllegalStateException("삭제된 관리자는 수정할 수 없습니다.");
+        }
+
+        // 이메일 중복 체크(본인 제외)
+        if (!admin.getEmail().equals(request.getEmail())) {
+            if (adminRepository.existsByEmailAndAdminIdNot(request.getEmail(), adminId)){
+                throw new IllegalStateException("이미 사용 중인 이메일입니다.");
+            }
+        }
+
+        admin.update(request.getAdminName(), request.getEmail(), request.getPhone());
+        adminRepository.flush();
+
+        return UpdateAdminResponse.regist(
+                admin.getAdminId(),
+                admin.getAdminName(),
+                admin.getEmail(),
+                admin.getPhone(),
+                admin.getRole(),
+                admin.getStatus(),
+                admin.getCreatedAt(),
+                admin.getUpdatedAt(),
+                admin.getAcceptedAt(),
+                admin.getDeniedAt()
+        );
+    }
+
+    // 관리자 삭제
+    @Transactional
+    public void deleteAdmin(Long adminId, SessionAdmin loginAdmin) {
+        if (loginAdmin.getRole() != AdminRole.SUPER_ADMIN) {
+            throw new IllegalAccessError("슈퍼 관리자만 접근할 수 있습니다.");
+        }
+        //삭제되지 않은 관리자만 조회
+        Admin admin = adminRepository.findByAdminIdAndDeletedFalse(adminId).orElseThrow(
+                () -> new IllegalStateException("존재하지 않는 관리자입니다.")
+        );
+
+        // 본인 삭제 방지
+        if (admin.getAdminId().equals(loginAdmin.getAdminId())) {
+            throw new IllegalStateException("본인 계정은 삭제할 수 없습니다.");
+        }
+
+        admin.delete();
     }
 
     @Transactional(readOnly = true)

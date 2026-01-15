@@ -75,9 +75,9 @@ public class Admin extends Base {
     }
 
     public void update(String adminName, String email, String phone) {
-        this.adminName = this.adminName;
-        this.email = this.email;
-        this.phone = this.phone;
+        this.adminName = adminName;
+        this.email = email;
+        this.phone = phone;
     }
 
     public void changePassword(String encodedPassword) {

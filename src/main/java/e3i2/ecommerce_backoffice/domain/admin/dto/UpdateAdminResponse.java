@@ -1,6 +1,8 @@
 package e3i2.ecommerce_backoffice.domain.admin.dto;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import e3i2.ecommerce_backoffice.domain.admin.entity.Admin;
 import e3i2.ecommerce_backoffice.domain.admin.entity.AdminRole;
 import e3i2.ecommerce_backoffice.domain.admin.entity.AdminStatus;
 import lombok.AccessLevel;
@@ -11,7 +13,7 @@ import java.time.LocalDateTime;
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class SearchAdminListResponse {
+public class UpdateAdminResponse {
     private Long adminId;
     private String adminName;
     private String email;
@@ -23,9 +25,15 @@ public class SearchAdminListResponse {
     private LocalDateTime createdAt;
 
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
+    private LocalDateTime updatedAt;
+
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
     private LocalDateTime acceptedAt;
 
-    public static SearchAdminListResponse regist(
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
+    private LocalDateTime deniedAt;
+
+    public static UpdateAdminResponse regist(
             Long adminId,
             String adminName,
             String email,
@@ -33,10 +41,11 @@ public class SearchAdminListResponse {
             AdminRole role,
             AdminStatus status,
             LocalDateTime createdAt,
-            LocalDateTime acceptedAt
+            LocalDateTime updatedAt,
+            LocalDateTime acceptedAt,
+            LocalDateTime deniedAt
     ) {
-        SearchAdminListResponse response = new SearchAdminListResponse();
-
+        UpdateAdminResponse response = new UpdateAdminResponse();
         response.adminId = adminId;
         response.adminName = adminName;
         response.email = email;
@@ -44,8 +53,10 @@ public class SearchAdminListResponse {
         response.role = role;
         response.status = status;
         response.createdAt = createdAt;
+        response.updatedAt = updatedAt;
         response.acceptedAt = acceptedAt;
-
+        response.deniedAt = deniedAt;
         return response;
     }
+
 }
