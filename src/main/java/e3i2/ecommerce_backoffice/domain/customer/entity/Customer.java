@@ -2,6 +2,8 @@ package e3i2.ecommerce_backoffice.domain.customer.entity;
 
 import e3i2.ecommerce_backoffice.common.entity.Base;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.Pattern;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -21,13 +23,15 @@ public class Customer extends Base {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long customerId;
 
+    @Email
     @Column(nullable = false)
     private String email;
 
     @Column(nullable = false)
     private String customerName;
 
-    @Column(nullable = false)
+    @Pattern(regexp = "^010-\\d{4}-\\d{4}$")
+    @Column(nullable = false, unique = true)
     private String phone;
 
     @Enumerated(EnumType.STRING)
@@ -37,15 +41,25 @@ public class Customer extends Base {
     private Boolean deleted;
     private LocalDateTime deletedAt;
 
-    public static Customer regist(String email, String customerName, String phone, CustomerStatus customerStatus) {
+    public static Customer regist(String customerName, String email, String phone, CustomerStatus customerStatus) {
         Customer customer = new Customer();
-        customer.email = email;
         customer.customerName = customerName;
+        customer.email = email;
         customer.phone = phone;
         customer.customerStatus = customerStatus;
         customer.deleted = false;
 
         return customer;
+    }
+
+    public void update(String customerName, String email, String phone) {
+        this.customerName = customerName;
+        this.email = email;
+        this.phone = phone;
+    }
+
+    public void statusChange(CustomerStatus customerStatus) {
+        this.customerStatus = customerStatus;
     }
 
     public void delete() {

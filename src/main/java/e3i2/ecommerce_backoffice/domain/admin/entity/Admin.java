@@ -44,17 +44,61 @@ public class Admin extends Base {
     private Boolean deleted;
     private LocalDateTime deletedAt;
 
-    public static Admin regist(String email, String password, String adminName, String phone, AdminRole role, AdminStatus status) {
+    private String deniedReason;  // 거부 이유
+    private LocalDateTime deniedAt;  // 거부된 시간
+
+    @Column(length = 500)
+    private String requestMessage;  // 승인대기 시 요청메세지
+
+    public static Admin regist(String email, String password, String adminName, String phone, AdminRole role, String requestMessage) {
         Admin admin = new Admin();
         admin.email = email;
         admin.password = password;
         admin.adminName = adminName;
         admin.phone = phone;
         admin.role = role;
-        admin.status = status;
+        admin.status = AdminStatus.WAIT;
         admin.deleted = false;
+        admin.requestMessage = requestMessage;
 
         return admin;
+    }
+
+    public void update(String adminName, String email, String phone) {
+        this.adminName = adminName;
+        this.email = email;
+        this.phone = phone;
+    }
+
+    public void changePassword(String encodedPassword) {
+        this.password = encodedPassword;
+    }
+
+    public void changeAdminRole(AdminRole role) {
+        this.role = role;
+    }
+
+    public void changeAdminStatus(AdminStatus status) {
+        this.status = status;
+    }
+
+    public void accept() {
+        if (this.status != AdminStatus.WAIT) {
+            throw new IllegalStateException("해당 계정은 승인 대기 상태가 아닙니다.");
+        }
+
+        this.status = AdminStatus.ACT;
+        this.acceptedAt = LocalDateTime.now();
+    }
+
+    public void deny(String reason) {
+        if (this.status != AdminStatus.WAIT) {
+            throw new IllegalStateException("해당 계정은 승인 대기 상태가 아닙니다.");
+        }
+
+        this.status = AdminStatus.DENY;
+        this.deniedReason = reason;
+        this.deniedAt = LocalDateTime.now();
     }
 
     public void delete() {
