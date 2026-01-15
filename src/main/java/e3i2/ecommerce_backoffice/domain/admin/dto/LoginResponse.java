@@ -4,36 +4,48 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import e3i2.ecommerce_backoffice.domain.admin.dto.common.SessionAdmin;
 import e3i2.ecommerce_backoffice.domain.admin.entity.AdminRole;
 import e3i2.ecommerce_backoffice.domain.admin.entity.AdminStatus;
+import lombok.AccessLevel;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
 
-// 생성자 정적 팩토리 메서드로 권장
 @Getter
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class LoginResponse {
-    private final Long adminId;
-    private final String adminName;
-    private final String email;
-    private final String phone;
-    private final AdminRole role;
-    private final AdminStatus status;
+
+    private Long adminId;
+    private String adminName;
+    private String email;
+    private String phone;
+    private AdminRole role;
+    private AdminStatus status;
 
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
-    private final LocalDateTime createdAt;
+    private LocalDateTime createdAt;
 
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
-    private final LocalDateTime acceptedAt;
+    private LocalDateTime acceptedAt;
 
-    public LoginResponse(SessionAdmin sessionAdmin) {
-        this.adminId = sessionAdmin.getAdminId();
-        this.adminName = sessionAdmin.getAdminName();
-        this.email = sessionAdmin.getEmail();
-        this.phone = sessionAdmin.getPhone();
-        this.role = sessionAdmin.getRole();
-        this.status = sessionAdmin.getStatus();
-        this.createdAt = sessionAdmin.getCreatedAd();
-        this.acceptedAt = sessionAdmin.getAcceptedAt();
+    public static LoginResponse regist(
+            Long adminId,
+            String adminName,
+            String email,
+            String phone,
+            AdminRole role,
+            AdminStatus status,
+            LocalDateTime createdAt,
+            LocalDateTime acceptedAt
+    ) {
+        LoginResponse response = new LoginResponse();
+        response.adminId = adminId;
+        response.adminName = adminName;
+        response.email = email;
+        response.phone = phone;
+        response.role = role;
+        response.status = status;
+        response.createdAt = createdAt;
+        response.acceptedAt = acceptedAt;
+        return response;
     }
-
-    //거부 시간은 따로 정의하지 않았음
 }

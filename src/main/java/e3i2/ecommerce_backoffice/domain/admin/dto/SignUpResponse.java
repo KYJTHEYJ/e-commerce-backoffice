@@ -3,32 +3,48 @@ package e3i2.ecommerce_backoffice.domain.admin.dto;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import e3i2.ecommerce_backoffice.domain.admin.entity.AdminRole;
 import e3i2.ecommerce_backoffice.domain.admin.entity.AdminStatus;
+import lombok.AccessLevel;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
 
-// 생성자 정적 팩토리 메서드로 권장
 @Getter
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class SignUpResponse {
-    private final Long adminId;
-    private final String adminName;
-    private final String email;
-    private final String phone;
-    private final AdminRole role;
+
+    private Long adminId;
+    private String adminName;
+    private String email;
+    private String phone;
+    private AdminRole role;
 
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
-    private final LocalDateTime createdAt;
-    private final AdminStatus status;
-    private final String requestMessage;
+    private LocalDateTime createdAt;
 
-    public SignUpResponse(Long adminId, String adminName, String email, String phone, AdminRole role, LocalDateTime createdAt, AdminStatus status, String requestMessage) {
-        this.adminId = adminId;
-        this.adminName = adminName;
-        this.email = email;
-        this.phone = phone;
-        this.role = role;
-        this.createdAt = createdAt;
-        this.status = status;
-        this.requestMessage = requestMessage;
+    private AdminStatus status;
+    private String requestMessage;
+
+    public static SignUpResponse regist(
+            Long adminId,
+            String adminName,
+            String email,
+            String phone,
+            AdminRole role,
+            LocalDateTime createdAt,
+            AdminStatus status,
+            String requestMessage
+    ) {
+        SignUpResponse response = new SignUpResponse();
+        response.adminId = adminId;
+        response.adminName = adminName;
+        response.email = email;
+        response.phone = phone;
+        response.role = role;
+        response.createdAt = createdAt;
+        response.status = status;
+        response.requestMessage = requestMessage;
+        return response;
     }
 }
+

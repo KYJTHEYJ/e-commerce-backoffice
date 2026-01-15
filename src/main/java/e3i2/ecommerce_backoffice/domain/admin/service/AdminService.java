@@ -30,7 +30,7 @@ public class AdminService {
         String encodePassword = passwordEncoder.encode(request.getPassword());
         Admin admin = Admin.regist(request.getEmail(), encodePassword, request.getAdminName(), request.getPhone(), request.getRole(), request.getRequestMessage());
         Admin saveAdmin = adminRepository.save(admin);
-        return new SignUpResponse(
+        return SignUpResponse.regist(
                 saveAdmin.getAdminId(),
                 saveAdmin.getAdminName(),
                 saveAdmin.getEmail(),
@@ -97,7 +97,18 @@ public class AdminService {
 
         admin.accept();
 
-        return new AcceptAdminResponse(admin);
+        return AcceptAdminResponse.regist(
+                admin.getAdminId(),
+                admin.getAdminName(),
+                admin.getEmail(),
+                admin.getPhone(),
+                admin.getRole(),
+                admin.getStatus(),
+                admin.getRequestMessage(),
+                admin.getCreatedAt(),
+                admin.getAcceptedAt(),
+                admin.getDeniedAt()
+        );
     }
 
     @Transactional
@@ -116,7 +127,18 @@ public class AdminService {
 
         admin.deny(request.getDeniedReason());
 
-        return new DeniedAdminResponse(admin);
+        return DeniedAdminResponse.regist(
+                admin.getAdminId(),
+                admin.getAdminName(),
+                admin.getEmail(),
+                admin.getPhone(),
+                admin.getRole(),
+                admin.getStatus(),
+                admin.getRequestMessage(),
+                admin.getCreatedAt(),
+                admin.getAcceptedAt(),
+                admin.getDeniedAt()
+        );
     }
 
     //관리자 리스트 조회
@@ -241,7 +263,7 @@ public class AdminService {
         if (admin.getDeleted().equals(true)) {
             throw new IllegalStateException("삭제된 관리자입니다.");
         }
-        return new GetMyProfileResponse(
+        return GetMyProfileResponse.regist(
                 admin.getAdminName(),
                 admin.getEmail(),
                 admin.getPhone()
@@ -268,7 +290,7 @@ public class AdminService {
                 request.getPhone()
         );
 
-        return new UpdateMyProfileResponse(
+        return UpdateMyProfileResponse.regist(
                 admin.getAdminName(),
                 admin.getEmail(),
                 admin.getPhone()

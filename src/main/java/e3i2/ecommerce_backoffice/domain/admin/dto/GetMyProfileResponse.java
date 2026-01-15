@@ -1,17 +1,27 @@
 package e3i2.ecommerce_backoffice.domain.admin.dto;
 
+import lombok.AccessLevel;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
-// 생성자 정적 팩토리 메서드로 권장
 @Getter
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class GetMyProfileResponse {
-    private final String adminName;
-    private final String email;
-    private final String phone;
 
-    public GetMyProfileResponse(String adminName, String email, String phone) {
-        this.adminName = adminName;
-        this.email = email;
-        this.phone = phone;
+    private String adminName;
+    private String email;
+    private String phone;
+
+    public static GetMyProfileResponse regist(
+            String adminName,
+            String email,
+            String phone
+    ) {
+        GetMyProfileResponse response = new GetMyProfileResponse();
+        response.adminName = adminName;
+        response.email = email;
+        response.phone = phone;
+        return response;
     }
 }
+

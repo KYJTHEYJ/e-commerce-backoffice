@@ -4,39 +4,57 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import e3i2.ecommerce_backoffice.domain.admin.entity.Admin;
 import e3i2.ecommerce_backoffice.domain.admin.entity.AdminRole;
 import e3i2.ecommerce_backoffice.domain.admin.entity.AdminStatus;
+import lombok.AccessLevel;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
 
-// 생성자 정적 팩토리 메서드로 권장
 @Getter
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class DeniedAdminResponse {
-    private final Long adminId;
-    private final String adminName;
-    private final String email;
-    private final String phone;
-    private final AdminRole role;
-    private final AdminStatus status;
-    private final String requestMessage;
+
+    private Long adminId;
+    private String adminName;
+    private String email;
+    private String phone;
+    private AdminRole role;
+    private AdminStatus status;
+    private String requestMessage;
 
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
-    private final LocalDateTime createdAt;
+    private LocalDateTime createdAt;
 
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
-    private final LocalDateTime acceptedAt;
+    private LocalDateTime acceptedAt;
 
-    private final LocalDateTime deniedAt;
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
+    private LocalDateTime deniedAt;
 
-    public DeniedAdminResponse(Admin admin) {
-        this.adminId = admin.getAdminId();
-        this.adminName = admin.getAdminName();
-        this.email = admin.getEmail();
-        this.phone = admin.getPhone();
-        this.role = admin.getRole();
-        this.status = admin.getStatus();
-        this.requestMessage = admin.getRequestMessage();
-        this.createdAt = admin.getCreatedAt();
-        this.acceptedAt = admin.getAcceptedAt();
-        this.deniedAt = admin.getDeniedAt();
+    public static DeniedAdminResponse regist(
+            Long adminId,
+            String adminName,
+            String email,
+            String phone,
+            AdminRole role,
+            AdminStatus status,
+            String requestMessage,
+            LocalDateTime createdAt,
+            LocalDateTime acceptedAt,
+            LocalDateTime deniedAt
+    ) {
+        DeniedAdminResponse response = new DeniedAdminResponse();
+        response.adminId = adminId;
+        response.adminName = adminName;
+        response.email = email;
+        response.phone = phone;
+        response.role = role;
+        response.status = status;
+        response.requestMessage = requestMessage;
+        response.createdAt = createdAt;
+        response.acceptedAt = acceptedAt;
+        response.deniedAt = deniedAt;
+        return response;
     }
 }
+

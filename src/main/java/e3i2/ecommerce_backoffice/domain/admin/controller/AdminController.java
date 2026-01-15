@@ -97,7 +97,16 @@ public class AdminController {
         SessionAdmin sessionAdmin = adminService.login(request);
         session.setAttribute(ADMIN_SESSION_NAME, sessionAdmin);
 
-        LoginResponse response = new LoginResponse(sessionAdmin);
+        LoginResponse response = LoginResponse.regist(
+                sessionAdmin.getAdminId(),
+                sessionAdmin.getAdminName(),
+                sessionAdmin.getEmail(),
+                sessionAdmin.getPhone(),
+                sessionAdmin.getRole(),
+                sessionAdmin.getStatus(),
+                sessionAdmin.getCreatedAd(),
+                sessionAdmin.getAcceptedAt()
+        );
 
         return ResponseEntity.status(HttpStatus.OK).body(
                 AdminApiResponse.success(
