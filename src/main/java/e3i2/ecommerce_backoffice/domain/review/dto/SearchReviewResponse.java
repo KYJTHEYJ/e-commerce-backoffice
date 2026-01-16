@@ -7,7 +7,7 @@ import java.time.LocalDateTime;
 
 @Getter
 @JsonPropertyOrder({"reviewId", "orderId", "productId", "customerId", "customerName", "customerEmail", "productName", "rating", "content", "createdAt"})
-public class GetReviewResponse {
+public class SearchReviewResponse {
     private final Long reviewId;
     private final Long orderId;
     private final Long productId;
@@ -19,7 +19,7 @@ public class GetReviewResponse {
     private final String content;
     private final LocalDateTime createdAt;
 
-    public GetReviewResponse(Long reviewId, Long orderId, Long productId, Long customerId, String customerName, String customerEmail, String productName, Integer rating, String content, LocalDateTime createdAt) {
+    public SearchReviewResponse(Long reviewId, Long orderId, Long productId, Long customerId, String customerName, String customerEmail, String productName, Integer rating, String content, LocalDateTime createdAt) {
         this.reviewId = reviewId;
         this.orderId = orderId;
         this.productId = productId;

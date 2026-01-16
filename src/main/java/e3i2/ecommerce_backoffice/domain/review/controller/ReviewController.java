@@ -2,7 +2,7 @@ package e3i2.ecommerce_backoffice.domain.review.controller;
 
 import e3i2.ecommerce_backoffice.common.dto.response.DataResponse;
 import e3i2.ecommerce_backoffice.common.dto.response.MessageResponse;
-import e3i2.ecommerce_backoffice.domain.review.dto.GetReviewResponse;
+import e3i2.ecommerce_backoffice.domain.review.dto.SearchReviewResponse;
 import e3i2.ecommerce_backoffice.domain.review.service.ReviewService;
 import e3i2.ecommerce_backoffice.common.annotation.LoginSessionCheck;
 import e3i2.ecommerce_backoffice.common.util.pagination.ItemsWithPagination;
@@ -31,7 +31,7 @@ public class ReviewController {
     private final ReviewService reviewService;
 
     // 리뷰 리스트 조회
-    @GetMapping("/api/admins/reviews")
+    @GetMapping("/api/reviews")
     @LoginSessionCheck
     public ResponseEntity<DataResponse<ItemsWithPagination<List<SearchReviewListResponse>>>> getReviewList(
             @RequestParam(required = false) String keyword,
@@ -48,8 +48,8 @@ public class ReviewController {
         return ResponseEntity.status(HttpStatus.OK).body(DataResponse.success(HttpStatus.OK.name(), response));
     }
 
-    @GetMapping("/api/admins/reviews/{reviewId}")
-    public ResponseEntity<DataResponse<GetReviewResponse>> getOne(@PathVariable Long reviewId) {
+    @GetMapping("/api/reviews/{reviewId}")
+    public ResponseEntity<DataResponse<SearchReviewResponse>> getOne(@PathVariable Long reviewId) {
         return ResponseEntity.ok(DataResponse.success(HttpStatus.OK.name(), reviewService.findOne(reviewId)));
     }
 
