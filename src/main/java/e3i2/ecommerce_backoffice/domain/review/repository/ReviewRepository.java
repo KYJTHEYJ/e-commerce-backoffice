@@ -15,7 +15,7 @@ public interface ReviewRepository extends JpaRepository<Review, Long> {
         FROM Review r
         JOIN r.customer c
         JOIN r.product p
-        JOIN r.ordering o
+        JOIN r.order o
         WHERE r.deleted = false
           AND (
               :keyword IS NULL

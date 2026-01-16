@@ -37,7 +37,7 @@ public class ReviewService {
         List<SearchReviewListResponse> items = reviews.getContent().stream()
                 .map(r -> SearchReviewListResponse.register(
                         r.getReviewId(),
-                        Long.valueOf(r.getOrdering().getOrderNo()), // 주문번호(orderNo)
+                        Long.valueOf(r.getOrder().getOrderNo()), // 주문번호(orderNo)
                         r.getProduct().getProductId(),
                         r.getCustomer().getCustomerId(),
                         r.getCustomer().getCustomerName(),
