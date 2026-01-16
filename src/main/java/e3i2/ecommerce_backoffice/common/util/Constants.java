@@ -15,9 +15,9 @@ public class Constants {
     public static final String MSG_LOGOUT_DUPLICATED = "이미 로그아웃 된 상태입니다";
     public static final String MSG_ADMIN_ACCOUNT_DENY_SIZE_ERR = "거부 사유는 1~50자 이내여야 합니다";
     public static final String MSG_ADMIN_ACCOUNT_DENY_BLANK_ERR = "거부 사유는 필수입니다";
-    public static final String MSG_ADMIN_ACCOUNT_ROLE_BLANK_ERR = "관리자 역할은 필수입니다";
-    public static final String MSG_ADMIN_ACCOUNT_STATUS_BLANK_ERR = "관리자 상태는 필수입니다";
-    public static final String MSG_CUSTOMER_ACCOUNT_STATUS_BLANK_ERR = "고객 상태는 필수입니다";
+    public static final String MSG_ADMIN_ACCOUNT_ROLE_NULL_ERR = "관리자 역할은 필수입니다";
+    public static final String MSG_ADMIN_ACCOUNT_STATUS_NULL_ERR = "관리자 상태는 필수입니다";
+    public static final String MSG_CUSTOMER_ACCOUNT_STATUS_NULL_ERR = "고객 상태는 필수입니다";
     public static final String MSG_DATA_INSERT_FAIL = "데이터 등록에 실패하였습니다";
     public static final String MSG_PASSWORD_SIZE_ERR = "비밀번호는 8~20자리 이내여야 합니다";
     public static final String MSG_EMAIL_PATTERN_ERR = "이메일 형식이 유효하지 않습니다";
@@ -41,12 +41,12 @@ public class Constants {
     public static final String MSG_NOT_MATCH_PASSWORD = "현재 비밀번호와 일치하지 않습니다";
     public static final String MSG_DUPLICATED_PHONE = "이미 등록된 전화번호 입니다";
     public static final String MSG_PRODUCT_NAME_BLANK_ERR = "상품의 이름은 필수입니다";
-    public static final String MSG_PRODUCT_CATEGORY_BLANK_ERR = "상품의 카테고리는 필수입니다";
+    public static final String MSG_PRODUCT_CATEGORY_NULL_ERR = "상품의 카테고리는 필수입니다";
     public static final String MSG_PRODUCT_PRICE_BLANK_ERR = "상품의 가격은 필수입니다";
     public static final String MSG_PRODUCT_PRICE_MINUS_ERR = "상품의 가격은 0원 이상이어야 합니다";
     public static final String MSG_PRODUCT_PRICE_MAX_ERR = "상품의 가격이 한도를 넘었습니다";
     public static final String MSG_PRODUCT_QUANTITY_MAX_ERR = "상품의 수량이 한도를 넘었습니다";
-    public static final String MSG_PRODUCT_STATUS_BLANK_ERR = "상품의 상태는 필수입니다";
+    public static final String MSG_PRODUCT_STATUS_NULL_ERR = "상품의 상태는 필수입니다";
     public static final String MSG_PRODUCT_QUANTITY_BLANK_ERR = "상품의 수량은 필수입니다";
     public static final String MSG_DELETE_PRODUCT = "상품이 삭제 되었습니다";
     public static final String MSG_NOT_FOUND_PRODUCT = "존재하지 않는 상품 입니다";
