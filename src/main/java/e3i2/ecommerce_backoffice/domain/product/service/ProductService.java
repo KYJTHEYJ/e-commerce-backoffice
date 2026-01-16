@@ -78,7 +78,7 @@ public class ProductService {
                 , product.getAdmin().getEmail()
         )).toList();
 
-        return ItemsWithPagination.registerer(items, page, limit, products.getTotalElements());
+        return ItemsWithPagination.register(items, page, limit, products.getTotalElements());
     }
 
     @Transactional(readOnly = true, propagation = Propagation.SUPPORTS)

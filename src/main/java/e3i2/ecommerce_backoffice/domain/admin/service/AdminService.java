@@ -208,7 +208,7 @@ public class AdminService {
                 })
                 .toList();
 
-        return ItemsWithPagination.registerer(items, page, limit, admins.getTotalElements());
+        return ItemsWithPagination.register(items, page, limit, admins.getTotalElements());
     }
 
     // 관리자 상세 조회

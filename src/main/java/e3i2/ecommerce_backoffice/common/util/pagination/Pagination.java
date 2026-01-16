@@ -12,7 +12,7 @@ public class Pagination {
     private Long total;
     private Integer totalPages;
 
-    public static Pagination registerer(Integer page, Integer limit, Long total, Integer totalPages) {
+    public static Pagination register(Integer page, Integer limit, Long total, Integer totalPages) {
         Pagination pagination = new Pagination();
 
         pagination.page = page;

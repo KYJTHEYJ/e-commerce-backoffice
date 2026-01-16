@@ -12,10 +12,10 @@ public class ItemsWithPagination<T> {
     private T items;
     private Pagination pagination;
 
-    public static <T> ItemsWithPagination<T> registerer(T items, Integer page, Integer limit, Long total) {
+    public static <T> ItemsWithPagination<T> register(T items, Integer page, Integer limit, Long total) {
         ItemsWithPagination<T> ItemsWithPagination = new ItemsWithPagination<>();
         ItemsWithPagination.items = items;
-        ItemsWithPagination.pagination = Pagination.registerer(
+        ItemsWithPagination.pagination = Pagination.register(
                 page
                 , limit
                 , total
