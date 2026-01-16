@@ -18,7 +18,7 @@ import static e3i2.ecommerce_backoffice.common.util.Constants.ADMIN_SESSION_NAME
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/admins/orders")
+@RequestMapping("/api/orders")
 public class OrderingController {
     private final OrderingService orderingService;
 
