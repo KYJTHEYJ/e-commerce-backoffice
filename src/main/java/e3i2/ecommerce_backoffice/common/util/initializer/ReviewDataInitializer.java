@@ -1,6 +1,6 @@
 package e3i2.ecommerce_backoffice.common.util.initializer;
 
-import e3i2.ecommerce_backoffice.domain.review.repository.ReviewRepositorty;
+import e3i2.ecommerce_backoffice.domain.review.repository.ReviewRepository;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.ApplicationArguments;
@@ -16,7 +16,7 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 public class ReviewDataInitializer implements ApplicationRunner {
 
-    private final ReviewRepositorty reviewRepository;
+    private final ReviewRepository reviewRepository;
 
     @Override
     @Transactional
