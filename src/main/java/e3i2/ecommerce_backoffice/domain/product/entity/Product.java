@@ -83,4 +83,15 @@ public class Product extends Base {
         deleted = false;
         deletedAt = null;
     }
+
+    //주문 취소 시 재고량 복구 메서드
+    public void restoreStock(Long quantity) {
+        this.quantity += quantity;
+
+        if (this.status != ProductStatus.DISCONTINUE) {
+            if (this.quantity > 0) {
+                this.status = ProductStatus.ON_SALE;
+            }
+        }
+    }
 }

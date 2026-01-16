@@ -9,6 +9,7 @@ import e3i2.ecommerce_backoffice.domain.order.dto.ChangeOrderingStatusResponse;
 import e3i2.ecommerce_backoffice.domain.order.entity.Ordering;
 import e3i2.ecommerce_backoffice.domain.order.entity.OrderingStatus;
 import e3i2.ecommerce_backoffice.domain.order.repository.OrderingRepository;
+import e3i2.ecommerce_backoffice.domain.product.entity.Product;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -57,16 +58,6 @@ public class OrderingService {
         );
     }
 
-    //상태 전이 검증 메서드(준비중 -> 배송중 -> 배송완료 순으로만 진행되도록)
-    private boolean isValidNextStatus(OrderingStatus current, OrderingStatus next) {
-        return switch (current) {
-            case PREPARING -> next == OrderingStatus.SHIPPING;
-            case SHIPPING -> next == OrderingStatus.DELIVERED;
-            default -> false;
-        };
-    }
-
-
     @Transactional
     public CancelOrderingResponse cancelOrdering(Long orderId, SessionAdmin sessionAdmin, CancelOrderingRequest request) {
         Ordering ordering = orderingRepository.findById(orderId).orElseThrow(
@@ -84,7 +75,9 @@ public class OrderingService {
 
         ordering.cancel(request.getCancelReason());
 
-        //TODO: 상품 취소한 수량만큼 증가
+        //취소 수량만큼 재고 증가
+        Product product = ordering.getProduct();
+        product.restoreStock(ordering.getOrderQuantity());
 
         return CancelOrderingResponse.register(
                 ordering.getOrderId(),
@@ -100,5 +93,14 @@ public class OrderingService {
                 ordering.getOrderStatus(),
                 ordering.getCancelReason()
         );
+    }
+
+    //상태 전이 검증 메서드(준비중 -> 배송중 -> 배송완료 순으로만 진행되도록)
+    private boolean isValidNextStatus(OrderingStatus current, OrderingStatus next) {
+        return switch (current) {
+            case PREPARING -> next == OrderingStatus.SHIPPING;
+            case SHIPPING -> next == OrderingStatus.DELIVERED;
+            default -> false;
+        };
     }
 }
