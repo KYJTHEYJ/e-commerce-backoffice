@@ -30,7 +30,7 @@ public class ReviewController {
     private final ReviewService reviewService;
 
     // 리뷰 리스트 조회
-    @GetMapping("/api/admins/reviews")
+    @GetMapping("/api/reviews")
     @LoginSessionCheck
     public ResponseEntity<DataResponse<ItemsWithPagination<List<SearchReviewListResponse>>>> getReviewList(
             @RequestParam(required = false) String keyword,
@@ -47,12 +47,12 @@ public class ReviewController {
         return ResponseEntity.status(HttpStatus.OK).body(DataResponse.success(HttpStatus.OK.name(), response));
     }
 
-    @GetMapping("/api/admins/reviews/{reviewId}")
+    @GetMapping("/api/reviews/{reviewId}")
     public ResponseEntity<DataResponse<SearchReviewListResponse>> getOne(@PathVariable Long reviewId) {
         return ResponseEntity.ok(DataResponse.success(HttpStatus.OK.name(), reviewService.findOne(reviewId)));
     }
 
-    @DeleteMapping("/api/admins/reviews/{reviewId}")
+    @DeleteMapping("/api/reviews/{reviewId}")
     public ResponseEntity<MessageResponse<Void>> delete(@PathVariable Long reviewId) {
         reviewService.delete(reviewId);
         return ResponseEntity.ok(MessageResponse.success(HttpStatus.OK.name(), MSG_DELETE_REVIEW_ACCOUNT));
