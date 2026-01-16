@@ -3,7 +3,6 @@ package e3i2.ecommerce_backoffice.domain.review.controller;
 import e3i2.ecommerce_backoffice.common.annotation.LoginSessionCheck;
 import e3i2.ecommerce_backoffice.common.dto.response.DataResponse;
 import e3i2.ecommerce_backoffice.common.util.pagination.ItemsWithPagination;
-import e3i2.ecommerce_backoffice.domain.admin.dto.SearchAdminDetailResponse;
 import e3i2.ecommerce_backoffice.domain.review.dto.SearchReviewListResponse;
 import e3i2.ecommerce_backoffice.domain.review.service.ReviewService;
 import jakarta.validation.constraints.Max;
@@ -15,8 +14,6 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-
-import static e3i2.ecommerce_backoffice.common.util.Constants.ADMIN_SESSION_NAME;
 
 @Validated
 @RestController

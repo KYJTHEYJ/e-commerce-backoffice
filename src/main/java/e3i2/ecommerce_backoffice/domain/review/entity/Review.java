@@ -43,17 +43,19 @@ public class Review extends Base {
     @JoinColumn(name = "product_id", nullable = false, foreignKey = @ForeignKey(name = "fk_product_id", value = ConstraintMode.NO_CONSTRAINT))
     private Product product;
 
-    private static Review register(
+    public static Review register(
             String content,
             Integer rating,
-            Ordering ordering
+            Ordering ordering,
+            Customer customer,
+            Product product
     ){
         Review review = new Review();
         review.content = content;
         review.rating = rating;
         review.ordering = ordering;
-        review.customer = ordering.getCustomer();
-        review.product = ordering.getProduct();
+        review.customer = customer;
+        review.product = product;
         review.deleted = false;
         return review;
     }
