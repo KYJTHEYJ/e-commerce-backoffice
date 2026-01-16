@@ -85,6 +85,13 @@ public class Ordering extends Base {
         deletedAt = null;
     }
 
+    public void cancel(String cancelReason) {
+        this.orderStatus = OrderingStatus.CANCELLED;
+        this.cancelReason = cancelReason;
+        this.deleted = true;
+        this.deletedAt = LocalDateTime.now();
+    }
+
 
 
     public void changeStatus(OrderingStatus nextStatus) {
