@@ -39,7 +39,7 @@ public class ReviewService {
         List<SearchReviewResponse> items = reviews.getContent().stream()
                 .map(r -> SearchReviewResponse.register(
                         r.getReviewId(),
-                        Long.valueOf(r.getOrder().getOrderNo()), // 주문번호(orderNo)
+                        r.getOrder().getOrderId(),
                         r.getProduct().getProductId(),
                         r.getCustomer().getCustomerId(),
                         r.getCustomer().getCustomerName(),
@@ -47,7 +47,7 @@ public class ReviewService {
                         r.getProduct().getProductName(),
                         r.getRating(),
                         r.getContent(),
-                        r.getCreatedAt()                // date
+                        r.getCreatedAt()
                 ))
                 .toList();
 

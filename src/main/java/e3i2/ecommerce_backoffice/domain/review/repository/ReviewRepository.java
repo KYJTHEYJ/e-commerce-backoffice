@@ -13,7 +13,7 @@ import java.util.Optional;
 public interface ReviewRepository extends JpaRepository<Review, Long> {
     Optional<Review> findByReviewIdAndDeletedFalse(Long reviewId);
 
-    @EntityGraph(attributePaths = {"customer", "product", "ordering"})
+    @EntityGraph(attributePaths = {"customer", "product", "order"})
     @Query("""
         SELECT r
         FROM Review r
