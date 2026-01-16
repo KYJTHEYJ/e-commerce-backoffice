@@ -31,7 +31,7 @@ public class ReviewController {
     private final ReviewService reviewService;
 
     // 리뷰 리스트 조회
-    @GetMapping("/api/admins/reviews")
+    @GetMapping("/api/reviews")
     @LoginSessionCheck
     public ResponseEntity<DataResponse<ItemsWithPagination<List<SearchReviewListResponse>>>> getReviewList(
             @RequestParam(required = false) String keyword,
@@ -48,7 +48,7 @@ public class ReviewController {
         return ResponseEntity.status(HttpStatus.OK).body(DataResponse.success(HttpStatus.OK.name(), response));
     }
 
-    @GetMapping("/api/admins/reviews/{reviewId}")
+    @GetMapping("/api/reviews/{reviewId}")
     public ResponseEntity<DataResponse<GetReviewResponse>> getOne(@PathVariable Long reviewId) {
         return ResponseEntity.ok(DataResponse.success(HttpStatus.OK.name(), reviewService.findOne(reviewId)));
     }
