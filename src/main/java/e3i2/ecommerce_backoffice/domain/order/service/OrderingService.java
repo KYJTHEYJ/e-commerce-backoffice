@@ -13,7 +13,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import static e3i2.ecommerce_backoffice.common.exception.ErrorEnum.ERR_NOT_FOUND_ORDER;
+import static e3i2.ecommerce_backoffice.common.exception.ErrorEnum.*;
 
 @Service
 @RequiredArgsConstructor
@@ -32,16 +32,14 @@ public class OrderingService {
 
         //배송완료 상태는 변경 불가
         if (current == OrderingStatus.DELIVERED) {
-            throw new IllegalStateException("배송완료된 주문은 상태를 변경할 수 없습니다");
+            throw new ServiceErrorException(ERR_ORDER_CHANGE_FORBIDDEN);
         }
 
-        //상태 전이 검증
+        //준비 중 -> 배송 중 -> 배송 완료 순으로만 상태 전이 가능
         if (!isValidNextStatus(current, next)) {
-            throw new IllegalStateException("주문 상태는 ~~~ 순으로만 변경할 수 있습니다");
+            throw new ServiceErrorException(ERR_ORDER_CHANGE_FORBIDDEN);
         }
-        
 
-        //상태 변경
         ordering.changeStatus(next);
 
         return ChangeOrderingStatusResponse.register(
@@ -76,12 +74,12 @@ public class OrderingService {
         );
         OrderingStatus current = ordering.getOrderStatus();
         if (current == OrderingStatus.DELIVERED) {
-            throw new IllegalStateException("배송완료된 주문은 상태를 변경할 수 없습니다");
+            throw new ServiceErrorException(ERR_ORDER_CHANGE_FORBIDDEN);
         }
 
         // 이미 취소된 주문
         if (current == OrderingStatus.CANCELLED) {
-            throw new IllegalStateException("이미 취소된 주문입니다.");
+            throw new ServiceErrorException(ERR_ORDER_ALREADY_CANCELLED);
         }
 
         ordering.cancel(request.getCancelReason());

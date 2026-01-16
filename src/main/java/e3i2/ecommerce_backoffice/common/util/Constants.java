@@ -60,6 +60,9 @@ public class Constants {
 
     public static final String MSG_ORDER_STATUS_BLANK_ERR = "주문 상태는 필수입니다";
     public static final String MSG_NOT_FOUND_ORDER = "존재하지 않는 주문입니다";
+    public static final String MSG_ORDER_CHANGE_FORBIDDEN = "배송 완료된 주문은 상태를 변경할 수 없습니다";
+    public static final String MSG_ORDER_STATUS_INVALID_TRANSITION = "현재 상태에서 요청하신 상태로 변경할 수 없습니다";
+    public static final String MSG_ORDER_ALREADY_CANCELLED = "이미 취소된 주문입니다";
 }
 
 

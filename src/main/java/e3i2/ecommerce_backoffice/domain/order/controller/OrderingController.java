@@ -30,13 +30,7 @@ public class OrderingController {
             @Valid @RequestBody ChangeOrderingStatusRequest request,
             @SessionAttribute(value = ADMIN_SESSION_NAME) SessionAdmin sessionAdmin
     ) {
-        return ResponseEntity.status(HttpStatus.OK)
-                .body(
-                        DataResponse.success(
-                                HttpStatus.OK.name(),
-                                orderingService.updateStatusOrdering(orderId, request, sessionAdmin)
-                        )
-                );
+        return ResponseEntity.status(HttpStatus.OK).body(DataResponse.success(HttpStatus.OK.name(), orderingService.updateStatusOrdering(orderId, request, sessionAdmin)));
     }
 
     //주문 취소
@@ -47,12 +41,6 @@ public class OrderingController {
         @RequestBody CancelOrderingRequest request,
         @SessionAttribute(value = ADMIN_SESSION_NAME) SessionAdmin sessionAdmin
     ) {
-        return ResponseEntity.status(HttpStatus.OK)
-                .body(
-                        DataResponse.success(
-                                HttpStatus.OK.name(),
-                                orderingService.cancelOrdering(orderId, sessionAdmin, request)
-                        )
-                );
+        return ResponseEntity.status(HttpStatus.OK).body(DataResponse.success(HttpStatus.OK.name(), orderingService.cancelOrdering(orderId, sessionAdmin, request)));
     }
 }
