@@ -1,9 +1,12 @@
 package e3i2.ecommerce_backoffice.domain.review.service;
 
+import e3i2.ecommerce_backoffice.common.exception.ErrorEnum;
+import e3i2.ecommerce_backoffice.common.exception.ServiceErrorException;
 import e3i2.ecommerce_backoffice.common.util.pagination.ItemsWithPagination;
+import e3i2.ecommerce_backoffice.domain.review.dto.GetReviewResponse;
 import e3i2.ecommerce_backoffice.domain.review.dto.SearchReviewListResponse;
 import e3i2.ecommerce_backoffice.domain.review.entity.Review;
-import e3i2.ecommerce_backoffice.domain.review.repository.ReviewRepository;
+import e3i2.ecommerce_backoffice.domain.review.repository.ReviewRepositorty;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 import lombok.RequiredArgsConstructor;
@@ -19,7 +22,7 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor
 public class ReviewService {
-    private final ReviewRepository reviewRepository;
+    private final ReviewRepositorty reviewRepositorty;
 
     // 리뷰 리스트 조회
     @Transactional(readOnly = true)
@@ -32,7 +35,7 @@ public class ReviewService {
 
         String safeKeyword = (keyword == null || keyword.isBlank()) ? null : keyword;
 
-        Page<Review> reviews = reviewRepository.findReviews(safeKeyword, rating, pageable);
+        Page<Review> reviews = reviewRepositorty.findReviews(safeKeyword, rating, pageable);
 
         List<SearchReviewListResponse> items = reviews.getContent().stream()
                 .map(r -> SearchReviewListResponse.register(
@@ -50,5 +53,32 @@ public class ReviewService {
                 .toList();
 
         return ItemsWithPagination.register(items, page, size, reviews.getTotalElements());
+    }
+
+    @Transactional(readOnly = true)
+    public GetReviewResponse findOne(Long reviewId) {
+        Review review = reviewRepositorty.findById(reviewId).orElseThrow(
+                () -> new ServiceErrorException(ErrorEnum.ERR_NOT_FOUND_REVIEW)
+        );
+        return new GetReviewResponse(
+                review.getReviewId(),
+                review.getOrder().getOrderId(),
+                review.getProduct().getProductId(),
+                review.getCustomer().getCustomerId(),
+                review.getCustomer().getCustomerName(),
+                review.getCustomer().getEmail(),
+                review.getProduct().getProductName(),
+                review.getRating(),
+                review.getContent(),
+                review.getCreatedAt()
+        );
+    }
+
+    @Transactional
+    public void delete(Long reviewId) {
+        Review review = reviewRepositorty.findByReviewIdAndDeletedFalse(reviewId).orElseThrow(
+                () -> new ServiceErrorException(ErrorEnum.ERR_NOT_FOUND_REVIEW)
+        );
+        review.delete();
     }
 }

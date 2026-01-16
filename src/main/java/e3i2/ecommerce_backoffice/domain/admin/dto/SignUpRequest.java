@@ -23,7 +23,7 @@ public class SignUpRequest {
     )
     private String phone;
 
-    @NotNull(message = MSG_ADMIN_ACCOUNT_ROLE_BLANK_ERR)
+    @NotNull(message = MSG_ADMIN_ACCOUNT_ROLE_NULL_ERR)
     private AdminRole role;
 
     @NotBlank(message = MSG_ADMIN_REQUEST_MESSAGE_BLANK_ERR)

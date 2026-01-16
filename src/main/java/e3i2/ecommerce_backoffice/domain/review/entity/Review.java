@@ -27,7 +27,7 @@ public class Review extends Base {
     private Integer rating;
 
     @Column(nullable=false)
-    private Boolean deleted;
+    private Boolean deleted = false;
 
     private LocalDateTime deletedAt;
 
@@ -44,11 +44,7 @@ public class Review extends Base {
     private Product product;
 
     public static Review register(
-            String content,
-            Integer rating,
-            Ordering order,
-            Customer customer,
-            Product product
+            String content, Integer rating, Ordering order, Customer customer, Product product
     ){
         Review review = new Review();
         review.content = content;

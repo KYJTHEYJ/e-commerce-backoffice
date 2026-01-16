@@ -32,8 +32,10 @@ public class CustomerService {
                 customer.getCustomerName(),
                 customer.getEmail(),
                 customer.getPhone(),
-                customer.getCustomerStatus().getStatusDescription(),
-                customer.getCreatedAt()
+                customer.getCustomerStatus().getStatusCode(),
+                customer.getCreatedAt(),
+                customer.getTotalOrders(),
+                customer.getTotalSpent()
         )).toList();
 
         return ItemsWithPagination.register(items, page, limit, customers.getTotalElements());
@@ -45,7 +47,7 @@ public class CustomerService {
         Customer customer = customerRepository.findByCustomerIdAndDeletedFalse(customerId).orElseThrow(
                 () -> new ServiceErrorException(ErrorEnum.ERR_NOT_FOUND_CUSTOMER)
         );
-        return new GetCustomerResponse(customer.getCustomerId(), customer.getCustomerName(), customer.getEmail(), customer.getPhone(), customer.getCustomerStatus().getStatusCode(), customer.getCreatedAt());
+        return new GetCustomerResponse(customer.getCustomerId(), customer.getCustomerName(), customer.getEmail(), customer.getPhone(), customer.getCustomerStatus().getStatusCode(), customer.getCreatedAt(), customer.getTotalOrders(), customer.getTotalSpent());
     }
 
     // 고객 정보 수정
@@ -63,7 +65,7 @@ public class CustomerService {
             throw new ServiceErrorException(ErrorEnum.ERR_DUPLICATED_PHONE);
         }
         customer.update(request.getCustomerName(), request.getEmail(), request.getPhone());
-        return new PutInfoCustomerResponse(customer.getCustomerId(), customer.getCustomerName(), customer.getEmail(), customer.getPhone(), customer.getCustomerStatus().getStatusCode(), customer.getCreatedAt());
+        return new PutInfoCustomerResponse(customer.getCustomerId(), customer.getCustomerName(), customer.getEmail(), customer.getPhone(), customer.getCustomerStatus().getStatusCode(), customer.getCreatedAt(), customer.getTotalOrders(), customer.getTotalSpent());
 
     }
 
@@ -74,7 +76,7 @@ public class CustomerService {
                 () -> new ServiceErrorException(ErrorEnum.ERR_NOT_FOUND_CUSTOMER)
         );
         customer.statusChange(request.getStatus());
-        return new PutStatusCustomerResponse(customer.getCustomerId(), customer.getCustomerName(), customer.getEmail(), customer.getPhone(), customer.getCustomerStatus().getStatusCode(), customer.getCreatedAt());
+        return new PutStatusCustomerResponse(customer.getCustomerId(), customer.getCustomerName(), customer.getEmail(), customer.getPhone(), customer.getCustomerStatus().getStatusCode(), customer.getCreatedAt(),  customer.getTotalOrders(), customer.getTotalSpent());
     }
 
     // 고객 삭제
@@ -83,7 +85,9 @@ public class CustomerService {
         Customer customer = customerRepository.findByCustomerIdAndDeletedFalse(customerId).orElseThrow(
                 () -> new ServiceErrorException(ErrorEnum.ERR_NOT_FOUND_CUSTOMER)
         );
-
+        if (customer.getTotalOrders() > 0) {
+            throw new ServiceErrorException(ErrorEnum.ERR_DENY_CUSTOMER_ACCOUNT_DELETE);
+        }
         customer.delete();
     }
 }
