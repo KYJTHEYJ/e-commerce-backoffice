@@ -17,7 +17,7 @@ public class ReviewService {
     @Transactional(readOnly = true)
     public GetReviewResponse findOne(Long reviewId) {
         Review review = reviewRepositorty.findById(reviewId).orElseThrow(
-                () -> new ServiceErrorException(ErrorEnum.ERR_NOT_FOUND_REVIEW) // 새로운 전역 예외 추가 필요
+                () -> new ServiceErrorException(ErrorEnum.ERR_NOT_FOUND_REVIEW)
         );
         return new GetReviewResponse(
                 review.getReviewId(),
