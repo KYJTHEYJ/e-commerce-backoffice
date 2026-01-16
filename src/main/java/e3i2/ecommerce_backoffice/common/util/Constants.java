@@ -52,6 +52,7 @@ public class Constants {
     public static final String MSG_NOT_FOUND_PRODUCT = "존재하지 않는 상품 입니다";
     public static final String MSG_NOT_LOGIN_ACCESS = "로그인 후 이용 가능합니다";
     public static final String MSG_DENY_CUSTOMER_ACCOUNT_DELETE = "주문 내역이 존재하여 삭제할 수 없습니다";
+    public static final String MSG_NOT_VALID_VALUE = "유효하지 않은 값이 입력되었습니다";
 }
 
 
