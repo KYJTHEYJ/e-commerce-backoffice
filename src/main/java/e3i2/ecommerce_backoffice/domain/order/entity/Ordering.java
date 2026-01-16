@@ -27,7 +27,8 @@ public class Ordering extends Base {
 
     @Enumerated(EnumType.STRING)
     private OrderingStatus orderStatus;
-    private Long orderAmount;
+    private Long orderTotalPrice;
+    private Long orderQuantity;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "product_id", nullable = false, foreignKey = @ForeignKey(name = "fk_product_id", value = ConstraintMode.NO_CONSTRAINT))
