@@ -1,6 +1,5 @@
 package e3i2.ecommerce_backoffice.domain.review.repository;
 
-import e3i2.ecommerce_backoffice.domain.customer.entity.Customer;
 import e3i2.ecommerce_backoffice.domain.review.entity.Review;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -11,7 +10,7 @@ import org.springframework.data.repository.query.Param;
 
 import java.util.Optional;
 
-public interface ReviewRepositorty extends JpaRepository<Review, Long> {
+public interface ReviewRepository extends JpaRepository<Review, Long> {
     Optional<Review> findByReviewIdAndDeletedFalse(Long reviewId);
 
     @EntityGraph(attributePaths = {"customer", "product", "ordering"})
