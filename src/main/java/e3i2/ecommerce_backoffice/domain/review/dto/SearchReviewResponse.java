@@ -23,7 +23,7 @@ import java.time.LocalDateTime;
         "content",
         "createdAt"
 })
-public class SearchReviewListResponse {
+public class SearchReviewResponse {
     @JsonProperty("id")
     private Long reviewId;
 
@@ -48,7 +48,7 @@ public class SearchReviewListResponse {
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
     private LocalDateTime createdAt;
 
-    public static SearchReviewListResponse register(
+    public static SearchReviewResponse register(
             Long reviewId,
             Long orderId,
             Long productId,
@@ -60,7 +60,7 @@ public class SearchReviewListResponse {
             String content,
             LocalDateTime createdAt
     ) {
-        SearchReviewListResponse response = new SearchReviewListResponse();
+        SearchReviewResponse response = new SearchReviewResponse();
         response.reviewId = reviewId;
         response.orderId = orderId;
         response.productId = productId;

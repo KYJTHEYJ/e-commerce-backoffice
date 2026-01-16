@@ -3,7 +3,7 @@ package e3i2.ecommerce_backoffice.domain.review.service;
 import e3i2.ecommerce_backoffice.common.exception.ErrorEnum;
 import e3i2.ecommerce_backoffice.common.exception.ServiceErrorException;
 import e3i2.ecommerce_backoffice.common.util.pagination.ItemsWithPagination;
-import e3i2.ecommerce_backoffice.domain.review.dto.SearchReviewListResponse;
+import e3i2.ecommerce_backoffice.domain.review.dto.SearchReviewResponse;
 import e3i2.ecommerce_backoffice.domain.review.entity.Review;
 import e3i2.ecommerce_backoffice.domain.review.repository.ReviewRepository;
 import jakarta.validation.constraints.Max;
@@ -25,7 +25,7 @@ public class ReviewService {
 
     // 리뷰 리스트 조회
     @Transactional(readOnly = true)
-    public ItemsWithPagination<List<SearchReviewListResponse>> getReviewList(String keyword, Integer page, Integer size, String sortBy, String sortOrder, @Min(1) @Max(5) Integer rating) {
+    public ItemsWithPagination<List<SearchReviewResponse>> getReviewList(String keyword, Integer page, Integer size, String sortBy, String sortOrder, @Min(1) @Max(5) Integer rating) {
         Sort sort = sortOrder.equalsIgnoreCase("asc")
                 ? Sort.by(sortBy).ascending()
                 : Sort.by(sortBy).descending();
@@ -36,8 +36,8 @@ public class ReviewService {
 
         Page<Review> reviews = reviewRepository.findReviews(safeKeyword, rating, pageable);
 
-        List<SearchReviewListResponse> items = reviews.getContent().stream()
-                .map(r -> SearchReviewListResponse.register(
+        List<SearchReviewResponse> items = reviews.getContent().stream()
+                .map(r -> SearchReviewResponse.register(
                         r.getReviewId(),
                         Long.valueOf(r.getOrder().getOrderNo()), // 주문번호(orderNo)
                         r.getProduct().getProductId(),
@@ -55,11 +55,11 @@ public class ReviewService {
     }
 
     @Transactional(readOnly = true)
-    public SearchReviewListResponse findOne(Long reviewId) {
-        Review review = reviewRepositorty.findById(reviewId).orElseThrow(
+    public SearchReviewResponse findOne(Long reviewId) {
+        Review review = reviewRepository.findById(reviewId).orElseThrow(
                 () -> new ServiceErrorException(ErrorEnum.ERR_NOT_FOUND_REVIEW)
         );
-        return SearchReviewListResponse.register(
+        return SearchReviewResponse.register(
                 review.getReviewId(),
                 review.getOrder().getOrderId(),
                 review.getProduct().getProductId(),

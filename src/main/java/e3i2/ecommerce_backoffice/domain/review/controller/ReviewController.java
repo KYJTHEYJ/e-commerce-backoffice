@@ -5,7 +5,7 @@ import e3i2.ecommerce_backoffice.common.dto.response.MessageResponse;
 import e3i2.ecommerce_backoffice.domain.review.service.ReviewService;
 import e3i2.ecommerce_backoffice.common.annotation.LoginSessionCheck;
 import e3i2.ecommerce_backoffice.common.util.pagination.ItemsWithPagination;
-import e3i2.ecommerce_backoffice.domain.review.dto.SearchReviewListResponse;
+import e3i2.ecommerce_backoffice.domain.review.dto.SearchReviewResponse;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 
@@ -30,9 +30,9 @@ public class ReviewController {
     private final ReviewService reviewService;
 
     // 리뷰 리스트 조회
-    @GetMapping("/api/reviews")
+    @GetMapping("/api/admins/reviews")
     @LoginSessionCheck
-    public ResponseEntity<DataResponse<ItemsWithPagination<List<SearchReviewListResponse>>>> getReviewList(
+    public ResponseEntity<DataResponse<ItemsWithPagination<List<SearchReviewResponse>>>> getReviewList(
             @RequestParam(required = false) String keyword,
             @RequestParam(defaultValue = "1") int page,
             @RequestParam(defaultValue = "10") int size,
@@ -40,7 +40,7 @@ public class ReviewController {
             @RequestParam(defaultValue = "desc") String sortOrder,
             @RequestParam(required = false) @Min(1) @Max(5) Integer rating
     ) {
-        ItemsWithPagination<List<SearchReviewListResponse>> response = reviewService.getReviewList(
+        ItemsWithPagination<List<SearchReviewResponse>> response = reviewService.getReviewList(
                 keyword, page, size, sortBy, sortOrder, rating
         );
 
@@ -48,7 +48,7 @@ public class ReviewController {
     }
 
     @GetMapping("/api/reviews/{reviewId}")
-    public ResponseEntity<DataResponse<SearchReviewListResponse>> getOne(@PathVariable Long reviewId) {
+    public ResponseEntity<DataResponse<SearchReviewResponse>> getOne(@PathVariable Long reviewId) {
         return ResponseEntity.ok(DataResponse.success(HttpStatus.OK.name(), reviewService.findOne(reviewId)));
     }
 
