@@ -12,12 +12,12 @@ import java.math.BigInteger;
 import java.time.LocalDateTime;
 
 @Getter
-@Entity
-@Table(uniqueConstraints = {
+@Entity@Table(uniqueConstraints = {
         @UniqueConstraint(
                 name = "customer_unique_email"
                 , columnNames = {"email"})
 })
+
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Customer extends Base {
     @Id
