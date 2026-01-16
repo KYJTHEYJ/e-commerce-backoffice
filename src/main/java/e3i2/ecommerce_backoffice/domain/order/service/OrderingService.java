@@ -21,8 +21,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import static e3i2.ecommerce_backoffice.common.exception.ErrorEnum.ERR_ORDER_TO_DISCONTINUE;
-import static e3i2.ecommerce_backoffice.common.exception.ErrorEnum.ERR_ORDER_TO_SOLD_OUT;
+import static e3i2.ecommerce_backoffice.common.exception.ErrorEnum.*;
 
 @Service
 @RequiredArgsConstructor
@@ -60,6 +59,10 @@ public class OrderingService {
             throw new ServiceErrorException(ERR_ORDER_TO_SOLD_OUT);
         }
 
+        if(product.getQuantity() < createOrderRequest.getOrderQuantity()) {
+            throw new ServiceErrorException(ERR_ORDER_TO_QUANTITY_OVER);
+        }
+
         String orderingSeq = getOrderingSeq();
 
         Ordering ordering = Ordering.register(
@@ -71,11 +74,13 @@ public class OrderingService {
         );
 
         Ordering saveOrder = orderRepository.save(ordering);
+        product.updateQuantity(product.getQuantity() - createOrderRequest.getOrderQuantity());
 
         return CreateOrderingResponse.register(
                 saveOrder.getOrderId()
                 , saveOrder.getOrderNo()
                 , saveOrder.getOrderAt()
+                , saveOrder.getOrderStatus().getStatusCode()
                 , saveOrder.getCustomer().getCustomerId()
                 , saveOrder.getCustomer().getCustomerName()
                 , saveOrder.getProduct().getProductId()

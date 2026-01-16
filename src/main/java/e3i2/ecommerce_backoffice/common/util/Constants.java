@@ -60,6 +60,7 @@ public class Constants {
     public static final String MSG_ORDER_QUANTITY_MIN_ERR = "상품의 주문수량은 1개 이상 이여야 합니다";
     public static final String MSG_ORDER_TO_DISCONTINUE_ERR = "단종된 상품은 주문할 수 없습니다";
     public static final String MSG_ORDER_TO_SOLD_OUT_ERR = "품절된 상품은 주문할 수 없습니다";
+    public static final String MSG_ORDER_TO_QUANTITY_OVER_ERR = "주문 수량이 상품 재고보다 많습니다";
 }
 
 

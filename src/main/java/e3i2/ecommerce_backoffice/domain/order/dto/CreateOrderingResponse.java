@@ -2,6 +2,7 @@ package e3i2.ecommerce_backoffice.domain.order.dto;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
+import e3i2.ecommerce_backoffice.domain.order.entity.OrderingStatus;
 import lombok.Getter;
 
 import java.time.LocalDateTime;
@@ -11,6 +12,7 @@ import java.time.LocalDateTime;
         "orderId"
         , "orderNo"
         , "orderAt"
+        , "orderStatus"
         , "customerId"
         , "customerName"
         , "productId"
@@ -27,6 +29,7 @@ public class CreateOrderingResponse {
     private final String orderNo;
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
     private final LocalDateTime orderAt;
+    private final String orderStatus;
     private final Long customerId;
     private final String customerName;
     private final Long productId;
@@ -42,6 +45,7 @@ public class CreateOrderingResponse {
             Long orderId
             , String orderNo
             , LocalDateTime orderAt
+            , String orderStatus
             , Long customerId
             , String customerName
             , Long productId
@@ -56,6 +60,7 @@ public class CreateOrderingResponse {
         this.orderId = orderId;
         this.orderNo = orderNo;
         this.orderAt = orderAt;
+        this.orderStatus = orderStatus;
         this.customerId = customerId;
         this.customerName = customerName;
         this.productId = productId;
@@ -72,6 +77,7 @@ public class CreateOrderingResponse {
             Long orderId
             , String orderNo
             , LocalDateTime orderAt
+            , String orderStatus
             , Long customerId
             , String customerName
             , Long productId
@@ -87,6 +93,7 @@ public class CreateOrderingResponse {
                 orderId
                 , orderNo
                 , orderAt
+                , orderStatus
                 , customerId
                 , customerName
                 , productId
