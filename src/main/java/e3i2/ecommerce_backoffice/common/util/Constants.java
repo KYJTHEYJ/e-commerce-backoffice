@@ -42,12 +42,12 @@ public class Constants {
     public static final String MSG_DUPLICATED_PHONE = "이미 등록된 전화번호 입니다";
     public static final String MSG_PRODUCT_NAME_BLANK_ERR = "상품의 이름은 필수입니다";
     public static final String MSG_PRODUCT_CATEGORY_NULL_ERR = "상품의 카테고리는 필수입니다";
-    public static final String MSG_PRODUCT_PRICE_BLANK_ERR = "상품의 가격은 필수입니다";
+    public static final String MSG_PRODUCT_PRICE_NULL_ERR = "상품의 가격은 필수입니다";
     public static final String MSG_PRODUCT_PRICE_MINUS_ERR = "상품의 가격은 0원 이상이어야 합니다";
     public static final String MSG_PRODUCT_PRICE_MAX_ERR = "상품의 가격이 한도를 넘었습니다";
     public static final String MSG_PRODUCT_QUANTITY_MAX_ERR = "상품의 수량이 한도를 넘었습니다";
     public static final String MSG_PRODUCT_STATUS_NULL_ERR = "상품의 상태는 필수입니다";
-    public static final String MSG_PRODUCT_QUANTITY_BLANK_ERR = "상품의 수량은 필수입니다";
+    public static final String MSG_PRODUCT_QUANTITY_NULL_ERR = "상품의 수량은 필수입니다";
     public static final String MSG_DELETE_PRODUCT = "상품이 삭제 되었습니다";
     public static final String MSG_NOT_FOUND_PRODUCT = "존재하지 않는 상품 입니다";
     public static final String MSG_NOT_LOGIN_ACCESS = "로그인 후 이용 가능합니다";
@@ -63,8 +63,7 @@ public class Constants {
     public static final String MSG_ORDER_TO_QUANTITY_OVER_ERR = "주문 수량이 상품 재고보다 많습니다";
     public static final String MSG_NOT_FOUND_ORDER = "존재하지 않는 주문 입니다";
     public static final String MSG_ORDER_STATUS_BLANK_ERR = "주문 상태는 필수입니다";
-    public static final String MSG_NOT_FOUND_ORDER = "존재하지 않는 주문입니다";
-    public static final String MSG_ORDER_CHANGE_FORBIDDEN = "배송 완료된 주문은 상태를 변경할 수 없습니다";
+    public static final String MSG_ORDER_PROCESSING_DELIVERED_FORBIDDEN = "배송 완료된 주문은 처리할 수 없습니다";
     public static final String MSG_ORDER_STATUS_INVALID_TRANSITION = "현재 상태에서 요청하신 상태로 변경할 수 없습니다";
     public static final String MSG_ORDER_ALREADY_CANCELLED = "이미 취소된 주문입니다";
 }

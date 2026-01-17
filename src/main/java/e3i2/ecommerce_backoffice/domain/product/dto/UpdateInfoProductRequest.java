@@ -15,7 +15,7 @@ public class UpdateInfoProductRequest {
     private String productName;
     @NotNull(message = MSG_PRODUCT_CATEGORY_NULL_ERR)
     private ProductCategory category;
-    @NotBlank(message = MSG_PRODUCT_PRICE_BLANK_ERR)
+    @NotNull(message = MSG_PRODUCT_PRICE_NULL_ERR)
     @Min(value = 0, message = MSG_PRODUCT_PRICE_MINUS_ERR)
     @Max(value = Long.MAX_VALUE, message = MSG_PRODUCT_PRICE_MAX_ERR)
     private Long price;

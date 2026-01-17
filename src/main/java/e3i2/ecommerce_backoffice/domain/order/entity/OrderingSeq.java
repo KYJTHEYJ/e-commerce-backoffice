@@ -7,7 +7,7 @@ import lombok.NoArgsConstructor;
 
 @Getter
 @Entity
-@Table(name = "order_seq")
+@Table(name = "ordering_seq")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class OrderingSeq {
     @Id

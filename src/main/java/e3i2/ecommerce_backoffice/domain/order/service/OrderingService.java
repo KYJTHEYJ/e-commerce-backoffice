@@ -1,5 +1,6 @@
 package e3i2.ecommerce_backoffice.domain.order.service;
 
+import e3i2.ecommerce_backoffice.common.annotation.LoginSessionCheck;
 import e3i2.ecommerce_backoffice.common.dto.session.SessionAdmin;
 import e3i2.ecommerce_backoffice.common.exception.ErrorEnum;
 import e3i2.ecommerce_backoffice.common.exception.ServiceErrorException;
@@ -158,7 +159,7 @@ public class OrderingService {
     }
 
     @Transactional
-    public ChangeOrderingStatusResponse updateStatusOrdering(Long orderId, ChangeOrderingStatusRequest request, SessionAdmin sessionAdmin) {
+    public ChangeOrderingStatusResponse updateStatusOrdering(Long orderId, ChangeOrderingStatusRequest request) {
         Ordering ordering = orderingRepository.findById(orderId).orElseThrow(
                 () -> new ServiceErrorException(ERR_NOT_FOUND_ORDER)
         );
@@ -169,12 +170,12 @@ public class OrderingService {
 
         //배송완료 상태는 변경 불가
         if (current == OrderingStatus.DELIVERED) {
-            throw new ServiceErrorException(ERR_ORDER_CHANGE_FORBIDDEN);
+            throw new ServiceErrorException(ERR_ORDER_PROCESSING_DELIVERED_FORBIDDEN);
         }
 
         //준비 중 -> 배송 중 -> 배송 완료 순으로만 상태 전이 가능
         if (!isValidNextStatus(current, next)) {
-            throw new ServiceErrorException(ERR_ORDER_CHANGE_FORBIDDEN);
+            throw new ServiceErrorException(ERR_ORDER_STATUS_INVALID_TRANSITION);
         }
 
         ordering.changeStatus(next);
@@ -195,13 +196,14 @@ public class OrderingService {
     }
 
     @Transactional
-    public CancelOrderingResponse cancelOrdering(Long orderId, SessionAdmin sessionAdmin, CancelOrderingRequest request) {
+    public CancelOrderingResponse cancelOrdering(Long orderId, CancelOrderingRequest request) {
         Ordering ordering = orderingRepository.findById(orderId).orElseThrow(
                 () -> new ServiceErrorException(ERR_NOT_FOUND_ORDER)
         );
+
         OrderingStatus current = ordering.getOrderStatus();
         if (current == OrderingStatus.DELIVERED) {
-            throw new ServiceErrorException(ERR_ORDER_CHANGE_FORBIDDEN);
+            throw new ServiceErrorException(ERR_ORDER_PROCESSING_DELIVERED_FORBIDDEN);
         }
 
         // 이미 취소된 주문
