@@ -17,7 +17,6 @@ import java.time.LocalDateTime;
         @UniqueConstraint(name = "customer_unique_email", columnNames = {"email"})
         , @UniqueConstraint(name = "customer_unique_phone", columnNames = {"phone"})
 })
-
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Customer extends Base {
     @Id
@@ -32,7 +31,7 @@ public class Customer extends Base {
     private String customerName;
 
     @Pattern(regexp = "^010-\\d{4}-\\d{4}$")
-    @Column(nullable = false)
+    @Column(nullable = false, unique = true)
     private String phone;
 
     @Enumerated(EnumType.STRING)
