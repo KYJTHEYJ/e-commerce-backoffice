@@ -7,7 +7,9 @@ import lombok.RequiredArgsConstructor;
 import org.jspecify.annotations.NonNull;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
+import org.springframework.context.annotation.DependsOn;
 import org.springframework.context.annotation.Profile;
+import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -16,9 +18,11 @@ import java.util.Arrays;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.stream.IntStream;
 
-@Component
+@Component("customerDataInit")
 @Profile("local")
 @RequiredArgsConstructor
+@DependsOn("adminDataInit")
+@Order(2)
 public class CustomerDataInitializer implements ApplicationRunner {
 
     private final CustomerRepository customerRepository;

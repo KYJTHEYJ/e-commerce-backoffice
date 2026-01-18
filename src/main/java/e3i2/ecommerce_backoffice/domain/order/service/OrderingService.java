@@ -1,6 +1,5 @@
 package e3i2.ecommerce_backoffice.domain.order.service;
 
-import e3i2.ecommerce_backoffice.common.annotation.LoginSessionCheck;
 import e3i2.ecommerce_backoffice.common.dto.session.SessionAdmin;
 import e3i2.ecommerce_backoffice.common.exception.ErrorEnum;
 import e3i2.ecommerce_backoffice.common.exception.ServiceErrorException;
@@ -49,9 +48,7 @@ public class OrderingService {
                 }
         );
 
-        Long nextOrderingSeq = orderingSeq.getNextOrderingSeq();
-
-        return String.format("ORDER%s%03d", "-", nextOrderingSeq);
+        return orderingSeq.getNextOrderNo();
     }
 
     @Transactional

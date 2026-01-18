@@ -10,12 +10,14 @@ import org.jspecify.annotations.NonNull;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.context.annotation.Profile;
+import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
-@Component
+@Component("adminDataInit")
 @Profile("local")
 @RequiredArgsConstructor
+@Order(1)
 public class AdminDataInitializer implements ApplicationRunner {
 
     private final AdminRepository adminRepository;
