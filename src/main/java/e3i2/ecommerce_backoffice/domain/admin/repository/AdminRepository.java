@@ -39,4 +39,14 @@ public interface AdminRepository extends JpaRepository<Admin, Long> {
     );
 
     boolean existsByEmail(@Email(message = "이메일 형식으로 작성해야 합니다") String email);
+
+    @Query("""
+            SELECT count(a.adminId)
+            FROM Admin a
+            WHERE a.status = :status
+            AND a.deleted = false
+           """)
+    Long countByAdminStatusDeletedFalse(AdminStatus status);
+
+    Long countByDeletedFalse();
 }

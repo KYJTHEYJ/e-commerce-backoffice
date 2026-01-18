@@ -1,6 +1,7 @@
 package e3i2.ecommerce_backoffice.domain.review.repository;
 
 import e3i2.ecommerce_backoffice.domain.product.entity.Product;
+import e3i2.ecommerce_backoffice.domain.product.repository.projection.ReviewRatingCount;
 import e3i2.ecommerce_backoffice.domain.product.repository.projection.ReviewSummary;
 import e3i2.ecommerce_backoffice.domain.review.entity.Review;
 import org.springframework.data.domain.Page;
@@ -50,4 +51,22 @@ public interface ReviewRepository extends JpaRepository<Review, Long> {
 
     @Query("SELECT r FROM Review r WHERE r.product = :product ORDER BY r.createdAt DESC LIMIT 3")
     List<Review> findRecent3ReviewByProduct(Product product);
+
+    Long countByDeletedFalse();
+
+    @Query("""
+           SELECT ifnull(round(avg(r.rating), 1), 0) AS averageRating
+           FROM Review r
+           WHERE r.deleted = false
+           """)
+    Double findAverageRating();
+
+    @Query("""
+        SELECT r.rating AS rating, COUNT(r.reviewId) AS reviewCount
+        FROM Review r
+        WHERE r.deleted = false
+        GROUP BY r.rating
+        ORDER BY r.rating
+        """)
+    List<ReviewRatingCount> countByRatingGroupByRating();
 }

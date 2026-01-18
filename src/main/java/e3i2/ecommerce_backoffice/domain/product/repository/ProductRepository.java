@@ -3,6 +3,7 @@ package e3i2.ecommerce_backoffice.domain.product.repository;
 import e3i2.ecommerce_backoffice.domain.product.entity.Product;
 import e3i2.ecommerce_backoffice.domain.product.entity.ProductCategory;
 import e3i2.ecommerce_backoffice.domain.product.entity.ProductStatus;
+import e3i2.ecommerce_backoffice.domain.product.repository.projection.ProductCategoryCount;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -29,4 +30,26 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
     );
 
     Optional<Product> findByProductIdAndDeletedFalse(Long productId);
+
+    @Query("""
+            SELECT count(p.productId)
+            FROM Product p
+            WHERE p.quantity <= 5
+            AND p.deleted = false
+           """)
+    Long countByProductQuantityLower5DeletedFalse();
+
+    Long countByDeletedFalse();
+
+    @Query("""
+        SELECT p.category as productCategory, COUNT(p.productId) AS productCount
+        FROM Product p
+        WHERE p.deleted = false
+        GROUP BY p.category
+        ORDER BY p.category
+        """)
+    List<ProductCategoryCount> countByCategoryGroupByCategory();
+
+    // 품절
+    long countByQuantityAndDeletedFalse(Long quantity);
 }
