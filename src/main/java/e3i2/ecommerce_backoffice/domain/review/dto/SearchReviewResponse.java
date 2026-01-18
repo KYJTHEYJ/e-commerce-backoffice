@@ -27,7 +27,6 @@ public class SearchReviewResponse {
     @JsonProperty("id")
     private Long reviewId;
 
-    @JsonProperty("orderId")
     private String orderNo;
     private Long productId;
     private Long customerId;

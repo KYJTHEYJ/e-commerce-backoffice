@@ -16,9 +16,9 @@ public class PutStatusCustomerResponse {
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
     private final LocalDateTime createdAt;
     private final Long totalOrders;
-    private final BigInteger totalSpent;
+    private final Long totalSpent;
 
-    public PutStatusCustomerResponse(Long customerId, String customerName, String email, String phone, String status, LocalDateTime createdAt, Long totalOrders, BigInteger totalSpent) {
+    public PutStatusCustomerResponse(Long customerId, String customerName, String email, String phone, String status, LocalDateTime createdAt, Long totalOrders, Long totalSpent) {
         this.customerId = customerId;
         this.customerName = customerName;
         this.email = email;

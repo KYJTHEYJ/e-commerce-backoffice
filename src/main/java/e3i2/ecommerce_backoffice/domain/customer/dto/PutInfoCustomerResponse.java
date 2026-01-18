@@ -3,7 +3,6 @@ package e3i2.ecommerce_backoffice.domain.customer.dto;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Getter;
 
-import java.math.BigInteger;
 import java.time.LocalDateTime;
 
 @Getter
@@ -16,9 +15,9 @@ public class PutInfoCustomerResponse {
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
     private final LocalDateTime createdAt;
     private final Long totalOrders;
-    private final BigInteger totalSpent;
+    private final Long totalSpent;
 
-    public PutInfoCustomerResponse(Long customerId, String customerName, String email, String phone, String status, LocalDateTime createdAt, Long totalOrders, BigInteger totalSpent) {
+    public PutInfoCustomerResponse(Long customerId, String customerName, String email, String phone, String status, LocalDateTime createdAt, Long totalOrders, Long totalSpent) {
         this.customerId = customerId;
         this.customerName = customerName;
         this.email = email;

@@ -62,19 +62,26 @@ public class OrderDataInitializer implements ApplicationRunner {
         for (int i = 0; i < 5; i++) {
             Customer customer = customers.get(new Random().nextInt(customers.size()));
             Product product = products.get(new Random().nextInt(products.size()));
-            Long quantity = new Random().nextLong(5);
+            Long quantity = new Random().nextLong(1,5);
 
-            OrderingSeq seq = orderingSeqRepository.findAll().get(0);
-
-            Ordering ordering = Ordering.register(
-                seq.getNextOrderNo(),
-                quantity,
-                product,
-                customer,
-                admin
+            OrderingSeq orderingSeq = orderingSeqRepository.findById().orElseGet(
+                    () -> {
+                        OrderingSeq newOrderingSeq = OrderingSeq.register();
+                        return orderingSeqRepository.save(newOrderingSeq);
+                    }
             );
 
-            orderingRepository.save(ordering);
+            Ordering ordering = Ordering.register(
+                    orderingSeq.getNextOrderNo(),
+                    quantity,
+                    product,
+                    customer,
+                    admin
+            );
+
+            Ordering saveOrder = orderingRepository.save(ordering);
+            product.updateQuantity(product.getQuantity() - quantity);
+            customer.updateOrderInfo(saveOrder.getOrderTotalPrice());
         }
     }
 }

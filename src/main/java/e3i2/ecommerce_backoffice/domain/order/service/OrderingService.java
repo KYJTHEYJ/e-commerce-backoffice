@@ -81,6 +81,7 @@ public class OrderingService {
 
         Ordering saveOrder = orderingRepository.save(ordering);
         product.updateQuantity(product.getQuantity() - createOrderRequest.getOrderQuantity());
+        customer.updateOrderInfo(saveOrder.getOrderTotalPrice());
 
         return CreateOrderingResponse.register(
                 saveOrder.getOrderId()

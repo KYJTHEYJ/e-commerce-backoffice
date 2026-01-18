@@ -7,6 +7,6 @@ import org.springframework.data.jpa.repository.Query;
 import java.util.Optional;
 
 public interface OrderingSeqRepository extends JpaRepository<OrderingSeq, Long> {
-    @Query("SELECT os FROM OrderingSeq os WHERE os.id = 'SEQ'")
+    @Query("SELECT os FROM OrderingSeq os WHERE os.id = 'ORDER'")
     Optional<OrderingSeq> findById();
 }

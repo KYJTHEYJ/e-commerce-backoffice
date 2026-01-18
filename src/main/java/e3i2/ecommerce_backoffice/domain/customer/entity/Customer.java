@@ -41,13 +41,13 @@ public class Customer extends Base {
     private Long totalOrders;
 
     @Column(nullable = false)
-    private BigInteger totalSpent;
+    private Long totalSpent;
 
     @Column(nullable = false)
     private Boolean deleted;
     private LocalDateTime deletedAt;
 
-    public static Customer register(String customerName, String email, String phone, CustomerStatus customerStatus,  Long totalOrders, BigInteger totalSpent) {
+    public static Customer register(String customerName, String email, String phone, CustomerStatus customerStatus,  Long totalOrders, Long totalSpent) {
         Customer customer = new Customer();
         customer.customerName = customerName;
         customer.email = email;
@@ -64,6 +64,11 @@ public class Customer extends Base {
         this.customerName = customerName;
         this.email = email;
         this.phone = phone;
+    }
+
+    public void updateOrderInfo(Long totalSpent) {
+        this.totalOrders++;
+        this.totalSpent = totalSpent;
     }
 
     public void statusChange(CustomerStatus customerStatus) {
