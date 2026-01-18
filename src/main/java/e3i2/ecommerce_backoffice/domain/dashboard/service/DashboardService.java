@@ -1,6 +1,5 @@
 package e3i2.ecommerce_backoffice.domain.dashboard.service;
 
-import e3i2.ecommerce_backoffice.domain.admin.repository.AdminRepository;
 import e3i2.ecommerce_backoffice.domain.customer.repository.CustomerRepository;
 import e3i2.ecommerce_backoffice.domain.dashboard.dto.SearchRecentListResponse;
 import e3i2.ecommerce_backoffice.domain.dashboard.dto.SearchWidgetsResponse;
@@ -42,7 +41,7 @@ public class DashboardService {
         long lowStockCount = productRepository.countLowStockProducts();
         long soldOutStockCount = productRepository.countByQuantityAndDeletedFalse(0L);
 
-        return new SearchWidgetsResponse(
+        return SearchWidgetsResponse.register(
                 totalSales,
                 todaySales,
                 preparingCount,
