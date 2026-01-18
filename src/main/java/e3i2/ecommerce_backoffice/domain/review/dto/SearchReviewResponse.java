@@ -27,7 +27,8 @@ public class SearchReviewResponse {
     @JsonProperty("id")
     private Long reviewId;
 
-    private Long orderId;
+    @JsonProperty("orderId")
+    private String orderNo;
     private Long productId;
     private Long customerId;
 
@@ -50,7 +51,7 @@ public class SearchReviewResponse {
 
     public static SearchReviewResponse register(
             Long reviewId,
-            Long orderId,
+            String orderNo,
             Long productId,
             Long customerId,
             String customerName,
@@ -62,7 +63,7 @@ public class SearchReviewResponse {
     ) {
         SearchReviewResponse response = new SearchReviewResponse();
         response.reviewId = reviewId;
-        response.orderId = orderId;
+        response.orderNo = orderNo;
         response.productId = productId;
         response.customerId = customerId;
         response.customerName = customerName;
