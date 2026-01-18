@@ -38,7 +38,7 @@ public interface CustomerRepository extends JpaRepository<Customer, Long> {
     Long countByDeletedFalse();
 
     @Query("""
-        SELECT c.customerStatus, COUNT(c.customerId)
+        SELECT c.customerStatus AS customerStatus, COUNT(c.customerId) AS customerCount
         FROM Customer c
         WHERE c.deleted = false
         GROUP BY c.customerStatus

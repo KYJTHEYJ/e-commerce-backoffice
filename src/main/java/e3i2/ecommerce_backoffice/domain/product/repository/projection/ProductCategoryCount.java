@@ -3,6 +3,6 @@ package e3i2.ecommerce_backoffice.domain.product.repository.projection;
 import e3i2.ecommerce_backoffice.domain.product.entity.ProductCategory;
 
 public interface ProductCategoryCount {
-    ProductCategory getCategory();
-    Long getCount();
+    ProductCategory getProductCategory();
+    Long getProductCount();
 }

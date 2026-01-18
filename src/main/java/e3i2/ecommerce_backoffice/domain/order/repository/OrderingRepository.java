@@ -8,6 +8,8 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
+import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
 
 public interface OrderingRepository extends JpaRepository<Ordering, Long> {
@@ -38,4 +40,36 @@ public interface OrderingRepository extends JpaRepository<Ordering, Long> {
     Long countByOrderQuantityLower5DeletedFalse();
 
     Long countByDeletedFalse();
+
+    // 총 매출
+    @Query("""
+        SELECT COALESCE(SUM(o.orderTotalPrice), 0)
+        FROM Ordering o
+        WHERE o.deleted = false
+    """)
+    Long sumTotalSales();
+
+    // 오늘 매출
+    @Query("""
+        SELECT COALESCE(SUM(o.orderTotalPrice), 0)
+        FROM Ordering o
+        WHERE o.deleted = false
+          AND o.orderAt BETWEEN :start AND :end
+    """)
+    Long sumTodaySales(
+            @Param("start") LocalDateTime start,
+            @Param("end") LocalDateTime end
+    );
+
+    // 주문 상태별 개수
+    long countByOrderStatusAndDeletedFalse(OrderingStatus status);
+
+    @Query("""
+        select o
+        from Ordering o
+        join fetch o.customer c
+        join fetch o.product p
+        order by o.createdAt desc
+    """)
+    List<Ordering> findRecentOrders(Pageable pageable);
 }

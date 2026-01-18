@@ -10,15 +10,15 @@ import lombok.Getter;
         , "count"
 })
 public class CustomerStatusCountResponse {
-    private final CustomerStatus status;
+    private final String status;
     private final Long count;
 
-    private CustomerStatusCountResponse(CustomerStatus status, Long count) {
+    private CustomerStatusCountResponse(String status, Long count) {
         this.status = status;
         this.count = count;
     }
 
-    public static CustomerStatusCountResponse register(CustomerStatus status, Long count) {
+    public static CustomerStatusCountResponse register(String status, Long count) {
         return new CustomerStatusCountResponse(status, count);
     }
 }

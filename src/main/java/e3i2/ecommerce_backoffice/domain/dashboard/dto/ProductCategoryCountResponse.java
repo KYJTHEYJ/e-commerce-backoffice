@@ -10,15 +10,15 @@ import lombok.Getter;
         , "count"
 })
 public class ProductCategoryCountResponse {
-    private final ProductCategory category;
+    private final String category;
     private final Long count;
 
-    private ProductCategoryCountResponse(ProductCategory category, Long count) {
+    private ProductCategoryCountResponse(String category, Long count) {
         this.category = category;
         this.count = count;
     }
 
-    public static ProductCategoryCountResponse register(ProductCategory category, Long count) {
+    public static ProductCategoryCountResponse register(String category, Long count) {
         return new ProductCategoryCountResponse(category, count);
     }
 }
