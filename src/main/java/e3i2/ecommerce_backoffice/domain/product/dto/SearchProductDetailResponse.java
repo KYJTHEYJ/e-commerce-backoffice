@@ -23,8 +23,10 @@ import java.util.List;
         , "adminId"
         , "adminName"
         , "adminEmail"
+        , "reviewSummary"
+        , "recentReview"
 })
-public class SearchProductResponse {
+public class SearchProductDetailResponse {
     private Long id;
     private String productName;
     private String category;
@@ -36,12 +38,15 @@ public class SearchProductResponse {
     private Long adminId;
     private String adminName;
     private String adminEmail;
+    private SearchReviewSummaryResponse reviewSummary;
+    private List<SearchReviewResponse> recentReview;
 
-    public static SearchProductResponse register(
+    public static SearchProductDetailResponse register(
             Long id, String productName, String category, Long price, Long quantity, String status, LocalDateTime createdAt
             , Long adminId, String adminName, String adminEmail
+            , SearchReviewSummaryResponse reviewSummary, List<SearchReviewResponse> recentReview
     ) {
-        SearchProductResponse response = new SearchProductResponse();
+        SearchProductDetailResponse response = new SearchProductDetailResponse();
         response.id = id;
         response.productName = productName;
         response.category = category;
@@ -52,6 +57,8 @@ public class SearchProductResponse {
         response.adminId = adminId;
         response.adminName = adminName;
         response.adminEmail = adminEmail;
+        response.reviewSummary = reviewSummary;
+        response.recentReview = recentReview;
 
         return response;
     }

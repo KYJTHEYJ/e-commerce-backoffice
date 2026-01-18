@@ -50,7 +50,7 @@ public class ProductController {
 
     @GetMapping("/{productId}")
     @LoginSessionCheck
-    public ResponseEntity<DataResponse<SearchProductResponse>> searchProduct(@PathVariable Long productId) {
+    public ResponseEntity<DataResponse<SearchProductDetailResponse>> searchProduct(@PathVariable Long productId) {
         return ResponseEntity.status(HttpStatus.OK).body(DataResponse.success(HttpStatus.OK.name(), productService.searchProduct(productId)));
     }
 

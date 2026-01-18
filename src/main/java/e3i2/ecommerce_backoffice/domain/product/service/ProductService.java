@@ -5,12 +5,15 @@ import e3i2.ecommerce_backoffice.common.exception.ServiceErrorException;
 import e3i2.ecommerce_backoffice.common.util.pagination.ItemsWithPagination;
 import e3i2.ecommerce_backoffice.domain.admin.entity.Admin;
 import e3i2.ecommerce_backoffice.domain.admin.repository.AdminRepository;
-import e3i2.ecommerce_backoffice.domain.customer.dto.GetCustomerResponse;
 import e3i2.ecommerce_backoffice.domain.product.dto.*;
 import e3i2.ecommerce_backoffice.domain.product.entity.Product;
 import e3i2.ecommerce_backoffice.domain.product.entity.ProductCategory;
 import e3i2.ecommerce_backoffice.domain.product.entity.ProductStatus;
 import e3i2.ecommerce_backoffice.domain.product.repository.ProductRepository;
+import e3i2.ecommerce_backoffice.domain.product.repository.projection.ReviewSummary;
+import e3i2.ecommerce_backoffice.domain.review.dto.SearchReviewResponse;
+import e3i2.ecommerce_backoffice.domain.review.entity.Review;
+import e3i2.ecommerce_backoffice.domain.review.repository.ReviewRepository;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -24,13 +27,13 @@ import java.util.List;
 
 import static e3i2.ecommerce_backoffice.common.exception.ErrorEnum.ERR_NOT_FOUND_ADMIN;
 import static e3i2.ecommerce_backoffice.common.exception.ErrorEnum.ERR_NOT_FOUND_PRODUCT;
-import static e3i2.ecommerce_backoffice.common.util.Constants.MSG_NOT_FOUND_ADMIN;
 
 @Service
 @RequiredArgsConstructor
 public class ProductService {
     private final ProductRepository productRepository;
     private final AdminRepository adminRepository;
+    private final ReviewRepository reviewRepository;
 
     @Transactional
     public CreateProductResponse createProduct(@Valid CreateProductRequest request, SessionAdmin sessionAdmin) {
@@ -82,9 +85,39 @@ public class ProductService {
     }
 
     @Transactional(readOnly = true, propagation = Propagation.SUPPORTS)
-    public SearchProductResponse searchProduct(Long productId) {
+    public SearchProductDetailResponse searchProduct(Long productId) {
         Product product = productRepository.findByProductIdAndDeletedFalse(productId).orElseThrow(() -> new ServiceErrorException(ERR_NOT_FOUND_PRODUCT));
-        return SearchProductResponse.register(
+        ReviewSummary reviewSummary = reviewRepository.findReviewSummaryByProductId(product);
+        List<Review> recentReview = reviewRepository.findRecent3ReviewByProduct(product);
+
+        SearchReviewSummaryResponse reviewSummaryResponse = SearchReviewSummaryResponse.register(
+                reviewSummary.getAverageRating()
+                , reviewSummary.getTotalReviews()
+                , reviewSummary.getFiveStarCount()
+                , reviewSummary.getFourStarCount()
+                , reviewSummary.getThreeStarCount()
+                , reviewSummary.getTwoStarCount()
+                , reviewSummary.getOneStarCount()
+        );
+
+        List<SearchReviewResponse> reviewResponseList = recentReview
+                .stream()
+                .map(review ->
+                    SearchReviewResponse.register(
+                            review.getReviewId()
+                            , review.getOrder().getOrderNo()
+                            , product.getProductId()
+                            , review.getCustomer().getCustomerId()
+                            , review.getCustomer().getCustomerName()
+                            , review.getCustomer().getEmail()
+                            , product.getProductName()
+                            , review.getRating()
+                            , review.getContent()
+                            , review.getCreatedAt()
+                    )
+                ).toList();
+
+        return SearchProductDetailResponse.register(
                 product.getProductId()
                 , product.getProductName()
                 , product.getCategory().getCategoryCode()
@@ -95,6 +128,8 @@ public class ProductService {
                 , product.getAdmin().getAdminId()
                 , product.getAdmin().getAdminName()
                 , product.getAdmin().getEmail()
+                , reviewSummaryResponse
+                , reviewResponseList
         );
     }
 
@@ -163,7 +198,7 @@ public class ProductService {
 
     @Transactional
     public void deleteProduct(Long productId, SessionAdmin sessionAdmin) {
-        Admin admin = adminRepository.findByAdminIdAndDeletedFalse(sessionAdmin.getAdminId()).orElseThrow(() -> new ServiceErrorException(ERR_NOT_FOUND_ADMIN));
+        adminRepository.findByAdminIdAndDeletedFalse(sessionAdmin.getAdminId()).orElseThrow(() -> new ServiceErrorException(ERR_NOT_FOUND_ADMIN));
         Product product = productRepository.findByProductIdAndDeletedFalse(productId).orElseThrow(() -> new ServiceErrorException(ERR_NOT_FOUND_PRODUCT));
 
         product.delete();
