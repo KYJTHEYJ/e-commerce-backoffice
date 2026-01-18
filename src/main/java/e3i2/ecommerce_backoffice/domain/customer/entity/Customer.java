@@ -71,6 +71,11 @@ public class Customer extends Base {
         this.totalSpent = totalSpent;
     }
 
+    public void restoreOrderInfo(Long totalSpent) {
+        this.totalOrders--;
+        this.totalSpent -= totalSpent;
+    }
+
     public void statusChange(CustomerStatus customerStatus) {
         this.customerStatus = customerStatus;
     }

@@ -211,10 +211,11 @@ public class OrderingService {
 
         ordering.cancel(request.getCancelReason());
 
-        //취소 수량만큼 재고 증가
+        //취소 수량만큼 재고 증가, 총 주문수, 총 주문 금액 감소
         Product product = ordering.getProduct();
         product.restoreStock(ordering.getOrderQuantity());
-
+        Customer customer = ordering.getCustomer();
+        customer.restoreOrderInfo(ordering.getOrderTotalPrice());
         return CancelOrderingResponse.register(
                 ordering.getOrderId(),
                 ordering.getOrderNo(),
