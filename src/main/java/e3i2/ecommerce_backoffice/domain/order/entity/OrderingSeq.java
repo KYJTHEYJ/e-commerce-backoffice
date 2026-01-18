@@ -11,24 +11,24 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class OrderingSeq {
     @Id
-    private String id = "SEQ";
+    private String orderingSeqId = "ORDER";
 
     @Column(nullable = false)
-    private Long CurrentOrderSeq = 0L;
+    private Long currentOrderSeq = 0L;
 
     public void update() {
-        this.CurrentOrderSeq = this.CurrentOrderSeq + 1;
+        this.currentOrderSeq = this.currentOrderSeq + 1;
     }
 
-    public Long getNextOrderingSeq() {
+    public String getNextOrderNo() {
         update();
-        return CurrentOrderSeq;
+        return String.format("%s%s%03d", this.orderingSeqId, "-", this.currentOrderSeq);
     }
 
     public static OrderingSeq register() {
         OrderingSeq orderingSeq = new OrderingSeq();
-        orderingSeq.id = "SEQ";
-        orderingSeq.CurrentOrderSeq = 0L;
+        orderingSeq.orderingSeqId = "ORDER";
+        orderingSeq.currentOrderSeq = 0L;
 
         return new OrderingSeq();
     }
