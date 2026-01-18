@@ -39,7 +39,7 @@ public class ReviewService {
         List<SearchReviewResponse> items = reviews.getContent().stream()
                 .map(r -> SearchReviewResponse.register(
                         r.getReviewId(),
-                        r.getOrder().getOrderId(),
+                        r.getOrder().getOrderNo(),
                         r.getProduct().getProductId(),
                         r.getCustomer().getCustomerId(),
                         r.getCustomer().getCustomerName(),
@@ -61,7 +61,7 @@ public class ReviewService {
         );
         return SearchReviewResponse.register(
                 review.getReviewId(),
-                review.getOrder().getOrderId(),
+                review.getOrder().getOrderNo(),
                 review.getProduct().getProductId(),
                 review.getCustomer().getCustomerId(),
                 review.getCustomer().getCustomerName(),
