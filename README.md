@@ -93,7 +93,7 @@ ecommerce_backoffice
 ### Soft Delete 정책
 - [x] 실제 삭제 대신 deleted_at 업데이트
 - [x] 기본 조회 시 삭제 데이터 제외
-- [x] 각 Entity 내부 delete(), restore() 메서드로 제어
+- [x] 각 Entity 내부 delete() 메서드로 제어
 
 ## Branch 전략
 <details>

@@ -35,7 +35,6 @@ import static e3i2.ecommerce_backoffice.common.util.Constants.*;
 public class AdminController {
     private final AdminService adminService;
 
-    // 관리자 회원가입
     @PostMapping("/signUp")
     public ResponseEntity<DataResponse<SignUpResponse>> signUp(@Valid @RequestBody SignUpRequest request) {
         SignUpResponse response = adminService.signUp(request);
@@ -43,7 +42,6 @@ public class AdminController {
         return ResponseEntity.status(HttpStatus.CREATED).body(DataResponse.success(HttpStatus.CREATED.name(), response));
     }
 
-    // 관리자 회원 가입 요청 승인
     @PutMapping("/{adminId}/accept")
     @LoginSessionCheck
     public ResponseEntity<DataResponse<AcceptAdminResponse>> acceptAdmin(
@@ -55,7 +53,6 @@ public class AdminController {
         return ResponseEntity.status(HttpStatus.OK).body(DataResponse.success(HttpStatus.OK.name(), response));
     }
 
-    // 관리자 회원 가입 요청 거부
     @PutMapping("/{adminId}/deny")
     @LoginSessionCheck
     public ResponseEntity<DataResponse<DeniedAdminResponse>> denyAdmin(
@@ -68,7 +65,6 @@ public class AdminController {
         return ResponseEntity.status(HttpStatus.OK).body(DataResponse.success(HttpStatus.OK.name(), response));
     }
 
-    // 관리자 로그인
     @PostMapping("/login")
     public ResponseEntity<DataResponse<LoginResponse>> login(
             @Valid @RequestBody LoginRequest request,
@@ -95,7 +91,6 @@ public class AdminController {
         return ResponseEntity.status(HttpStatus.OK).body(DataResponse.success(HttpStatus.OK.name(), response));
     }
 
-    // 관리자 로그아웃
     @PostMapping("/logout")
     @LoginSessionCheck
     public ResponseEntity<MessageResponse<Void>> logout(
@@ -110,7 +105,6 @@ public class AdminController {
         );
     }
 
-    // 관리자 리스트 조회
     @GetMapping
     @LoginSessionCheck
     public ResponseEntity<DataResponse<ItemsWithPagination<List<SearchAdminDetailResponse>>>> getAdminList(
@@ -130,7 +124,6 @@ public class AdminController {
         return ResponseEntity.status(HttpStatus.OK).body(DataResponse.success("OK", response));
     }
 
-    // 관리자 상세 조회
     @GetMapping("/{adminId}")
     @LoginSessionCheck
     public ResponseEntity<DataResponse<SearchAdminDetailResponse>> getAdminDetail(
@@ -141,7 +134,6 @@ public class AdminController {
         return ResponseEntity.status(HttpStatus.OK).body(DataResponse.success(HttpStatus.OK.name(), response));
     }
 
-    // 관리자 정보 수정
     @PutMapping("/{adminId}")
     @LoginSessionCheck
     public ResponseEntity<DataResponse<UpdateAdminResponse>> updateAdmin(
@@ -154,7 +146,6 @@ public class AdminController {
         return ResponseEntity.status(HttpStatus.OK).body(DataResponse.success(HttpStatus.OK.name(), response));
     }
 
-    // 관리자 삭제
     @DeleteMapping("/{adminId}")
     @LoginSessionCheck
     public ResponseEntity<MessageResponse<Void>> deleteAdmin(
@@ -166,7 +157,6 @@ public class AdminController {
         return ResponseEntity.status(HttpStatus.OK).body(MessageResponse.success(HttpStatus.OK.name(), MSG_DELETE_ADMIN_ACCOUNT));
     }
 
-    // 내 프로필 조회
     @GetMapping("/me")
     @LoginSessionCheck
     public ResponseEntity<DataResponse<GetMyProfileResponse>> getMyProfile(
@@ -177,7 +167,6 @@ public class AdminController {
         return ResponseEntity.status(HttpStatus.OK).body(DataResponse.success(HttpStatus.OK.name(), response));
     }
 
-    // 내 프로필 수정
     @PutMapping("/me/profile")
     @LoginSessionCheck
     public ResponseEntity<DataResponse<UpdateMyProfileResponse>> updateMyProfile(
@@ -189,7 +178,6 @@ public class AdminController {
         return ResponseEntity.status(HttpStatus.OK).body(DataResponse.success(HttpStatus.OK.name(), response));
     }
 
-    // 내 비밀번호 변경
     @PutMapping("/me/password")
     @LoginSessionCheck
     public ResponseEntity<MessageResponse<Void>> changeMyPassword(
@@ -201,7 +189,6 @@ public class AdminController {
         return ResponseEntity.status(HttpStatus.OK).body(MessageResponse.success(HttpStatus.OK.name(), MSG_CHANGE_PASSWORD_SUCCESS));
     }
 
-    // 관리자 역할 변경
     @PutMapping("/{adminId}/role")
     @LoginSessionCheck
     public ResponseEntity<DataResponse<ChangeAdminRoleResponse>> changeAdminRole(
@@ -214,7 +201,6 @@ public class AdminController {
         return ResponseEntity.status(HttpStatus.OK).body(DataResponse.success(HttpStatus.OK.name(), response));
     }
 
-    // 관리자 상태 변경
     @PutMapping("/{adminId}/status")
     @LoginSessionCheck
     public ResponseEntity<DataResponse<ChangeAdminStatusResponse>> changeAdminStatus(

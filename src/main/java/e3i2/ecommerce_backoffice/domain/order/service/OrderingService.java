@@ -4,7 +4,6 @@ import e3i2.ecommerce_backoffice.common.dto.session.SessionAdmin;
 import e3i2.ecommerce_backoffice.common.exception.ErrorEnum;
 import e3i2.ecommerce_backoffice.common.exception.ServiceErrorException;
 import e3i2.ecommerce_backoffice.common.util.pagination.ItemsWithPagination;
-import e3i2.ecommerce_backoffice.domain.customer.entity.CustomerStatus;
 import e3i2.ecommerce_backoffice.domain.order.dto.*;
 import e3i2.ecommerce_backoffice.domain.admin.entity.Admin;
 import e3i2.ecommerce_backoffice.domain.admin.repository.AdminRepository;
@@ -102,7 +101,6 @@ public class OrderingService {
         );
     }
 
-    // 주문 리스트 통합 조회
     @Transactional(readOnly = true, propagation = Propagation.SUPPORTS)
     public ItemsWithPagination<List<SearchOrderingResponse>> searchAllOrdering(
             String orderNo, String customerName, OrderingStatus orderStatus, Integer page, Integer limit, String sortBy, String sortOrder) {
@@ -135,7 +133,6 @@ public class OrderingService {
         return ItemsWithPagination.register(items, page, limit, orders.getTotalElements());
     }
 
-    // 주문 상세 조회
     @Transactional(readOnly = true, propagation = Propagation.SUPPORTS)
     public SearchOrderingResponse searchOrdering(Long orderId) {
         Ordering order = orderingRepository.findByOrderIdAndDeletedFalse(orderId).
@@ -166,12 +163,10 @@ public class OrderingService {
         OrderingStatus current = ordering.getOrderStatus();
         OrderingStatus next = request.getStatus();
 
-        // 배송완료 상태는 변경 불가
         if (current == OrderingStatus.DELIVERED) {
             throw new ServiceErrorException(ERR_ORDER_PROCESSING_DELIVERED_FORBIDDEN);
         }
 
-        // 준비 중 -> 배송 중 -> 배송 완료 순으로만 상태 전이 가능
         if (!isValidNextStatus(current, next)) {
             throw new ServiceErrorException(ERR_ORDER_STATUS_INVALID_TRANSITION);
         }
@@ -208,14 +203,12 @@ public class OrderingService {
             throw new ServiceErrorException(ERR_ORDER_PROCESSING_DELIVERED_FORBIDDEN);
         }
 
-        // 이미 취소된 주문
         if (current == OrderingStatus.CANCELLED) {
             throw new ServiceErrorException(ERR_ORDER_ALREADY_CANCELLED);
         }
 
         ordering.cancel(request.getCancelReason());
 
-        // 취소 수량만큼 재고 증가, 총 주문수, 총 주문 금액 감소
         Product product = ordering.getProduct();
         product.restoreStock(ordering.getOrderQuantity());
         Customer customer = ordering.getCustomer();
@@ -236,7 +229,6 @@ public class OrderingService {
         );
     }
 
-    // 상태 전이 검증 메서드 (준비중 → 배송중 → 배송완료)
     private boolean isValidNextStatus(OrderingStatus current, OrderingStatus next) {
         if (current == OrderingStatus.PREPARING) {
             return next == OrderingStatus.SHIPPING;

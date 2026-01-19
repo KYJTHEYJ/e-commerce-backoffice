@@ -32,8 +32,7 @@ public class OrderingController {
         return ResponseEntity.status(HttpStatus.OK).body(DataResponse.success(HttpStatus.OK.name(), orderingService.createOrder(request, sessionAdmin)));
     }
 
-    // 주문 리스트 통합 조회
-    @GetMapping()
+    @GetMapping
     @LoginSessionCheck
     public ResponseEntity<DataResponse<ItemsWithPagination<List<SearchOrderingResponse>>>> searchAllOrderResponse(
             @RequestParam(required = false) String orderNo,
@@ -49,7 +48,6 @@ public class OrderingController {
                 orderingService.searchAllOrdering(orderNo, customerName, orderStatus, page, limit, sortBy, sortOrder)));
     }
 
-    // 주문 리스트 상세 조회
     @GetMapping("/{orderId}")
     ResponseEntity<DataResponse<SearchOrderingResponse>> searchOrderResponse(
             @PathVariable Long orderId) {
@@ -57,7 +55,6 @@ public class OrderingController {
                 orderingService.searchOrdering(orderId)));
     }
 
-    //주문 상태 수정
     @PutMapping("/{orderId}/status")
     @LoginSessionCheck
     public ResponseEntity<DataResponse<ChangeOrderingStatusResponse>> changeOrderingStatus(
@@ -67,7 +64,6 @@ public class OrderingController {
         return ResponseEntity.status(HttpStatus.OK).body(DataResponse.success(HttpStatus.OK.name(), orderingService.updateStatusOrdering(orderId, request)));
     }
 
-    //주문 취소
     @PutMapping("/{orderId}/cancel")
     @LoginSessionCheck
     public ResponseEntity<DataResponse<CancelOrderingResponse>> cancelOrdering(

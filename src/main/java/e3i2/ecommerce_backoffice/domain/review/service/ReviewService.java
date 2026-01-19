@@ -23,7 +23,6 @@ import java.util.List;
 public class ReviewService {
     private final ReviewRepository reviewRepository;
 
-    // 리뷰 리스트 조회
     @Transactional(readOnly = true)
     public ItemsWithPagination<List<SearchReviewResponse>> getReviewList(String keyword, Integer page, Integer size, String sortBy, String sortOrder, @Min(1) @Max(5) Integer rating) {
         Sort sort = sortOrder.equalsIgnoreCase("asc")

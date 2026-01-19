@@ -24,7 +24,6 @@ public class CustomerDataInitializer implements ApplicationRunner {
 
     private final CustomerRepository customerRepository;
 
-    // 고객 데이터 초기화
     @Override
     @Transactional
     public void run(@NonNull ApplicationArguments args) {

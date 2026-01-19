@@ -29,7 +29,6 @@ import java.util.List;
 public class ReviewController {
     private final ReviewService reviewService;
 
-    // 리뷰 리스트 조회
     @GetMapping("/api/reviews")
     @LoginSessionCheck
     public ResponseEntity<DataResponse<ItemsWithPagination<List<SearchReviewResponse>>>> getReviewList(

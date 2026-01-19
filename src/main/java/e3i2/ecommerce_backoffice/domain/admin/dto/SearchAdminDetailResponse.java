@@ -10,7 +10,6 @@ import lombok.Getter;
 
 import java.time.LocalDateTime;
 
-// 관리자 상세 조회
 @Getter
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonPropertyOrder({
@@ -48,9 +47,8 @@ public class SearchAdminDetailResponse {
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
     private final LocalDateTime deniedAt;
 
-    // 관리자 상태별 조건부 필드
-    private final String requestMessage;  // WAIT 상태일 때만
-    private final String deniedReason; // DENY 상태일 때만
+    private final String requestMessage;
+    private final String deniedReason;
 
     private SearchAdminDetailResponse(
             Long adminId,
@@ -91,7 +89,6 @@ public class SearchAdminDetailResponse {
             String requestMessage,
             String deniedReason
     ) {
-        // 상태별 조건부 필드
         String finalRequestMessage = null;
         String finalDeniedReason = null;
 
