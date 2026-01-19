@@ -497,7 +497,239 @@ ecommerce_backoffice
 <summary> 상품 </summary>
 <div markdown="1">
 
+### 1. 상품 추가
+- **URL**: `/api/products`
+- **Method**: `POST`
+- **Request Body**:
+```json
+{
+  "ProductName":"테스트 상품",
+  "category":"ELECTRONICS",
+  "price":100000,
+  "status":"ON_SALE",
+  "quantity":100
+}
+```
+- **Response**:
+```json
+{
+  "code": "CREATED",
+  "data": {
+    "category": "ELECTRONICS",
+    "createdAt": "2026-01-14",
+    "id": 1,
+    "name": "테스트 상품",
+    "price": 100000,
+    "quantity": 100,
+    "status": "ON_SALE"
+  },
+  "success": true
+}
+```
 
+### 2. 상품 조회
+- **URL**: `/api/products`
+- **Method**: `GET`
+- **Query Parameters**:
+    - `productName`: 상품명    
+    - `category`: 카테고리 필터
+    - `status`: 상태 필터
+    - `page`: 페이지 번호 
+    - `limit`: 페이지당 항목 수
+    - `sortOrder` : 정렬 순서 (asc, desc)
+    - `sortBy` 
+- **Response**:
+```json
+{
+  "success": true,
+  "code": "OK",
+  "data": {
+    "items": [
+      {
+        "id": 1,
+        "productName": "테스트 상품",
+        "category": "ELECTRONICS",
+        "price": 100000,
+        "quantity": 100,
+        "status": "ON_SALE",
+        "createdAt": "2026-01-16",
+        "adminId": 1,
+        "adminName": "TEST_SUPER_ADMIN",
+        "adminEmail": "admin@test.com"
+      }
+    ],
+    "pagination": {
+      "limit": 10,
+      "page": 1,
+      "total": 1,
+      "totalPages": 1
+    }
+  }
+}
+```
+
+### 3. 상품 개별 조회
+- **URL**: `/api/products/{product_id}`
+- **Method**: `GET`
+- **Parameter** `product_id`
+- **Response**:
+```json
+{
+  "success": true,
+  "code": "OK",
+  "data": {
+    "id": 1,
+    "productName": "테스트 제품1",
+    "category": "ELECTRONICS",
+    "price": 1500000,
+    "quantity": -4,
+    "status": "SOLD_OUT",
+    "createdAt": "2026-01-18",
+    "adminId": 1,
+    "adminName": "TEST_SUPER_ADMIN",
+    "adminEmail": "admin@test.com",
+    "reviewSummary": {
+      "averageRating": 2.3,
+      "totalReviews": 4,
+      "fiveStarCount": 0,
+      "fourStarCount": 1,
+      "threeStarCount": 0,
+      "twoStarCount": 2,
+      "oneStarCount": 1
+    },
+    "recentReview": [
+      {
+        "id": 5,
+        "productId": 1,
+        "customerId": 13,
+        "customer": "이서아",
+        "customerEmail": "seoa@example.com",
+        "product": "테스트 제품1",
+        "rating": 4,
+        "comment": "테스트 리뷰",
+        "date": "2026-01-18",
+        "orderNo": "ORDER-005"
+      },
+      {
+        "id": 4,
+        "productId": 1,
+        "customerId": 16,
+        "customer": "백하준",
+        "customerEmail": "hajun@example.com",
+        "product": "테스트 제품1",
+        "rating": 2,
+        "comment": "테스트 리뷰",
+        "date": "2026-01-18",
+        "orderNo": "ORDER-004"
+      },
+      {
+        "id": 3,
+        "productId": 1,
+        "customerId": 18,
+        "customer": "허지호",
+        "customerEmail": "jiho2@example.com",
+        "product": "테스트 제품1",
+        "rating": 2,
+        "comment": "테스트 리뷰",
+        "date": "2026-01-18",
+        "orderNo": "ORDER-003"
+      }
+    ]
+  }
+}
+```
+
+### 4. 상품 정보 수정
+- **URL**: `/api/products/{product_id}`
+- **Method**: `PUT`
+- **Request Body**:
+```json
+{
+  "productName":"트스테"
+, "category":"CLOTH"
+, "price":1000
+}
+```
+- **Response**:
+```json
+{
+  "code": "OK",
+  "data": {
+    "category": "CLOTH",
+    "createdAt": "2026-01-15T10:50:46.020801",
+    "id": 1,
+    "price": 1000,
+    "productName": "트스테",
+    "quantity": 100,
+    "status": "ON_SALE"
+  },
+  "success": true
+}
+```
+
+### 5. 상품 정보 수량 수정
+- **URL**: `/api/products/{product_id}/quantity`
+- **Method**: `PUT`
+- **Request Body**:
+```json
+{
+  "quantity": 100
+}
+```
+- **Response**:
+```json
+{
+  "code": "OK",
+  "data": {
+    "category": "CLOTH",
+    "createdAt": "2026-01-15T10:50:46.020801",
+    "id": 1,
+    "price": 1000,
+    "productName": "트스테",
+    "quantity": 100,
+    "status": "ON_SALE"
+  },
+  "success": true
+}
+```
+
+### 6. 상품 정보 상태 수정
+- **URL**: `/api/products/{product_id}/status`
+- **Method**: `PUT`
+- **Request Body**:
+```json
+{
+  "status":"SOLD_OUT"
+}
+```
+- **Response**:
+```json
+{
+  "code": "OK",
+  "data": {
+    "category": "CLOTH",
+    "createdAt": "2026-01-15T10:50:46.020801",
+    "id": 1,
+    "price": 1000,
+    "productName": "트스테",
+    "quantity": 100,
+    "status": "SOLD_OUT"
+  },
+  "success": true
+}
+```
+
+### 7. 상품 정보 삭제
+- **URL**: `/api/products/{product_id}`
+- **Method**: `DELETE`
+- **Response**:
+```json
+{
+  "success": true,
+  "code": "OK",
+  "message": "상품이 삭제되었습니다"
+}
+```
 
 </div>
 </details>
@@ -506,7 +738,140 @@ ecommerce_backoffice
 <summary> 고객 </summary>
 <div markdown="1">
 
+### 1. 고객 리스트 조회
+- **URL**: `/api/customers`
+- **Method**: `GET`
+- **Query Parameters**:
+    - `page`: 페이지 번호 (default: 1)
+    - `limit`: 페이지당 항목 수 (default: 10)
+    - `status`: 상태 필터 (ACTIVE, INACTIVE, BLOCKED)
+    - `search`: 검색어 (이름, 이메일, 전화번호)
+- **Response**:
+```json
+{
+  "success": true,
+  "code": "OK",
+  "data": {
+    "items": [
+      {
+        "customerId": 20,
+        "customerName": "강태우",
+        "email": "taewoo@example.com",
+        "phone": "010-0020-0020",
+        "status": "SUSPEND",
+        "createdAt": "2026-01-16",
+        "totalOrders": 2,
+        "totalSpent": 15600
+      },
+      {
+        "customerId": 19,
+        "customerName": "오수아",
+        "email": "sua@example.com",
+        "phone": "010-0019-0019",
+        "status": "IN_ACT",
+        "createdAt": "2026-01-16",
+        "totalOrders": 5,
+        "totalSpent": 71000
+      }
+    ],
+    "pagination": {
+      "limit": 2,
+      "page": 1,
+      "total": 18,
+      "totalPages": 9
+    }
+  }
+}
+```
 
+### 2. 고객 상세 조회
+- **URL**: `/api/customers/{customerId}`
+- **Method**: `GET`
+- **Response**:
+```json
+{
+  "success": true,
+  "code": "OK",
+  "data": {
+    "customerId": 3,
+    "customerName": "정유미",
+    "email": "yumi@example.com",
+    "phone": "010-0003-0003",
+    "status": "ACT",
+    "createdAt": "2026-01-16",
+    "totalOrders": 5,
+    "totalSpent": 76400
+  }
+}
+```
+
+### 3. 고객 정보 수정
+- **URL**: `/api/customers/{customerId}/info`
+- **Method**: `PATCH`
+- **Request Body**:
+```json
+{
+  "customerName": "이연준",
+  "email": "123ljy456@gmail.com",
+  "phone": "010-1234-1234"
+}
+```
+- **Response**:
+```json
+{
+  "success": true,
+  "code": "OK",
+  "data": {
+    "customerId": 1,
+    "customerName": "홍길동",
+    "email": "123ljy456@gmail.com",
+    "phone": "010-1234-5678",
+    "status": "IN_ACT",
+    "createdAt": "2026-01-16",
+    "totalOrders": 1,
+    "totalSpent": 30900
+  }
+}
+```
+
+### 4. 고객 상태 변경
+- **URL**: `/api/customers/{customerId}/status`
+- **Method**: `PATCH`
+- **Request Body**:
+```json
+{
+  "status": "ACT"
+}
+```
+- **Response**:
+```json
+{
+  "success": true,
+  "code": "OK",
+  "data": {
+    "customerId": 2,
+    "customerName": "송지호",
+    "email": "jiho@example.com",
+    "phone": "010-0002-0002",
+    "status": "ACT",
+    "createdAt": "2026-01-16",
+    "totalOrders": 4,
+    "totalSpent": 35600
+  }
+}
+```
+
+### 5. 고객 삭제
+- **URL**: `/api/customers/{customerId}`
+- **Method**: `DELETE`
+- **Response**:
+```json
+{
+  "success": true,
+  "code": "OK",
+  "message": "고객이 삭제 되었습니다"
+}
+```
 
 </div>
 </details>
@@ -515,7 +880,170 @@ ecommerce_backoffice
 <summary> 주문 </summary>
 <div markdown="1">
 
+### 1. 주문 생성
+- **URL**: `/api/orders`
+- **Method**: `POST`
+- **Request Body**:
+```json
+{
+  "customerId":1
+, "productId":1
+, "orderQuantity":10
+}
+```
+- **Response**:
+```json
+{
+  "success": true,
+  "code": "OK",
+  "data": {
+    "orderId": 5,
+    "orderNo": "ORDER-005",
+    "orderAt": "2026-01-17",
+    "customerId": 1,
+    "customerName": "강하윤",
+    "productId": 1,
+    "productName": "테스트 상품",
+    "productPrice": 100000,
+    "orderQuantity": 10,
+    "orderTotalPrice": 1000000,
+    "adminId": 1,
+    "adminName": "TEST_SUPER_ADMIN",
+    "adminEmail": "admin@test.com"
+  }
+}
+```
 
+### 2. 주문 리스트 통합 조회
+- **URL**: `/api/orders`
+- **Method**: `GET`
+- **Query Parameters**:
+    - `page`: 페이지 번호 (default: 1)
+    - `limit`: 페이지당 항목 수 (default: 10)
+    - `status`: 상태 필터 (PENDING, CONFIRMED, SHIPPING, DELIVERED, CANCELLED)
+    - `customerId`: 고객 ID 필터
+    - `startDate`: 시작 날짜
+    - `endDate`: 종료 날짜
+    - `search`: 검색어 (주문번호, 고객명)
+- **Response**:
+```json
+{
+  "success": true,
+  "code": "OK",
+  "data": {
+    "items": [
+      {
+        "id": 1,
+        "orderNo": "1",
+        "customerId": 1,
+        "customerName": "강하윤",
+        "productId": 1,
+        "productName": "hello",
+        "quantity": 5,
+        "amount": 1241424241,
+        "orderAt": "2026-01-16",
+        "AdminId": 1,
+        "AdminName": "TEST_SUPER_ADMIN",
+        "AdminRole": "SUPER_ADMIN",
+        "orderStatus": "DELIVERED"
+      }
+    ],
+    "pagination": {
+      "limit": 10,
+      "page": 1,
+      "total": 1,
+      "totalPages": 1
+    }
+  }
+}
+```
+
+### 3. 주문 상세 조회
+- **URL**: `/api/orders/{orderId}`
+- **Method**: `GET`
+- **Response**:
+```json
+{
+  "success": true,
+  "code": "OK",
+  "data": {
+    "id": 1,
+    "orderNo": "1",
+    "customerId": 1,
+    "customerName": "강하윤",
+    "productId": 1,
+    "productName": "daf",
+    "quantity": 1,
+    "amount": 52135154,
+    "orderAt": "2026-01-16",
+    "AdminId": 1,
+    "AdminName": "TEST_SUPER_ADMIN",
+    "AdminRole": "SUPER_ADMIN",
+    "orderStatus": "DELIVERED"
+  }
+}
+```
+
+### 4. 주문 상태 수정
+- **URL**: `/api/orders/{orderId}/status`
+- **Method**: `PUT`
+- **Request Body**:
+```json
+{
+  "status": "SHIPPING"
+}
+```
+- **Response**:
+```json
+{
+  "success": true,
+  "code": "OK",
+  "data": {
+    "orderId": "1",
+    "orderNo": "O001",
+    "customerId": "1",
+    "customerName": "권유준",
+    "email": "yujun@example.com",
+    "productId": "1",
+    "productName": "핸드크림 세트",
+    "quantity": 1,
+    "orderTotalPrice": 18000,
+    "createdAt": "2026-01-16",
+    "status": "SHIPPING"
+  }
+}
+```
+
+### 5. 주문 취소
+- **URL**: `/api/orders/{orderId}/cancel`
+- **Method**: `PUT`
+- **Request Body**:
+```json
+{
+  "cancelReason": "취소 사유입니다."
+}
+```
+- **Response**:
+```json
+{
+  "success": true,
+  "code": "OK",
+  "data": {
+    "orderId": "ORDER-0010",
+    "orderNo": "O001",
+    "customerId": "1",
+    "customerName": "진이준",
+    "email": "ijun@example.com",
+    "productId": "P005",
+    "productName": "블루투스 스피커",
+    "orderQuantity": 3,
+    "orderTotalPrice": 375000,
+    "deletedAt": "2026-01-15",
+    "status": "CANCELLED",
+    "cancelReason": "취소 사유입니다."
+  }
+}
+```
 
 </div>
 </details>
@@ -524,7 +1052,92 @@ ecommerce_backoffice
 <summary> 리뷰 </summary>
 <div markdown="1">
 
+### 1. 리뷰 리스트 조회
+- **URL**: `/api/reviews`
+- **Method**: `GET`
+- **Query Parameters**:
+    - `page`: 페이지 번호 (default: 1)
+    - `limit`: 페이지당 항목 수 (default: 10)
+    - `productId`: 상품 ID 필터
+    - `customerId`: 고객 ID 필터
+    - `rating`: 평점 필터 (1-5)
+    - `search`: 검색어
+- **Response**:
+```json
+{
+  "success": true,
+  "code": "OK",
+  "data": {
+    "items": [
+      {
+        "id": "R001",
+        "orderNo": "ORDER-0073",
+        "productId": "1",
+        "customerId": "1",
+        "customer": "정유미",
+        "customerEmail": "yumi@example.com",
+        "product": "운동복 세트",
+        "rating": 5,
+        "comment": "가성비 최고입니다. 강력 추천해요!",
+        "date": "2026-01-05"
+      },
+      {
+        "id": "R002",
+        "orderNo": "ORDER-0034",
+        "productId": "2",
+        "customerId": "5",
+        "customer": "양지후",
+        "customerEmail": "jihoo@example.com",
+        "product": "올리브오일",
+        "rating": 3,
+        "comment": "화면이랑 색상이 조금 다르네요.",
+        "date": "2026-01-04"
+      }
+    ],
+    "pagination": {
+      "page": 1,
+      "limit": 10,
+      "total": 2,
+      "totalPages": 1
+    }
+  }
+}
+```
 
+### 2. 리뷰 상세 조회
+- **URL**: `/api/reviews/{reviewId}`
+- **Method**: `GET`
+- **Response**:
+```json
+{
+  "success": true,
+  "code": "OK",
+  "data": {
+    "id": "R001",
+    "orderNo": "ORDER-0020",
+    "productId": "P100",
+    "customerId": "1",
+    "customer": "허지호",
+    "customerEmail": "jiho2@example.com",
+    "product": "인형의 집",
+    "rating": 5,
+    "comment": "정말 만족스러운 구매였습니다! 품질이 훌륭해요.",
+    "date": "2025-12-28"
+  }
+}
+```
+
+### 3. 리뷰 삭제
+- **URL**: `/api/reviews/{reviewId}`
+- **Method**: `DELETE`
+- **Response**:
+```json
+{
+  "success": true,
+  "code": "OK",
+  "message": "리뷰가 삭제 되었습니다"
+}
+```
 
 </div>
 </details>
@@ -533,7 +1146,55 @@ ecommerce_backoffice
 <summary> 대시보드 </summary>
 <div markdown="1">
 
-
+### 1. 대시보드 통계
+- **URL**: `/api/dashboard/stat`
+- **Method**: `GET`
+- **Query Parameters**:
+    - `startDate`: 시작 날짜 (default: 오늘 기준 30일 전)
+    - `endDate`: 종료 날짜 (default: 오늘)
+- **Response**:
+```json
+{
+  "summary": {
+    "totalSales": 150000000,
+    "totalOrders": 500,
+    "totalCustomers": 300,
+    "totalProducts": 150
+  },
+  "salesTrend": [
+    {
+      "date": "2024-01-01",
+      "sales": 5000000,
+      "orders": 20
+    }
+  ],
+  "topProducts": [
+    {
+      "productId": 1,
+      "productName": "맥북 프로 16인치",
+      "sales": 35000000,
+      "quantity": 10
+    }
+  ],
+  "recentOrders": [
+    {
+      "orderId": 1,
+      "orderNumber": "ORD-20240101-0001",
+      "customerName": "김고객",
+      "amount": 7000000,
+      "status": "CONFIRMED",
+      "createdAt": "2024-01-01T00:00:00Z"
+    }
+  ],
+  "statusBreakdown": {
+    "pending": 10,
+    "confirmed": 30,
+    "shipping": 20,
+    "delivered": 400,
+    "cancelled": 40
+  }
+}
+```
 
 </div>
 </details>
