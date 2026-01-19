@@ -751,10 +751,12 @@ ecommerce_backoffice
 - **URL**: `/api/customers`
 - **Method**: `GET`
 - **Query Parameters**:
+    - `customerName`, `email`: 검색 키워드
     - `page`: 페이지 번호 (default: 1)
     - `limit`: 페이지당 항목 수 (default: 10)
-    - `status`: 상태 필터 (ACTIVE, INACTIVE, BLOCKED)
-    - `search`: 검색어 (이름, 이메일, 전화번호)
+    - `sortBy` : 정렬 기준 (adminName, email, createdAt 등...)
+    - `sortOrder` : 정렬 순서 (asc, desc)
+    - `status`: 상태 필터 (ACT, IN_ACT, SUSOEND)
 - **Response**:
 ```json
 {
@@ -932,13 +934,7 @@ ecommerce_backoffice
 - **URL**: `/api/orders`
 - **Method**: `GET`
 - **Query Parameters**:
-    - `page`: 페이지 번호 (default: 1)
-    - `limit`: 페이지당 항목 수 (default: 10)
-    - `status`: 상태 필터 (PENDING, CONFIRMED, SHIPPING, DELIVERED, CANCELLED)
-    - `customerId`: 고객 ID 필터
-    - `startDate`: 시작 날짜
-    - `endDate`: 종료 날짜
-    - `search`: 검색어 (주문번호, 고객명)
+    - `orderNo`, `orderStatus`, `customerName`: 검색 키워드
 - **Response**:
 ```json
 {
@@ -1073,12 +1069,12 @@ ecommerce_backoffice
 - **URL**: `/api/reviews`
 - **Method**: `GET`
 - **Query Parameters**:
+    - `customerName`, `email`: 검색 키워드
     - `page`: 페이지 번호 (default: 1)
     - `limit`: 페이지당 항목 수 (default: 10)
-    - `productId`: 상품 ID 필터
-    - `customerId`: 고객 ID 필터
-    - `rating`: 평점 필터 (1-5)
-    - `search`: 검색어
+    - `sortBy` : 정렬 기준 (adminName, email, createdAt 등...)
+    - `sortOrder` : 정렬 순서 (asc, desc)
+    - `rating`: 평점 필터 (1~5)
 - **Response**:
 ```json
 {
@@ -1149,7 +1145,6 @@ ecommerce_backoffice
 - **URL**: `/api/reviews/{reviewId}`
 - **Method**: `DELETE`
 - **Parameter** `reviewId`
-
 - **Response**:
 ```json
 {
@@ -1169,9 +1164,6 @@ ecommerce_backoffice
 ### 1. 대시보드 통계
 - **URL**: `/api/dashboard/stat`
 - **Method**: `GET`
-- **Query Parameters**:
-    - `startDate`: 시작 날짜 (default: 오늘 기준 30일 전)
-    - `endDate`: 종료 날짜 (default: 오늘)
 - **Response**:
 ```json
 {
