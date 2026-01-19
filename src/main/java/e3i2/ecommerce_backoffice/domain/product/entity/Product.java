@@ -79,11 +79,6 @@ public class Product extends Base {
         deletedAt = LocalDateTime.now();
     }
 
-    public void restore() {
-        deleted = false;
-        deletedAt = null;
-    }
-
     //주문 취소 시 재고량 복구 메서드
     public void restoreStock(Long quantity) {
         this.quantity += quantity;

@@ -107,11 +107,6 @@ public class Admin extends Base {
         deleted = true;
         deletedAt = LocalDateTime.now();
     }
-
-    public void restore() {
-        deleted = false;
-        deletedAt = null;
-    }
 }
 
 

@@ -1,27 +1,62 @@
 package e3i2.ecommerce_backoffice.domain.dashboard.dto;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import e3i2.ecommerce_backoffice.domain.order.entity.OrderingStatus;
-import lombok.AccessLevel;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
 
 @Getter
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@JsonPropertyOrder({
+    "orderId",
+    "orderNo",
+    "customerId",
+    "customerName",
+    "email",
+    "productName",
+    "orderQuantity",
+    "orderTotalPrice",
+    "orderCreatedAt",
+    "status"
+})
 public class SearchRecentListResponse {
-    private Long orderId;
-    private String orderNo;
-    private Long customerId;
-    private String customerName;
-    private String email;
-    private String productName;
-    private Long orderQuantity;
-    private Long orderTotalPrice;
+    private final Long orderId;
+    private final String orderNo;
+    private final Long customerId;
+    private final String customerName;
+    private final String email;
+    private final String productName;
+    private final Long orderQuantity;
+    private final Long orderTotalPrice;
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
-    private LocalDateTime orderCreatedAt;
-    private OrderingStatus status;
+    private final LocalDateTime orderCreatedAt;
+    private final String status;
+
+    private SearchRecentListResponse(
+            Long orderId,
+            String orderNo,
+            Long customerId,
+            String customerName,
+            String email,
+            String productName,
+            Long orderQuantity,
+            Long orderTotalPrice,
+            LocalDateTime orderCreatedAt,
+            String status
+
+    ) {
+        this.orderId = orderId;
+        this.orderNo = orderNo;
+        this.customerId = customerId;
+        this.customerName = customerName;
+        this.email = email;
+        this.productName = productName;
+        this.orderQuantity = orderQuantity;
+        this.orderTotalPrice = orderTotalPrice;
+        this.orderCreatedAt = orderCreatedAt;
+        this.status = status;
+    }
 
     public static SearchRecentListResponse register(
             Long orderId,
@@ -36,19 +71,7 @@ public class SearchRecentListResponse {
             OrderingStatus status
 
     ) {
-        SearchRecentListResponse response = new SearchRecentListResponse();
-        response.orderId = orderId;
-        response.orderNo = orderNo;
-        response.customerId = customerId;
-        response.customerName = customerName;
-        response.email = email;
-        response.productName = productName;
-        response.orderQuantity = orderQuantity;
-        response.orderTotalPrice = orderTotalPrice;
-        response.orderCreatedAt = orderCreatedAt;
-        response.status = status;
-
-        return response;
+        return new SearchRecentListResponse(orderId, orderNo, customerId, customerName, email, productName, orderQuantity, orderTotalPrice, orderCreatedAt, status.getStatusCode());
     }
 
 

@@ -56,11 +56,6 @@ public class Ordering extends Base {
         deletedAt = LocalDateTime.now();
     }
 
-    public void restore() {
-        deleted = false;
-        deletedAt = null;
-    }
-
     public static Ordering register(String orderNo, Long orderQuantity, Product product, Customer customer, Admin admin) {
         Ordering ordering = new Ordering();
         ordering.orderNo = orderNo;
