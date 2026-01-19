@@ -50,6 +50,5 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
         """)
     List<ProductCategoryCount> countByCategoryGroupByCategory();
 
-    // 품절
     long countByQuantityAndDeletedFalse(Long quantity);
 }

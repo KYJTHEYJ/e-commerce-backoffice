@@ -12,8 +12,6 @@ import e3i2.ecommerce_backoffice.domain.admin.entity.Admin;
 import e3i2.ecommerce_backoffice.domain.admin.entity.AdminRole;
 import e3i2.ecommerce_backoffice.domain.admin.entity.AdminStatus;
 import e3i2.ecommerce_backoffice.domain.admin.repository.AdminRepository;
-import e3i2.ecommerce_backoffice.domain.product.entity.ProductCategory;
-import e3i2.ecommerce_backoffice.domain.product.entity.ProductStatus;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -23,7 +21,6 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 import static e3i2.ecommerce_backoffice.common.exception.ErrorEnum.*;
@@ -75,7 +72,6 @@ public class AdminService {
             throw new ServiceErrorException(ERR_WRONG_EMAIL_PASSWORD);
         }
 
-        // 관리자 상태별 로그인 제한
         switch (admin.getStatus()) {
             case WAIT:
                 throw new ServiceErrorException(ERR_WAIT_ADMIN_ACCOUNT_LOGIN);
@@ -86,7 +82,6 @@ public class AdminService {
             case IN_ACT:
                 throw new ServiceErrorException(ERR_IN_ACT_ADMIN_ACCOUNT_LOGIN);
             case ACT:
-                // 정상 로그인 → 통과
                 break;
             default:
                 throw new ServiceErrorException(ERR_UNAUTHORIZED_ACCOUNT_LOGIN);
@@ -159,7 +154,6 @@ public class AdminService {
         );
     }
 
-    //관리자 리스트 조회
     @Transactional(readOnly = true)
     public ItemsWithPagination<List<SearchAdminDetailResponse>> getAdminList (
             String keyword, int page, int limit, String sortBy, String sortOrder, AdminRole role, AdminStatus status, SessionAdmin loginAdmin
@@ -212,7 +206,6 @@ public class AdminService {
         return ItemsWithPagination.register(items, page, limit, admins.getTotalElements());
     }
 
-    // 관리자 상세 조회
     @Transactional(readOnly = true)
     public SearchAdminDetailResponse getAdminDetail(Long adminId, SessionAdmin loginAdmin) {
         if (loginAdmin.getRole() != AdminRole.SUPER_ADMIN) {
@@ -248,7 +241,6 @@ public class AdminService {
         );
     }
 
-    // 관리자 정보 수정
     @Transactional
     public UpdateAdminResponse updateAdmin(Long adminId, @Valid UpdateAdminRequest request, SessionAdmin loginAdmin) {
         if (loginAdmin.getRole() != AdminRole.SUPER_ADMIN) {
@@ -281,7 +273,6 @@ public class AdminService {
         );
     }
 
-    // 관리자 삭제
     @Transactional
     public void deleteAdmin(Long adminId, SessionAdmin loginAdmin) {
         if (loginAdmin.getRole() != AdminRole.SUPER_ADMIN) {
@@ -299,7 +290,6 @@ public class AdminService {
         admin.delete();
     }
 
-    // 내 프로필 조회 (로그인 사용자)
     @Transactional(readOnly = true)
     public GetMyProfileResponse getMyProfile(Long adminId) {
         Admin admin = adminRepository.findByAdminIdAndDeletedFalse(adminId).orElseThrow(
@@ -319,7 +309,6 @@ public class AdminService {
         );
     }
 
-    // 내 프로필 수정 (로그인 사용자)
     @Transactional
     public UpdateMyProfileResponse updateMyProfile(UpdateMyProfileRequest request, Long adminId) {
         Admin admin = adminRepository.findByAdminIdAndDeletedFalse(adminId).orElseThrow(
@@ -349,7 +338,6 @@ public class AdminService {
         );
     }
 
-    // 내 비밀번호 변경 (로그인 사용자)
     @Transactional
     public void changeMyPassword(ChangeMyPasswordRequest request, Long adminId) {
         Admin admin = adminRepository.findByAdminIdAndDeletedFalse(adminId).orElseThrow(
@@ -368,7 +356,6 @@ public class AdminService {
         admin.changePassword(encodedPassword);
     }
 
-    // 관리자 역할 변경
     @Transactional
     public ChangeAdminRoleResponse changeAdminRole(@Valid ChangeAdminRoleRequest request, Long adminId, SessionAdmin loginAdmin) {
         if (loginAdmin.getRole() != AdminRole.SUPER_ADMIN) {
@@ -398,7 +385,6 @@ public class AdminService {
         );
     }
 
-    //관리자 상태 변경
     @Transactional
     public ChangeAdminStatusResponse changeAdminStatus(ChangeAdminStatusRequest request, Long adminId, SessionAdmin loginAdmin) {
         if (loginAdmin.getRole() != AdminRole.SUPER_ADMIN) {

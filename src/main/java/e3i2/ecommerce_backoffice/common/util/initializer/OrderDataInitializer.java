@@ -52,13 +52,11 @@ public class OrderDataInitializer implements ApplicationRunner {
 
         List<Product> products = productRepository.findAll();
 
-        // 주문 시퀀스 초기화
         if (orderingSeqRepository.count() == 0) {
             OrderingSeq orderingSeq = OrderingSeq.register();
             orderingSeqRepository.save(orderingSeq);
         }
 
-        // 주문 데이터 5개 생성
         for (int i = 0; i < 5; i++) {
             Customer customer = customers.get(new Random().nextInt(customers.size()));
             Product product = products.get(new Random().nextInt(products.size()));

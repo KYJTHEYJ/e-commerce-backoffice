@@ -14,17 +14,13 @@ import lombok.Getter;
     "soldOutStockCount"
 })
 public class SearchWidgetsResponse {
-
-    // 매출
     private final Long totalSales;
     private final Long todaySales;
 
-    // 주문 상태
     private final Long preparingCount;
     private final Long shippingCount;
     private final Long deliveredCount;
 
-    // 재고
     private final Long lowStockCount;
     private final Long soldOutStockCount;
 

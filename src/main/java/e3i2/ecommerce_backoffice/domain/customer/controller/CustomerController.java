@@ -22,7 +22,6 @@ import static e3i2.ecommerce_backoffice.common.util.Constants.MSG_DELETE_CUSTOME
 public class CustomerController {
     private final CustomerService customerService;
 
-    // 고객 리스트 조회
     @GetMapping("/api/customers")
     @LoginSessionCheck
     public ResponseEntity<DataResponse<ItemsWithPagination<List<GetCustomerResponse>>>> getAll(
@@ -37,28 +36,24 @@ public class CustomerController {
         return ResponseEntity.status(HttpStatus.OK).body(DataResponse.success(HttpStatus.OK.name(), customerService.findAll(customerName, email, page, limit, sortBy, sortOrder, status)));
     }
 
-    // 고객 상세 조회
     @GetMapping("/api/customers/{customerId}")
     @LoginSessionCheck
     public ResponseEntity<DataResponse<GetCustomerResponse>> getOne(@PathVariable Long customerId) {
         return ResponseEntity.status(HttpStatus.OK).body(DataResponse.success(HttpStatus.OK.name(), customerService.findOne(customerId)));
     }
 
-    // 고객 정보 수정
     @PutMapping("/api/customers/{customerId}/info")
     @LoginSessionCheck
     public ResponseEntity<DataResponse<PutInfoCustomerResponse>> putInfo(@PathVariable Long customerId, @Valid @RequestBody PutInfoCustomerRequest request) {
         return ResponseEntity.status(HttpStatus.OK).body(DataResponse.success(HttpStatus.OK.name(), customerService.updateInfo(customerId, request)));
     }
 
-    // 고객 상태 변경
     @PutMapping("/api/customers/{customerId}/status")
     @LoginSessionCheck
     public ResponseEntity<DataResponse<PutStatusCustomerResponse>> putStatus(@PathVariable Long customerId, @Valid @RequestBody PutStatusCustomerRequest request) {
         return ResponseEntity.status(HttpStatus.OK).body(DataResponse.success(HttpStatus.OK.name(), customerService.updateStatus(customerId, request)));
     }
 
-    // 고객 삭제
     @DeleteMapping("/api/customers/{customerId}")
     @LoginSessionCheck
     public ResponseEntity<MessageResponse<Void>> delete(@PathVariable Long customerId) {

@@ -41,7 +41,6 @@ public interface OrderingRepository extends JpaRepository<Ordering, Long> {
 
     Long countByDeletedFalse();
 
-    // 총 매출
     @Query("""
         SELECT COALESCE(SUM(o.orderTotalPrice), 0)
         FROM Ordering o
@@ -49,7 +48,6 @@ public interface OrderingRepository extends JpaRepository<Ordering, Long> {
     """)
     Long sumTotalSales();
 
-    // 오늘 매출
     @Query("""
         SELECT COALESCE(SUM(o.orderTotalPrice), 0)
         FROM Ordering o
@@ -61,7 +59,6 @@ public interface OrderingRepository extends JpaRepository<Ordering, Long> {
             @Param("end") LocalDateTime end
     );
 
-    // 주문 상태별 개수
     long countByOrderStatusAndDeletedFalse(OrderingStatus status);
 
     @Query("""
