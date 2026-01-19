@@ -1,35 +1,69 @@
 package e3i2.ecommerce_backoffice.domain.admin.dto;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import e3i2.ecommerce_backoffice.domain.admin.entity.AdminRole;
 import e3i2.ecommerce_backoffice.domain.admin.entity.AdminStatus;
-import lombok.AccessLevel;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
 
 @Getter
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@JsonPropertyOrder({
+    "adminId",
+    "adminName",
+    "email",
+    "phone",
+    "role",
+    "status",
+    "createdAt",
+    "updatedAt",
+    "acceptedAt",
+    "deniedAt"
+})
 public class UpdateAdminResponse {
-    private Long adminId;
-    private String adminName;
-    private String email;
-    private String phone;
-    private AdminRole role;
-    private AdminStatus status;
+    private final Long adminId;
+    private final String adminName;
+    private final String email;
+    private final String phone;
+    private final String role;
+    private final String status;
 
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
-    private LocalDateTime createdAt;
+    private final LocalDateTime createdAt;
 
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
-    private LocalDateTime updatedAt;
+    private final LocalDateTime updatedAt;
 
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
-    private LocalDateTime acceptedAt;
+    private final LocalDateTime acceptedAt;
 
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
-    private LocalDateTime deniedAt;
+    private final LocalDateTime deniedAt;
+
+    private UpdateAdminResponse(
+            Long adminId,
+            String adminName,
+            String email,
+            String phone,
+            String role,
+            String status,
+            LocalDateTime createdAt,
+            LocalDateTime updatedAt,
+            LocalDateTime acceptedAt,
+            LocalDateTime deniedAt
+    ) {
+        this.adminId = adminId;
+        this.adminName = adminName;
+        this.email = email;
+        this.phone = phone;
+        this.role = role;
+        this.status = status;
+        this.createdAt = createdAt;
+        this.updatedAt = updatedAt;
+        this.acceptedAt = acceptedAt;
+        this.deniedAt = deniedAt;
+    }
 
     public static UpdateAdminResponse register(
             Long adminId,
@@ -43,18 +77,18 @@ public class UpdateAdminResponse {
             LocalDateTime acceptedAt,
             LocalDateTime deniedAt
     ) {
-        UpdateAdminResponse response = new UpdateAdminResponse();
-        response.adminId = adminId;
-        response.adminName = adminName;
-        response.email = email;
-        response.phone = phone;
-        response.role = role;
-        response.status = status;
-        response.createdAt = createdAt;
-        response.updatedAt = updatedAt;
-        response.acceptedAt = acceptedAt;
-        response.deniedAt = deniedAt;
-        return response;
+        return new UpdateAdminResponse(
+                adminId,
+                adminName,
+                email,
+                phone,
+                role.getRoleCode(),
+                status.getStatusCode(),
+                createdAt,
+                updatedAt,
+                acceptedAt,
+                deniedAt
+        );
     }
 
 }

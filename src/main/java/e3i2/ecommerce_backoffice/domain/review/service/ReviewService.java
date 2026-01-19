@@ -56,7 +56,7 @@ public class ReviewService {
 
     @Transactional(readOnly = true)
     public SearchReviewResponse findOne(Long reviewId) {
-        Review review = reviewRepository.findById(reviewId).orElseThrow(
+        Review review = reviewRepository.findByReviewIdAndDeletedFalse(reviewId).orElseThrow(
                 () -> new ServiceErrorException(ErrorEnum.ERR_NOT_FOUND_REVIEW)
         );
         return SearchReviewResponse.register(

@@ -1,26 +1,50 @@
 package e3i2.ecommerce_backoffice.domain.dashboard.dto;
 
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 
 @Getter
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@JsonPropertyOrder({
+    "totalSales",
+    "todaySales",
+    "preparingCount",
+    "shippingCount",
+    "deliveredCount",
+    "lowStockCount",
+    "soldOutStockCount"
+})
 public class SearchWidgetsResponse {
 
     // 매출
-    private Long totalSales;
-    private Long todaySales;
+    private final Long totalSales;
+    private final Long todaySales;
 
     // 주문 상태
-    private Long preparingCount;
-    private Long shippingCount;
-    private Long deliveredCount;
+    private final Long preparingCount;
+    private final Long shippingCount;
+    private final Long deliveredCount;
 
     // 재고
-    private Long lowStockCount;
-    private Long soldOutStockCount;
+    private final Long lowStockCount;
+    private final Long soldOutStockCount;
+
+    private SearchWidgetsResponse(
+            Long totalSales,
+            Long todaySales,
+            Long preparingCount,
+            Long shippingCount,
+            Long deliveredCount,
+            Long lowStockCount,
+            Long soldOutStockCount
+    ) {
+        this.totalSales = totalSales;
+        this.todaySales = todaySales;
+        this.preparingCount = preparingCount;
+        this.shippingCount = shippingCount;
+        this.deliveredCount = deliveredCount;
+        this.lowStockCount = lowStockCount;
+        this.soldOutStockCount = soldOutStockCount;
+    }
 
     public static SearchWidgetsResponse register(
             Long totalSales,
@@ -31,14 +55,6 @@ public class SearchWidgetsResponse {
             Long lowStockCount,
             Long soldOutStockCount
     ) {
-        SearchWidgetsResponse response = new SearchWidgetsResponse();
-        response.totalSales = totalSales;
-        response.todaySales = todaySales;
-        response.preparingCount = preparingCount;
-        response.shippingCount = shippingCount;
-        response.deliveredCount = deliveredCount;
-        response.lowStockCount = lowStockCount;
-        response.soldOutStockCount = soldOutStockCount;
-        return response;
+        return new SearchWidgetsResponse(totalSales, todaySales, preparingCount, shippingCount, deliveredCount, lowStockCount, soldOutStockCount);
     }
 }

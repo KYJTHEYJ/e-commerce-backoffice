@@ -17,6 +17,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
+import static e3i2.ecommerce_backoffice.common.exception.ErrorEnum.ERR_NOT_FOUND_CUSTOMER_STATUS;
+
 @Service
 @RequiredArgsConstructor
 public class CustomerService {
@@ -56,14 +58,19 @@ public class CustomerService {
         Customer customer = customerRepository.findByCustomerIdAndDeletedFalse(customerId).orElseThrow(
                 () -> new ServiceErrorException(ErrorEnum.ERR_NOT_FOUND_CUSTOMER)
         );
+
         boolean emailExists = customerRepository.existsByEmail(request.getEmail());
+
         if (emailExists) {
             throw new ServiceErrorException(ErrorEnum.ERR_DUPLICATED_EMAIL);
         }
+
         boolean phoneExists = customerRepository.existsByPhone(request.getPhone());
+
         if (phoneExists) {
             throw new ServiceErrorException(ErrorEnum.ERR_DUPLICATED_PHONE);
         }
+
         customer.update(request.getCustomerName(), request.getEmail(), request.getPhone());
         return new PutInfoCustomerResponse(customer.getCustomerId(), customer.getCustomerName(), customer.getEmail(), customer.getPhone(), customer.getCustomerStatus().getStatusCode(), customer.getCreatedAt(), customer.getTotalOrders(), customer.getTotalSpent());
 
@@ -75,6 +82,11 @@ public class CustomerService {
         Customer customer = customerRepository.findByCustomerIdAndDeletedFalse(customerId).orElseThrow(
                 () -> new ServiceErrorException(ErrorEnum.ERR_NOT_FOUND_CUSTOMER)
         );
+
+        if(request.getStatus() == CustomerStatus.UNKNOWN) {
+            throw new ServiceErrorException(ERR_NOT_FOUND_CUSTOMER_STATUS);
+        }
+
         customer.statusChange(request.getStatus());
         return new PutStatusCustomerResponse(customer.getCustomerId(), customer.getCustomerName(), customer.getEmail(), customer.getPhone(), customer.getCustomerStatus().getStatusCode(), customer.getCreatedAt(),  customer.getTotalOrders(), customer.getTotalSpent());
     }
@@ -85,6 +97,7 @@ public class CustomerService {
         Customer customer = customerRepository.findByCustomerIdAndDeletedFalse(customerId).orElseThrow(
                 () -> new ServiceErrorException(ErrorEnum.ERR_NOT_FOUND_CUSTOMER)
         );
+
         if (customer.getTotalOrders() > 0) {
             throw new ServiceErrorException(ErrorEnum.ERR_DENY_CUSTOMER_ACCOUNT_DELETE);
         }

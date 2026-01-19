@@ -6,16 +6,13 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import e3i2.ecommerce_backoffice.domain.admin.entity.AdminRole;
 import e3i2.ecommerce_backoffice.domain.admin.entity.AdminStatus;
-import lombok.AccessLevel;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
 
 // 관리자 상세 조회
 @Getter
 @JsonInclude(JsonInclude.Include.NON_NULL)
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @JsonPropertyOrder({
         "id",
         "name",
@@ -32,28 +29,54 @@ import java.time.LocalDateTime;
 public class SearchAdminDetailResponse {
 
     @JsonProperty("id")
-    private Long adminId;
+    private final Long adminId;
 
     @JsonProperty("name")
-    private String adminName;
+    private final String adminName;
 
-    private String email;
-    private String phone;
-    private AdminRole role;
-    private AdminStatus status;
-
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
-    private LocalDateTime createdAt;
+    private final String email;
+    private final String phone;
+    private final String role;
+    private final String status;
 
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
-    private String acceptedAt;
+    private final LocalDateTime createdAt;
 
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
-    private String deniedAt;
+    private final LocalDateTime acceptedAt;
+
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
+    private final LocalDateTime deniedAt;
 
     // 관리자 상태별 조건부 필드
-    private String requestMessage;  // WAIT 상태일 때만
-    private String deniedReason; // DENY 상태일 때만
+    private final String requestMessage;  // WAIT 상태일 때만
+    private final String deniedReason; // DENY 상태일 때만
+
+    private SearchAdminDetailResponse(
+            Long adminId,
+            String adminName,
+            String email,
+            String phone,
+            AdminRole role,
+            AdminStatus status,
+            LocalDateTime createdAt,
+            LocalDateTime acceptedAt,
+            LocalDateTime deniedAt,
+            String requestMessage,
+            String deniedReason
+    ) {
+        this.adminId = adminId;
+        this.adminName = adminName;
+        this.email = email;
+        this.phone = phone;
+        this.role = role.getRoleCode();
+        this.status = status.getStatusCode();
+        this.createdAt = createdAt;
+        this.acceptedAt = acceptedAt;
+        this.deniedAt = deniedAt;
+        this.requestMessage = requestMessage;
+        this.deniedReason = deniedReason;
+    }
 
     public static SearchAdminDetailResponse register(
             Long adminId,
@@ -63,30 +86,33 @@ public class SearchAdminDetailResponse {
             AdminRole role,
             AdminStatus status,
             LocalDateTime createdAt,
-            String acceptedAt,
-            String deniedAt,
+            LocalDateTime acceptedAt,
+            LocalDateTime deniedAt,
             String requestMessage,
             String deniedReason
     ) {
-        SearchAdminDetailResponse response = new SearchAdminDetailResponse();
-
-        response.adminId = adminId;
-        response.adminName = adminName;
-        response.email = email;
-        response.phone = phone;
-        response.role = role;
-        response.status = status;
-        response.createdAt = createdAt;
-        response.acceptedAt = acceptedAt;
-        response.deniedAt = deniedAt;
-
         // 상태별 조건부 필드
-        if (status == AdminStatus.WAIT) {
-            response.requestMessage = requestMessage;
-        } else if (status == AdminStatus.DENY) {
-            response.deniedReason = deniedReason;
+        String finalRequestMessage = null;
+        String finalDeniedReason = null;
+
+        if (status.getStatusCode().equals(AdminStatus.WAIT.getStatusCode())) {
+            finalRequestMessage = requestMessage;
+        } else if (status.getStatusCode().equals(AdminStatus.DENY.getStatusCode())) {
+            finalDeniedReason = deniedReason;
         }
 
-        return response;
+        return new SearchAdminDetailResponse(
+                adminId,
+                adminName,
+                email,
+                phone,
+                role,
+                status,
+                createdAt,
+                acceptedAt,
+                deniedAt,
+                finalRequestMessage,
+                finalDeniedReason
+        );
     }
 }

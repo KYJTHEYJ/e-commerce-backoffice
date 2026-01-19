@@ -37,11 +37,11 @@ public interface ReviewRepository extends JpaRepository<Review, Long> {
     @Query("""
             SELECT ifnull(round(avg(r.rating), 1), 0) AS averageRating
             , count(r.reviewId) AS totalReviews
-            , (SELECT count(r.reviewId) FROM Review r WHERE r.rating = 5 and r.product = :product) AS fiveStarCount
-            , (SELECT count(r.reviewId) FROM Review r WHERE r.rating = 4 and r.product = :product) AS fourStarCount
-            , (SELECT count(r.reviewId) FROM Review r WHERE r.rating = 3 and r.product = :product) AS threeStarCount
-            , (SELECT count(r.reviewId) FROM Review r WHERE r.rating = 2 and r.product = :product) AS twoStarCount
-            , (SELECT count(r.reviewId) FROM Review r WHERE r.rating = 1 and r.product = :product) AS oneStarCount
+            , (SELECT count(r.reviewId) FROM Review r WHERE r.rating = 5 and r.product = :product AND r.deleted = false) AS fiveStarCount
+            , (SELECT count(r.reviewId) FROM Review r WHERE r.rating = 4 and r.product = :product AND r.deleted = false) AS fourStarCount
+            , (SELECT count(r.reviewId) FROM Review r WHERE r.rating = 3 and r.product = :product AND r.deleted = false) AS threeStarCount
+            , (SELECT count(r.reviewId) FROM Review r WHERE r.rating = 2 and r.product = :product AND r.deleted = false) AS twoStarCount
+            , (SELECT count(r.reviewId) FROM Review r WHERE r.rating = 1 and r.product = :product AND r.deleted = false) AS oneStarCount
             FROM Review r
             INNER JOIN r.product
             WHERE r.product = :product
@@ -49,7 +49,7 @@ public interface ReviewRepository extends JpaRepository<Review, Long> {
            """)
     ReviewSummary findReviewSummaryByProductId(@Param("product") Product product);
 
-    @Query("SELECT r FROM Review r WHERE r.product = :product ORDER BY r.createdAt DESC LIMIT 3")
+    @Query("SELECT r FROM Review r WHERE r.product = :product AND r.deleted = false ORDER BY r.createdAt DESC LIMIT 3")
     List<Review> findRecent3ReviewByProduct(Product product);
 
     Long countByDeletedFalse();

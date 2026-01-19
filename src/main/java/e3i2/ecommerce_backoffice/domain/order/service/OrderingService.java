@@ -4,6 +4,7 @@ import e3i2.ecommerce_backoffice.common.dto.session.SessionAdmin;
 import e3i2.ecommerce_backoffice.common.exception.ErrorEnum;
 import e3i2.ecommerce_backoffice.common.exception.ServiceErrorException;
 import e3i2.ecommerce_backoffice.common.util.pagination.ItemsWithPagination;
+import e3i2.ecommerce_backoffice.domain.customer.entity.CustomerStatus;
 import e3i2.ecommerce_backoffice.domain.order.dto.*;
 import e3i2.ecommerce_backoffice.domain.admin.entity.Admin;
 import e3i2.ecommerce_backoffice.domain.admin.repository.AdminRepository;
@@ -52,20 +53,20 @@ public class OrderingService {
     }
 
     @Transactional
-    public CreateOrderingResponse createOrder(CreateOrderingRequest createOrderRequest, SessionAdmin sessionAdmin) {
+    public CreateOrderingResponse createOrder(CreateOrderingRequest request, SessionAdmin sessionAdmin) {
         Admin admin = adminRepository.findByAdminIdAndDeletedFalse(sessionAdmin.getAdminId()).orElseThrow(() -> new ServiceErrorException(ErrorEnum.ERR_NOT_FOUND_ADMIN));
-        Product product = productRepository.findByProductIdAndDeletedFalse(createOrderRequest.getProductId()).orElseThrow(() -> new ServiceErrorException(ErrorEnum.ERR_NOT_FOUND_PRODUCT));
-        Customer customer = customerRepository.findByCustomerIdAndDeletedFalse(createOrderRequest.getCustomerId()).orElseThrow(() -> new ServiceErrorException(ErrorEnum.ERR_NOT_FOUND_CUSTOMER));
+        Product product = productRepository.findByProductIdAndDeletedFalse(request.getProductId()).orElseThrow(() -> new ServiceErrorException(ErrorEnum.ERR_NOT_FOUND_PRODUCT));
+        Customer customer = customerRepository.findByCustomerIdAndDeletedFalse(request.getCustomerId()).orElseThrow(() -> new ServiceErrorException(ErrorEnum.ERR_NOT_FOUND_CUSTOMER));
 
-        if (product.getStatus().equals(ProductStatus.DISCONTINUE)) {
+        if (product.getStatus() == ProductStatus.DISCONTINUE) {
             throw new ServiceErrorException(ERR_ORDER_TO_DISCONTINUE);
         }
 
-        if (product.getStatus().equals(ProductStatus.SOLD_OUT)) {
+        if (product.getStatus() == ProductStatus.SOLD_OUT) {
             throw new ServiceErrorException(ERR_ORDER_TO_SOLD_OUT);
         }
 
-        if (product.getQuantity() < createOrderRequest.getOrderQuantity()) {
+        if (product.getQuantity() < request.getOrderQuantity()) {
             throw new ServiceErrorException(ERR_ORDER_TO_QUANTITY_OVER);
         }
 
@@ -73,14 +74,14 @@ public class OrderingService {
 
         Ordering ordering = Ordering.register(
                 orderingSeq
-                , createOrderRequest.getOrderQuantity()
+                , request.getOrderQuantity()
                 , product
                 , customer
                 , admin
         );
 
         Ordering saveOrder = orderingRepository.save(ordering);
-        product.updateQuantity(product.getQuantity() - createOrderRequest.getOrderQuantity());
+        product.updateQuantity(product.getQuantity() - request.getOrderQuantity());
         customer.updateOrderInfo(saveOrder.getOrderTotalPrice());
 
         return CreateOrderingResponse.register(
@@ -165,15 +166,18 @@ public class OrderingService {
         OrderingStatus current = ordering.getOrderStatus();
         OrderingStatus next = request.getStatus();
 
-
-        //배송완료 상태는 변경 불가
+        // 배송완료 상태는 변경 불가
         if (current == OrderingStatus.DELIVERED) {
             throw new ServiceErrorException(ERR_ORDER_PROCESSING_DELIVERED_FORBIDDEN);
         }
 
-        //준비 중 -> 배송 중 -> 배송 완료 순으로만 상태 전이 가능
+        // 준비 중 -> 배송 중 -> 배송 완료 순으로만 상태 전이 가능
         if (!isValidNextStatus(current, next)) {
             throw new ServiceErrorException(ERR_ORDER_STATUS_INVALID_TRANSITION);
+        }
+
+        if(request.getStatus() == OrderingStatus.UNKNOWN) {
+            throw new ServiceErrorException(ERR_NOT_FOUND_ORDER_STATUS);
         }
 
         ordering.changeStatus(next);
@@ -211,7 +215,7 @@ public class OrderingService {
 
         ordering.cancel(request.getCancelReason());
 
-        //취소 수량만큼 재고 증가, 총 주문수, 총 주문 금액 감소
+        // 취소 수량만큼 재고 증가, 총 주문수, 총 주문 금액 감소
         Product product = ordering.getProduct();
         product.restoreStock(ordering.getOrderQuantity());
         Customer customer = ordering.getCustomer();

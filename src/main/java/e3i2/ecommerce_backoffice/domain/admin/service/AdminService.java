@@ -12,6 +12,8 @@ import e3i2.ecommerce_backoffice.domain.admin.entity.Admin;
 import e3i2.ecommerce_backoffice.domain.admin.entity.AdminRole;
 import e3i2.ecommerce_backoffice.domain.admin.entity.AdminStatus;
 import e3i2.ecommerce_backoffice.domain.admin.repository.AdminRepository;
+import e3i2.ecommerce_backoffice.domain.product.entity.ProductCategory;
+import e3i2.ecommerce_backoffice.domain.product.entity.ProductStatus;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -36,6 +38,10 @@ public class AdminService {
     public SignUpResponse signUp(@Valid SignUpRequest request) {
         if (adminRepository.existsByEmail(request.getEmail())) {
             throw new ServiceErrorException(ERR_DUPLICATED_EMAIL);
+        }
+
+        if(request.getRole() == AdminRole.UNKNOWN) {
+            throw new ServiceErrorException(ERR_NOT_FOUND_ADMIN_ROLE);
         }
 
         String encodePassword = passwordEncoder.encode(request.getPassword());
@@ -175,13 +181,8 @@ public class AdminService {
                 pageable
         );
 
-        DateTimeFormatter fmt = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-
         List<SearchAdminDetailResponse> items = admins.stream()
                 .map(a -> {
-                    String acceptedAt = a.getAcceptedAt() == null ? "" : a.getAcceptedAt().format(fmt);
-                    String deniedAt = a.getDeniedAt() == null ? "" : a.getDeniedAt().format(fmt);
-
                     String requestMessage = null;
                     String deniedReason = null;
 
@@ -200,8 +201,8 @@ public class AdminService {
                             a.getRole(),
                             a.getStatus(),
                             a.getCreatedAt(),
-                            acceptedAt,
-                            deniedAt,
+                            a.getAcceptedAt(),
+                            a.getDeniedAt(),
                             requestMessage,
                             deniedReason
                     );
@@ -222,10 +223,6 @@ public class AdminService {
                 () -> new ServiceErrorException(ERR_NOT_FOUND_ADMIN)
         );
 
-        DateTimeFormatter fmt = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-
-        String acceptedAt = admin.getAcceptedAt() == null ? "" : admin.getAcceptedAt().format(fmt);
-        String deniedAt = admin.getDeniedAt() == null ? "" : admin.getDeniedAt().format(fmt);
 
         String requestMessage = null;
         String deniedReason = null;
@@ -244,8 +241,8 @@ public class AdminService {
                 admin.getRole(),
                 admin.getStatus(),
                 admin.getCreatedAt(),
-                acceptedAt,
-                deniedAt,
+                admin.getAcceptedAt(),
+                admin.getDeniedAt(),
                 requestMessage,
                 deniedReason
         );
@@ -382,6 +379,10 @@ public class AdminService {
                 () -> new ServiceErrorException(ERR_NOT_FOUND_ADMIN)
         );
 
+        if(request.getRole() == AdminRole.UNKNOWN) {
+            throw new ServiceErrorException(ERR_NOT_FOUND_ADMIN_ROLE);
+        }
+
         admin.changeAdminRole(request.getRole());
 
         return ChangeAdminRoleResponse.register(
@@ -407,6 +408,10 @@ public class AdminService {
         Admin admin = adminRepository.findByAdminIdAndDeletedFalse(adminId).orElseThrow(
                 () -> new ServiceErrorException(ERR_NOT_FOUND_ADMIN)
         );
+
+        if(request.getStatus() == AdminStatus.UNKNOWN) {
+            throw new ServiceErrorException(ERR_NOT_FOUND_ADMIN_STATUS);
+        }
 
         admin.changeAdminStatus(request.getStatus());
 

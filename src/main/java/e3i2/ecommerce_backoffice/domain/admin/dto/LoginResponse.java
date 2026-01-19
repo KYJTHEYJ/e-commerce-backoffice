@@ -1,30 +1,58 @@
 package e3i2.ecommerce_backoffice.domain.admin.dto;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import e3i2.ecommerce_backoffice.domain.admin.entity.AdminRole;
 import e3i2.ecommerce_backoffice.domain.admin.entity.AdminStatus;
-import lombok.AccessLevel;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
 
 @Getter
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@JsonPropertyOrder({
+    "adminId",
+    "adminName",
+    "email",
+    "phone",
+    "role",
+    "status",
+    "createdAt",
+    "acceptedAt"
+})
 public class LoginResponse {
 
-    private Long adminId;
-    private String adminName;
-    private String email;
-    private String phone;
-    private AdminRole role;
-    private AdminStatus status;
+    private final Long adminId;
+    private final String adminName;
+    private final String email;
+    private final String phone;
+    private final String role;
+    private final String status;
 
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
-    private LocalDateTime createdAt;
+    private final LocalDateTime createdAt;
 
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
-    private LocalDateTime acceptedAt;
+    private final LocalDateTime acceptedAt;
+
+    private LoginResponse(
+            Long adminId,
+            String adminName,
+            String email,
+            String phone,
+            String role,
+            String status,
+            LocalDateTime createdAt,
+            LocalDateTime acceptedAt
+    ) {
+        this.adminId = adminId;
+        this.adminName = adminName;
+        this.email = email;
+        this.phone = phone;
+        this.role = role;
+        this.status = status;
+        this.createdAt = createdAt;
+        this.acceptedAt = acceptedAt;
+    }
 
     public static LoginResponse register(
             Long adminId,
@@ -36,15 +64,15 @@ public class LoginResponse {
             LocalDateTime createdAt,
             LocalDateTime acceptedAt
     ) {
-        LoginResponse response = new LoginResponse();
-        response.adminId = adminId;
-        response.adminName = adminName;
-        response.email = email;
-        response.phone = phone;
-        response.role = role;
-        response.status = status;
-        response.createdAt = createdAt;
-        response.acceptedAt = acceptedAt;
-        return response;
+        return new LoginResponse(
+                adminId,
+                adminName,
+                email,
+                phone,
+                role.getRoleCode(),
+                status.getStatusCode(),
+                createdAt,
+                acceptedAt
+        );
     }
 }

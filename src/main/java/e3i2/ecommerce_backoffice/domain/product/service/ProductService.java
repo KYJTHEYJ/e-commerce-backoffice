@@ -25,8 +25,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
-import static e3i2.ecommerce_backoffice.common.exception.ErrorEnum.ERR_NOT_FOUND_ADMIN;
-import static e3i2.ecommerce_backoffice.common.exception.ErrorEnum.ERR_NOT_FOUND_PRODUCT;
+import static e3i2.ecommerce_backoffice.common.exception.ErrorEnum.*;
 
 @Service
 @RequiredArgsConstructor
@@ -39,6 +38,14 @@ public class ProductService {
     public CreateProductResponse createProduct(@Valid CreateProductRequest request, SessionAdmin sessionAdmin) {
         Admin admin = adminRepository.findById(sessionAdmin.getAdminId()).orElseThrow(() -> new ServiceErrorException(ERR_NOT_FOUND_ADMIN));
 
+        if(request.getCategory() == ProductCategory.UNKNOWN) {
+            throw new ServiceErrorException(ERR_NOT_FOUND_PRODUCT_CATEGORY);
+        }
+
+        if(request.getStatus() == ProductStatus.UNKNOWN) {
+            throw new ServiceErrorException(ERR_NOT_FOUND_PRODUCT_STATUS);
+        }
+
         Product product = Product.register(
                 admin
                 , request.getProductName()
@@ -50,13 +57,14 @@ public class ProductService {
 
         Product saveProduct = productRepository.save(product);
 
+
         return CreateProductResponse.register(
                 saveProduct.getProductId()
                 , saveProduct.getProductName()
-                , saveProduct.getCategory().getCategoryCode()
+                , saveProduct.getCategory()
                 , saveProduct.getPrice()
                 , saveProduct.getQuantity()
-                , saveProduct.getStatus().getStatusCode()
+                , saveProduct.getStatus()
                 , saveProduct.getCreatedAt()
                 , admin.getAdminId()
                 , admin.getAdminName()
@@ -71,10 +79,10 @@ public class ProductService {
         List<SearchProductResponse> items = products.stream().map(product -> SearchProductResponse.register(
                 product.getProductId()
                 , product.getProductName()
-                , product.getCategory().getCategoryCode()
+                , product.getCategory()
                 , product.getPrice()
                 , product.getQuantity()
-                , product.getStatus().getStatusCode()
+                , product.getStatus()
                 , product.getCreatedAt()
                 , product.getAdmin().getAdminId()
                 , product.getAdmin().getAdminName()
@@ -120,10 +128,10 @@ public class ProductService {
         return SearchProductDetailResponse.register(
                 product.getProductId()
                 , product.getProductName()
-                , product.getCategory().getCategoryCode()
+                , product.getCategory()
                 , product.getPrice()
                 , product.getQuantity()
-                , product.getStatus().getStatusCode()
+                , product.getStatus()
                 , product.getCreatedAt()
                 , product.getAdmin().getAdminId()
                 , product.getAdmin().getAdminName()
@@ -138,15 +146,19 @@ public class ProductService {
         Admin admin = adminRepository.findByAdminIdAndDeletedFalse(sessionAdmin.getAdminId()).orElseThrow(() -> new ServiceErrorException(ERR_NOT_FOUND_ADMIN));
         Product product = productRepository.findByProductIdAndDeletedFalse(productId).orElseThrow(() -> new ServiceErrorException(ERR_NOT_FOUND_PRODUCT));
 
+        if(request.getCategory() == ProductCategory.UNKNOWN) {
+            throw new ServiceErrorException(ERR_NOT_FOUND_PRODUCT_CATEGORY);
+        }
+
         product.updateInfo(request.getProductName(), request.getCategory(), request.getPrice());
 
         return UpdateInfoProductResponse.register(
                 product.getProductId()
                 , product.getProductName()
-                , product.getCategory().getCategoryCode()
+                , product.getCategory()
                 , product.getPrice()
                 , product.getQuantity()
-                , product.getStatus().getStatusCode()
+                , product.getStatus()
                 , product.getCreatedAt()
                 , admin.getAdminId()
                 , admin.getAdminName()
@@ -164,10 +176,10 @@ public class ProductService {
         return UpdateQuantityProductResponse.register(
                 product.getProductId()
                 , product.getProductName()
-                , product.getCategory().getCategoryCode()
+                , product.getCategory()
                 , product.getPrice()
                 , product.getQuantity()
-                , product.getStatus().getStatusCode()
+                , product.getStatus()
                 , product.getCreatedAt()
                 , admin.getAdminId()
                 , admin.getAdminName()
@@ -180,15 +192,19 @@ public class ProductService {
         Admin admin = adminRepository.findByAdminIdAndDeletedFalse(sessionAdmin.getAdminId()).orElseThrow(() -> new ServiceErrorException(ERR_NOT_FOUND_ADMIN));
         Product product = productRepository.findByProductIdAndDeletedFalse(productId).orElseThrow(() -> new ServiceErrorException(ERR_NOT_FOUND_PRODUCT));
 
+        if(request.getStatus() == ProductStatus.UNKNOWN) {
+            throw new ServiceErrorException(ERR_NOT_FOUND_PRODUCT_STATUS);
+        }
+
         product.updateStatus(request.getStatus());
 
         return UpdateStatusProductResponse.register(
                 product.getProductId()
                 , product.getProductName()
-                , product.getCategory().getCategoryCode()
+                , product.getCategory()
                 , product.getPrice()
                 , product.getQuantity()
-                , product.getStatus().getStatusCode()
+                , product.getStatus()
                 , product.getCreatedAt()
                 , admin.getAdminId()
                 , admin.getAdminName()

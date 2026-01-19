@@ -1,6 +1,7 @@
 package e3i2.ecommerce_backoffice.domain.customer.dto;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import lombok.Getter;
 
 import java.math.BigDecimal;
@@ -8,6 +9,16 @@ import java.math.BigInteger;
 import java.time.LocalDateTime;
 
 @Getter
+@JsonPropertyOrder({
+    "customerId",
+    "customerName",
+    "email",
+    "phone",
+    "status",
+    "createdAt",
+    "totalOrders",
+    "totalSpent"
+})
 public class GetCustomerResponse {
     private final Long customerId;
     private final String customerName;

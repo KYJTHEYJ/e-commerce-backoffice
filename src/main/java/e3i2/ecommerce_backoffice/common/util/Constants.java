@@ -19,6 +19,9 @@ public class Constants {
     public static final String MSG_ADMIN_ACCOUNT_ROLE_NULL_ERR = "관리자 역할은 필수입니다";
     public static final String MSG_ADMIN_ACCOUNT_STATUS_NULL_ERR = "관리자 상태는 필수입니다";
     public static final String MSG_CUSTOMER_ACCOUNT_STATUS_NULL_ERR = "고객 상태는 필수입니다";
+    public static final String MSG_NOT_FOUND_CUSTOMER_STATUS_ERR = "고객 상태가 없는 값으로 입력 되었습니다";
+    public static final String MSG_NOT_FOUND_ADMIN_ROLE_ERR = "관리자 역할이 없는 값으로 입력 되었습니다";
+    public static final String MSG_NOT_FOUND_ADMIN_STATUS_ERR = "관리자 상태가 없는 값으로 입력 되었습니다";
     public static final String MSG_DATA_INSERT_FAIL = "데이터 등록에 실패하였습니다";
     public static final String MSG_PASSWORD_SIZE_ERR = "비밀번호는 8~20자리 이내여야 합니다";
     public static final String MSG_EMAIL_PATTERN_ERR = "이메일 형식이 유효하지 않습니다";
@@ -51,6 +54,8 @@ public class Constants {
     public static final String MSG_PRODUCT_QUANTITY_NULL_ERR = "상품의 수량은 필수입니다";
     public static final String MSG_DELETE_PRODUCT = "상품이 삭제 되었습니다";
     public static final String MSG_NOT_FOUND_PRODUCT = "존재하지 않는 상품 입니다";
+    public static final String MSG_NOT_FOUND_PRODUCT_CATEGORY_ERR = "상품 카테고리가 없는 값으로 입력 되었습니다";
+    public static final String MSG_NOT_FOUND_PRODUCT_STATUS_ERR = "상품 상태가 없는 값으로 입력 되었습니다";
     public static final String MSG_NOT_LOGIN_ACCESS = "로그인 후 이용 가능합니다";
     public static final String MSG_DENY_CUSTOMER_ACCOUNT_DELETE = "주문 내역이 존재하여 삭제할 수 없습니다";
     public static final String MSG_NOT_VALID_VALUE = "유효하지 않은 값이 입력되었습니다";
@@ -63,6 +68,7 @@ public class Constants {
     public static final String MSG_ORDER_TO_SOLD_OUT_ERR = "품절된 상품은 주문할 수 없습니다";
     public static final String MSG_ORDER_TO_QUANTITY_OVER_ERR = "주문 수량이 상품 재고보다 많습니다";
     public static final String MSG_NOT_FOUND_ORDER = "존재하지 않는 주문 입니다";
+    public static final String MSG_NOT_FOUND_ORDER_STATUS_ERR = "주문 상태가 없는 값으로 입력 되었습니다";
     public static final String MSG_ORDER_STATUS_BLANK_ERR = "주문 상태는 필수입니다";
     public static final String MSG_ORDER_PROCESSING_DELIVERED_FORBIDDEN = "배송 완료된 주문은 처리할 수 없습니다";
     public static final String MSG_ORDER_STATUS_INVALID_TRANSITION = "현재 상태에서 요청하신 상태로 변경할 수 없습니다";
