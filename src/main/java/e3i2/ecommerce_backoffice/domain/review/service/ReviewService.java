@@ -24,16 +24,16 @@ public class ReviewService {
     private final ReviewRepository reviewRepository;
 
     @Transactional(readOnly = true)
-    public ItemsWithPagination<List<SearchReviewResponse>> getReviewList(String keyword, Integer page, Integer size, String sortBy, String sortOrder, @Min(1) @Max(5) Integer rating) {
+    public ItemsWithPagination<List<SearchReviewResponse>> getReviewList(String search, Integer page, Integer size, String sortBy, String sortOrder, @Min(1) @Max(5) Integer rating) {
         Sort sort = sortOrder.equalsIgnoreCase("asc")
                 ? Sort.by(sortBy).ascending()
                 : Sort.by(sortBy).descending();
 
         Pageable pageable = PageRequest.of(page - 1, size, sort);
 
-        String safeKeyword = (keyword == null || keyword.isBlank()) ? null : keyword;
+        search = (search == null || search.isBlank()) ? null : search;
 
-        Page<Review> reviews = reviewRepository.findReviews(safeKeyword, rating, pageable);
+        Page<Review> reviews = reviewRepository.findReviews(search, rating, pageable);
 
         List<SearchReviewResponse> items = reviews.getContent().stream()
                 .map(r -> SearchReviewResponse.register(

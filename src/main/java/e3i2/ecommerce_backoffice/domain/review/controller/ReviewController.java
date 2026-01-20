@@ -32,7 +32,7 @@ public class ReviewController {
     @GetMapping("/api/reviews")
     @LoginSessionCheck
     public ResponseEntity<DataResponse<ItemsWithPagination<List<SearchReviewResponse>>>> getReviewList(
-            @RequestParam(required = false) String keyword,
+            @RequestParam(required = false) String search,
             @RequestParam(defaultValue = "1") int page,
             @RequestParam(defaultValue = "10") int size,
             @RequestParam(defaultValue = "createdAt") String sortBy,
@@ -40,7 +40,7 @@ public class ReviewController {
             @RequestParam(required = false) @Min(1) @Max(5) Integer rating
     ) {
         ItemsWithPagination<List<SearchReviewResponse>> response = reviewService.getReviewList(
-                keyword, page, size, sortBy, sortOrder, rating
+                search, page, size, sortBy, sortOrder, rating
         );
 
         return ResponseEntity.status(HttpStatus.OK).body(DataResponse.success(HttpStatus.OK.name(), response));

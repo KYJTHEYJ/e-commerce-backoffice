@@ -644,13 +644,13 @@ ecommerce_backoffice
 - **URL**: `/api/products`
 - **Method**: `GET`
 - **Query Parameters**:
-    - `productName`: 상품명    
+    - `search`: 상품명    
     - `category`: 카테고리 필터
     - `status`: 상태 필터
     - `page`: 페이지 번호 
     - `limit`: 페이지당 항목 수
     - `sortOrder` : 정렬 순서 (asc, desc)
-    - `sortBy` 
+    - `sortBy` : 정렬 기준 컬럼 (default 는 createdAt)
 - **Response**:
 ```json
 {
@@ -893,12 +893,12 @@ ecommerce_backoffice
 - **URL**: `/api/customers`
 - **Method**: `GET`
 - **Query Parameters**:
-    - `customerName`, `email`: 검색 키워드
+    - `search`: 검색 키워드 (고객명 또는 이메일)
     - `page`: 페이지 번호 (default: 1)
     - `limit`: 페이지당 항목 수 (default: 10)
     - `sortBy` : 정렬 기준 (adminName, email, createdAt 등...)
     - `sortOrder` : 정렬 순서 (asc, desc)
-    - `status`: 상태 필터 (ACT, IN_ACT, SUSOEND)
+    - `status`: 상태 필터 (ACT, IN_ACT, SUSPEND)
 - **Response**:
 ```json
 {
@@ -1109,7 +1109,12 @@ ecommerce_backoffice
 - **URL**: `/api/orders`
 - **Method**: `GET`
 - **Query Parameters**:
-    - `orderNo`, `orderStatus`, `customerName`: 검색 키워드
+  - `search`: 검색 키워드 (고객명 또는 주문번호)
+  - `orderStatus`: 주문 상태 필터
+  - `page`: 페이지 번호
+  - `limit`: 페이지당 항목 수
+  - `sortOrder` : 정렬 순서 (asc, desc)
+  - `sortBy` : 정렬 기준 컬럼 (default 는 createdAt)
 - **Response**:
 ```json
 {
@@ -1264,7 +1269,7 @@ ecommerce_backoffice
 - **URL**: `/api/reviews`
 - **Method**: `GET`
 - **Query Parameters**:
-    - `customerName`, `email`: 검색 키워드
+    - `search`: 검색 키워드 (고객 또는 상품명)
     - `page`: 페이지 번호 (default: 1)
     - `limit`: 페이지당 항목 수 (default: 10)
     - `sortBy` : 정렬 기준 (adminName, email, createdAt 등...)
@@ -1426,7 +1431,8 @@ ecommerce_backoffice
 <summary> ERD </summary>
 <div markdown="1">
 
-여기에 ERD
+<img width="1014" height="1125" alt="image" src="https://github.com/user-attachments/assets/3b58a7b4-f834-46b5-ac30-bcd68febf850" />
+
 
 </div>
 </details>
@@ -1435,7 +1441,64 @@ ecommerce_backoffice
 <summary> FlowChart </summary>
 <div markdown="1">
 
-여기에 FlowChart
+- 플로우 차트
+    
+    ## 전체 흐름
+    
+    실선 → 프로세스 처리 흐름
+    
+    점선 → 데이터 연관 흐름
+    
+    <img width="1051" height="950" alt="image" src="https://github.com/user-attachments/assets/b20efeea-7d1b-4757-a0c6-e9adff6917da" />
+
+    
+    ## 관리자 회원 가입
+    
+    <img width="944" height="1058" alt="image" src="https://github.com/user-attachments/assets/ea418ad0-5605-4870-b382-60c1a42906ba" />
+
+    
+    ## 로그인
+    
+    <img width="932" height="1072" alt="image" src="https://github.com/user-attachments/assets/1c952564-1c6e-4d00-9636-0c547f1fcf9c" />
+
+    
+    ## 로그아웃
+    
+    <img width="1118" height="893" alt="image" src="https://github.com/user-attachments/assets/d6c84c7b-eb6f-4179-9897-f6149049a753" />
+
+    
+    ## 관리자 도메인
+    
+    <img width="1834" height="767" alt="image" src="https://github.com/user-attachments/assets/d3c7afc4-82f1-4791-862a-b1535d5e5368" />
+
+    
+    <img width="1025" height="975" alt="image" src="https://github.com/user-attachments/assets/c854b933-5cdd-4ea0-9f76-c0b5c9fe050c" />
+
+    
+    ## 상품 도메인
+    
+    <img width="965" height="1035" alt="image" src="https://github.com/user-attachments/assets/96f17a86-f516-447c-b6f5-87744fdc9640" />
+
+    
+    ## 고객 도메인
+    
+    <img width="1113" height="897" alt="image" src="https://github.com/user-attachments/assets/3b5b4fa1-143b-4dcf-a3ff-af4950ddb937" />
+
+    
+    ## 주문 도메인
+    
+    <img width="1433" height="697" alt="image" src="https://github.com/user-attachments/assets/c0a94e50-c86f-487c-8efd-e75355e398f6" />
+
+    
+    ## 리뷰 도메인
+    
+    <img width="1050" height="952" alt="image" src="https://github.com/user-attachments/assets/94216618-1acf-4420-b98f-334ebb8dc097" />
+
+    
+    ## 대시보드
+    
+    <img width="694" height="1439" alt="image" src="https://github.com/user-attachments/assets/93e16c2e-3b03-4bab-97c0-fb93e259dbb8" />
+
 
 </div>
 </details>

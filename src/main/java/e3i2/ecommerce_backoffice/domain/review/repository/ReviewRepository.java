@@ -26,13 +26,13 @@ public interface ReviewRepository extends JpaRepository<Review, Long> {
         JOIN r.order o
         WHERE r.deleted = false
           AND (
-              :keyword IS NULL
-              OR LOWER(c.customerName) LIKE CONCAT('%', LOWER(:keyword), '%')
-              OR LOWER(p.productName) LIKE CONCAT('%', LOWER(:keyword), '%')
+              :search IS NULL
+              OR LOWER(c.customerName) LIKE CONCAT('%', LOWER(:search), '%')
+              OR LOWER(p.productName) LIKE CONCAT('%', LOWER(:search), '%')
           )
           AND (r.rating = :rating OR :rating IS NULL)
     """)
-    Page<Review> findReviews(@Param("keyword") String keyword, @Param("rating") Integer rating, Pageable pageable);
+    Page<Review> findReviews(@Param("search") String search, @Param("rating") Integer rating, Pageable pageable);
 
     @Query("""
             SELECT ifnull(round(avg(r.rating), 1), 0) AS averageRating
