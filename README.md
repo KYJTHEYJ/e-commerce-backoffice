@@ -1,3 +1,19 @@
+# Fork 이후 활용 방안
+- 학습 교보재로 이용
+
+# 학습 목표점
+- Spring Security, JWT
+- N+1 해결
+- 아키텍처 전환 (Hexagonal)
+- JOOQ 사용 버전으로도 구성해보기
+- 그외 기타 맘에 안드는 로직 제거나 수정 등 자유롭게 활용 예정
+
+
+---
+
+<details>
+<summary> 토이 프로젝트 정보 </summary>
+
 # 고객 및 상품 관리 시스템 프로젝트
 - 팀명 : E3-I2
 - 팀장 : 김영재
@@ -1502,5 +1518,4 @@ ecommerce_backoffice
 
 </div>
 </details>
-
-
+</details>
