@@ -7,15 +7,17 @@ import e3i2.ecommerce_backoffice.common.dto.response.DataResponse;
 import e3i2.ecommerce_backoffice.common.exception.ErrorEnum;
 import e3i2.ecommerce_backoffice.common.exception.ServiceErrorException;
 import e3i2.ecommerce_backoffice.common.jwt.JwtUtil;
+import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import static e3i2.ecommerce_backoffice.common.util.Constants.MSG_NOT_LOGIN_ACCESS;
-
+@Slf4j
 @RestController
 @RequestMapping("/api/auth")
 @RequiredArgsConstructor
@@ -27,8 +29,9 @@ public class AuthController {
     @PostMapping("/login_NEW")
     public ResponseEntity<DataResponse<LoginResponse_NEW>> login_new(
             @Valid @RequestBody LoginRequest_NEW request
+            , HttpServletResponse response
     ) {
-        return ResponseEntity.status(HttpStatus.OK).body(DataResponse.success(HttpStatus.OK.name(),  authService.login_new(request)));
+        return ResponseEntity.status(HttpStatus.OK).body(DataResponse.success(HttpStatus.OK.name(),  authService.login_new(request, response)));
     }
 
     //TODO JWT 테스트
@@ -36,10 +39,26 @@ public class AuthController {
     public ResponseEntity<DataResponse<Boolean>> validate_new(
             HttpServletRequest request
     ) {
-        // Bearer 인증 값을 제외한 나머지 값인 토큰
-        String token = request.getHeader("Authorization").substring("Bearer ".length());
 
-        if(!jwtUtil.validateToken(token)) {
+        // Bearer 인증 값을 제외한 나머지 값인 토큰 (직접 검증용)
+        //String token = request.getHeader("Authorization").substring("Bearer ".length());
+
+        String token = null;
+
+        Cookie[] cookies = request.getCookies();
+        if (cookies != null) {
+            for (Cookie cookie : cookies) {
+                if ("token".equals(cookie.getName())) {
+                    token = cookie.getValue();  // 쿠키 값은 이미 순수 JWT 토큰 상태
+                    break;
+                }
+            }
+        }
+
+        log.debug("token validate Test: {}", token);
+
+        // 3. 토큰 검증
+        if (token == null || !jwtUtil.validateToken(token)) {
             throw new ServiceErrorException(ErrorEnum.ERR_NOT_LOGIN_ACCESS);
         }
 

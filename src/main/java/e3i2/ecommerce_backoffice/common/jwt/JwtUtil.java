@@ -44,10 +44,11 @@ public class JwtUtil {
                 .build();
     }
 
-    // 토큰 생성
+    // 토큰 생성 (순수 JWT 토큰만 반환, Bearer prefix는 프론트에서 추가 (지금은 Postman 활용)
     public String generateToken(String adminEmail) {
         Date now = new Date();
-        return BEARER_PREFIX + Jwts.builder()
+        return Jwts.builder()
+                .subject(adminEmail)
                 .claim("adminEmail", adminEmail)
                 .issuedAt(now)
                 .expiration(new Date(now.getTime() + TOKEN_TIME))
@@ -72,9 +73,5 @@ public class JwtUtil {
     // 토큰 복호화
     private Claims extractAllClaims(String token) {
         return parser.parseSignedClaims(token).getPayload(); // 토큰을 서명키로 파싱, 그 후 페이로드 반환
-    }
-
-    public String extractUsername(String token) {
-        return extractAllClaims(token).get("username", String.class);
     }
 }

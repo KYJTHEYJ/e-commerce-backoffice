@@ -86,7 +86,7 @@ public class ProductController {
 
     @DeleteMapping("/{productId}")
     @LoginSessionCheck
-    public ResponseEntity<MessageResponse<Void>> deleteInfoProduct(
+    public ResponseEntity<MessageResponse> deleteInfoProduct(
             @PathVariable Long productId
             , @SessionAttribute(name = ADMIN_SESSION_NAME) SessionAdmin sessionAdmin
     ) {

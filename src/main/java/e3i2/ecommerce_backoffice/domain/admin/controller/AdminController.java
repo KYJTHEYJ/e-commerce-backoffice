@@ -1,9 +1,6 @@
 package e3i2.ecommerce_backoffice.domain.admin.controller;
 
 import e3i2.ecommerce_backoffice.common.annotation.LoginSessionCheck;
-import e3i2.ecommerce_backoffice.common.auth.dto.LoginInfoDto_NEW;
-import e3i2.ecommerce_backoffice.common.auth.dto.LoginRequest_NEW;
-import e3i2.ecommerce_backoffice.common.auth.dto.LoginResponse_NEW;
 import e3i2.ecommerce_backoffice.common.dto.response.DataResponse;
 import e3i2.ecommerce_backoffice.common.dto.response.MessageResponse;
 import e3i2.ecommerce_backoffice.common.dto.session.SessionAdmin;
@@ -100,7 +97,7 @@ public class AdminController {
 
     @PostMapping("/logout")
     @LoginSessionCheck
-    public ResponseEntity<MessageResponse<Void>> logout(
+    public ResponseEntity<MessageResponse> logout(
             @SessionAttribute(value = ADMIN_SESSION_NAME) SessionAdmin loginAdmin, HttpSession session) {
         if (loginAdmin == null) {
             throw new ServiceErrorException(ErrorEnum.ERR_LOGOUT_DUPLICATED);
@@ -155,7 +152,7 @@ public class AdminController {
 
     @DeleteMapping("/{adminId}")
     @LoginSessionCheck
-    public ResponseEntity<MessageResponse<Void>> deleteAdmin(
+    public ResponseEntity<MessageResponse> deleteAdmin(
             @PathVariable Long adminId,
             @SessionAttribute(value = ADMIN_SESSION_NAME) SessionAdmin loginAdmin
     ) {
@@ -187,7 +184,7 @@ public class AdminController {
 
     @PutMapping("/me/password")
     @LoginSessionCheck
-    public ResponseEntity<MessageResponse<Void>> changeMyPassword(
+    public ResponseEntity<MessageResponse> changeMyPassword(
             @Valid @RequestBody ChangeMyPasswordRequest request,
             @SessionAttribute(value = ADMIN_SESSION_NAME) SessionAdmin loginAdmin
     ) {

@@ -55,7 +55,7 @@ public class CustomerController {
 
     @DeleteMapping("/api/customers/{customerId}")
     @LoginSessionCheck
-    public ResponseEntity<MessageResponse<Void>> delete(@PathVariable Long customerId) {
+    public ResponseEntity<MessageResponse> delete(@PathVariable Long customerId) {
         customerService.delete(customerId);
         return ResponseEntity.status(HttpStatus.OK).body(MessageResponse.success(HttpStatus.OK.name(), MSG_DELETE_CUSTOMER_ACCOUNT));
     }
