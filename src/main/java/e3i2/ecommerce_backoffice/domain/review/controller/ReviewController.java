@@ -52,7 +52,7 @@ public class ReviewController {
     }
 
     @DeleteMapping("/api/reviews/{reviewId}")
-    public ResponseEntity<MessageResponse<Void>> delete(@PathVariable Long reviewId) {
+    public ResponseEntity<MessageResponse> delete(@PathVariable Long reviewId) {
         reviewService.delete(reviewId);
         return ResponseEntity.ok(MessageResponse.success(HttpStatus.OK.name(), MSG_DELETE_REVIEW_ACCOUNT));
     }

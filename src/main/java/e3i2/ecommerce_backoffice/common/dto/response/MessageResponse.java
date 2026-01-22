@@ -8,13 +8,13 @@ import lombok.NoArgsConstructor;
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @JsonPropertyOrder({ "success", "code", "message" })
-public class MessageResponse<T> extends BaseResponse {
+public class MessageResponse extends BaseResponse {
     private boolean success;
     private String code;
     private String message;
 
-    public static <T> MessageResponse<T> success(String code, String message) {
-        MessageResponse<T> response = new MessageResponse<>();
+    public static MessageResponse success(String code, String message) {
+        MessageResponse response = new MessageResponse();
 
         response.success = true;
         response.code = code;
@@ -23,8 +23,8 @@ public class MessageResponse<T> extends BaseResponse {
         return response;
     }
 
-    public static <T> MessageResponse<T> fail(String code, String message) {
-        MessageResponse<T> response = new MessageResponse<>();
+    public static <T> MessageResponse fail(String code, String message) {
+        MessageResponse response = new MessageResponse();
 
         response.success = false;
         response.code = code;
