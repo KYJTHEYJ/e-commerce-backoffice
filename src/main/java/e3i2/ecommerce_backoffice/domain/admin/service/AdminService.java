@@ -1,5 +1,6 @@
 package e3i2.ecommerce_backoffice.domain.admin.service;
 
+import e3i2.ecommerce_backoffice.common.auth.dto.LoginInfoDto_NEW;
 import e3i2.ecommerce_backoffice.common.config.PasswordEncoder;
 import e3i2.ecommerce_backoffice.common.exception.ServiceErrorException;
 import e3i2.ecommerce_backoffice.common.util.pagination.ItemsWithPagination;
@@ -37,7 +38,7 @@ public class AdminService {
             throw new ServiceErrorException(ERR_DUPLICATED_EMAIL);
         }
 
-        if(request.getRole() == AdminRole.UNKNOWN) {
+        if (request.getRole() == AdminRole.UNKNOWN) {
             throw new ServiceErrorException(ERR_NOT_FOUND_ADMIN_ROLE);
         }
 
@@ -68,7 +69,7 @@ public class AdminService {
                 admin.getPassword()
         );
 
-        if (!matches){
+        if (!matches) {
             throw new ServiceErrorException(ERR_WRONG_EMAIL_PASSWORD);
         }
 
@@ -155,7 +156,7 @@ public class AdminService {
     }
 
     @Transactional(readOnly = true)
-    public ItemsWithPagination<List<SearchAdminDetailResponse>> getAdminList (
+    public ItemsWithPagination<List<SearchAdminDetailResponse>> getAdminList(
             String search, int page, int limit, String sortBy, String sortOrder, AdminRole role, AdminStatus status, SessionAdmin loginAdmin
     ) {
         if (loginAdmin.getRole() != AdminRole.SUPER_ADMIN) {
@@ -182,8 +183,7 @@ public class AdminService {
 
                     if (a.getStatus() == AdminStatus.WAIT) {
                         requestMessage = a.getRequestMessage();
-                    }
-                    else if (a.getStatus() == AdminStatus.DENY) {
+                    } else if (a.getStatus() == AdminStatus.DENY) {
                         deniedReason = a.getDeniedReason();
                     }
 
@@ -252,7 +252,7 @@ public class AdminService {
         );
 
         if (!admin.getEmail().equals(request.getEmail())) {
-            if (adminRepository.existsByEmailAndAdminIdNot(request.getEmail(), adminId)){
+            if (adminRepository.existsByEmailAndAdminIdNot(request.getEmail(), adminId)) {
                 throw new ServiceErrorException(ERR_DUPLICATED_EMAIL);
             }
         }
@@ -366,7 +366,7 @@ public class AdminService {
                 () -> new ServiceErrorException(ERR_NOT_FOUND_ADMIN)
         );
 
-        if(request.getRole() == AdminRole.UNKNOWN) {
+        if (request.getRole() == AdminRole.UNKNOWN) {
             throw new ServiceErrorException(ERR_NOT_FOUND_ADMIN_ROLE);
         }
 
@@ -395,7 +395,7 @@ public class AdminService {
                 () -> new ServiceErrorException(ERR_NOT_FOUND_ADMIN)
         );
 
-        if(request.getStatus() == AdminStatus.UNKNOWN) {
+        if (request.getStatus() == AdminStatus.UNKNOWN) {
             throw new ServiceErrorException(ERR_NOT_FOUND_ADMIN_STATUS);
         }
 

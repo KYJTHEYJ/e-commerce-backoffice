@@ -16,7 +16,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.stream.IntStream;
 
 @Component("customerDataInit")
-@Profile("local")
+@Profile("test")
 @RequiredArgsConstructor
 @DependsOn("adminDataInit")
 @Order(2)

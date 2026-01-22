@@ -1,11 +1,15 @@
 package e3i2.ecommerce_backoffice.domain.admin.controller;
 
 import e3i2.ecommerce_backoffice.common.annotation.LoginSessionCheck;
+import e3i2.ecommerce_backoffice.common.auth.dto.LoginInfoDto_NEW;
+import e3i2.ecommerce_backoffice.common.auth.dto.LoginRequest_NEW;
+import e3i2.ecommerce_backoffice.common.auth.dto.LoginResponse_NEW;
 import e3i2.ecommerce_backoffice.common.dto.response.DataResponse;
 import e3i2.ecommerce_backoffice.common.dto.response.MessageResponse;
 import e3i2.ecommerce_backoffice.common.dto.session.SessionAdmin;
 import e3i2.ecommerce_backoffice.common.exception.ErrorEnum;
 import e3i2.ecommerce_backoffice.common.exception.ServiceErrorException;
+import e3i2.ecommerce_backoffice.common.jwt.JwtUtil;
 import e3i2.ecommerce_backoffice.common.util.pagination.ItemsWithPagination;
 import e3i2.ecommerce_backoffice.domain.admin.dto.*;
 import e3i2.ecommerce_backoffice.domain.admin.dto.SearchAdminDetailResponse;
@@ -34,6 +38,7 @@ import static e3i2.ecommerce_backoffice.common.util.Constants.*;
 @RequestMapping("/api/admins")
 public class AdminController {
     private final AdminService adminService;
+    private final JwtUtil jwtUtil;
 
     @PostMapping("/signUp")
     public ResponseEntity<DataResponse<SignUpResponse>> signUp(@Valid @RequestBody SignUpRequest request) {
@@ -90,6 +95,8 @@ public class AdminController {
 
         return ResponseEntity.status(HttpStatus.OK).body(DataResponse.success(HttpStatus.OK.name(), response));
     }
+
+
 
     @PostMapping("/logout")
     @LoginSessionCheck

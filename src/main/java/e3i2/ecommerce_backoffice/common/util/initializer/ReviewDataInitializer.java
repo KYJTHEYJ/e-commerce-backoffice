@@ -24,7 +24,7 @@ import java.util.Random;
 
 @Slf4j
 @Component("reviewDataInit")
-@Profile("local")
+@Profile("test")
 @RequiredArgsConstructor
 @DependsOn("orderDataInit")
 @Order(5)

@@ -15,7 +15,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 @Component("adminDataInit")
-@Profile("local")
+@Profile({"test", "local"})
 @RequiredArgsConstructor
 @Order(1)
 public class AdminDataInitializer implements ApplicationRunner {

@@ -24,7 +24,7 @@ import java.util.List;
 import java.util.Random;
 
 @Component("orderDataInit")
-@Profile("local")
+@Profile("test")
 @RequiredArgsConstructor
 @DependsOn({"adminDataInit", "customerDataInit", "productDataInit"})
 @Order(4)
