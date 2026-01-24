@@ -20,6 +20,8 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -45,18 +47,15 @@ public class AdminController {
     }
 
     @PutMapping("/{adminId}/accept")
-    @LoginSessionCheck
     public ResponseEntity<DataResponse<AcceptAdminResponse>> acceptAdmin(
-            @PathVariable Long adminId,
-            @SessionAttribute(value = ADMIN_SESSION_NAME) SessionAdmin loginAdmin
+            @PathVariable Long adminId
     ) {
-        AcceptAdminResponse response = adminService.acceptAdmin(adminId, loginAdmin);
+        AcceptAdminResponse response = adminService.acceptAdmin(adminId);
 
         return ResponseEntity.status(HttpStatus.OK).body(DataResponse.success(HttpStatus.OK.name(), response));
     }
 
     @PutMapping("/{adminId}/deny")
-    @LoginSessionCheck
     public ResponseEntity<DataResponse<DeniedAdminResponse>> denyAdmin(
             @PathVariable Long adminId,
             @Valid @RequestBody DeniedAdminRequest request,
@@ -93,10 +92,7 @@ public class AdminController {
         return ResponseEntity.status(HttpStatus.OK).body(DataResponse.success(HttpStatus.OK.name(), response));
     }
 
-
-
     @PostMapping("/logout")
-    @LoginSessionCheck
     public ResponseEntity<MessageResponse> logout(
             @SessionAttribute(value = ADMIN_SESSION_NAME) SessionAdmin loginAdmin, HttpSession session) {
         if (loginAdmin == null) {
@@ -110,7 +106,6 @@ public class AdminController {
     }
 
     @GetMapping
-    @LoginSessionCheck
     public ResponseEntity<DataResponse<ItemsWithPagination<List<SearchAdminDetailResponse>>>> getAdminList(
             @RequestParam(required = false) String search,
             @RequestParam(defaultValue = "1") int page,
@@ -129,7 +124,6 @@ public class AdminController {
     }
 
     @GetMapping("/{adminId}")
-    @LoginSessionCheck
     public ResponseEntity<DataResponse<SearchAdminDetailResponse>> getAdminDetail(
             @PathVariable Long adminId,
             @SessionAttribute(value = ADMIN_SESSION_NAME, required = false) SessionAdmin loginAdmin
@@ -139,7 +133,6 @@ public class AdminController {
     }
 
     @PutMapping("/{adminId}")
-    @LoginSessionCheck
     public ResponseEntity<DataResponse<UpdateAdminResponse>> updateAdmin(
             @PathVariable Long adminId,
             @Valid @RequestBody UpdateAdminRequest request,
@@ -151,7 +144,6 @@ public class AdminController {
     }
 
     @DeleteMapping("/{adminId}")
-    @LoginSessionCheck
     public ResponseEntity<MessageResponse> deleteAdmin(
             @PathVariable Long adminId,
             @SessionAttribute(value = ADMIN_SESSION_NAME) SessionAdmin loginAdmin
@@ -162,7 +154,6 @@ public class AdminController {
     }
 
     @GetMapping("/me")
-    @LoginSessionCheck
     public ResponseEntity<DataResponse<GetMyProfileResponse>> getMyProfile(
             @SessionAttribute(value = ADMIN_SESSION_NAME, required = false) SessionAdmin loginAdmin
     ) {
@@ -172,7 +163,6 @@ public class AdminController {
     }
 
     @PutMapping("/me/profile")
-    @LoginSessionCheck
     public ResponseEntity<DataResponse<UpdateMyProfileResponse>> updateMyProfile(
             @Valid @RequestBody UpdateMyProfileRequest request,
             @SessionAttribute(value = ADMIN_SESSION_NAME) SessionAdmin loginAdmin
@@ -183,7 +173,6 @@ public class AdminController {
     }
 
     @PutMapping("/me/password")
-    @LoginSessionCheck
     public ResponseEntity<MessageResponse> changeMyPassword(
             @Valid @RequestBody ChangeMyPasswordRequest request,
             @SessionAttribute(value = ADMIN_SESSION_NAME) SessionAdmin loginAdmin
@@ -206,7 +195,6 @@ public class AdminController {
     }
 
     @PutMapping("/{adminId}/status")
-    @LoginSessionCheck
     public ResponseEntity<DataResponse<ChangeAdminStatusResponse>> changeAdminStatus(
             @PathVariable Long adminId,
             @Valid @RequestBody ChangeAdminStatusRequest request,

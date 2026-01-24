@@ -41,8 +41,10 @@ public class AuthController {
     ) {
 
         // Bearer 인증 값을 제외한 나머지 값인 토큰 (직접 검증용)
-        //String token = request.getHeader("Authorization").substring("Bearer ".length());
+        String token = request.getHeader("Authorization").substring("Bearer ".length());
 
+        /*
+        // TODO 후에 refresh Token 을 갖고 쿠키 등록해서 활용해보기
         String token = null;
 
         Cookie[] cookies = request.getCookies();
@@ -56,9 +58,10 @@ public class AuthController {
         }
 
         log.debug("token validate Test: {}", token);
+        */
 
         // 3. 토큰 검증
-        if (token == null || !jwtUtil.validateToken(token)) {
+        if (!jwtUtil.validateToken(token)) {
             throw new ServiceErrorException(ErrorEnum.ERR_NOT_LOGIN_ACCESS);
         }
 
