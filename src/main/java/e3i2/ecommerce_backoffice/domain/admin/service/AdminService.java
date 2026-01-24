@@ -1,7 +1,5 @@
 package e3i2.ecommerce_backoffice.domain.admin.service;
 
-import e3i2.ecommerce_backoffice.common.auth.dto.LoginInfoDto_NEW;
-import e3i2.ecommerce_backoffice.common.config.PasswordEncoder;
 import e3i2.ecommerce_backoffice.common.exception.ServiceErrorException;
 import e3i2.ecommerce_backoffice.common.util.pagination.ItemsWithPagination;
 import e3i2.ecommerce_backoffice.domain.admin.dto.*;
@@ -19,6 +17,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -101,11 +101,7 @@ public class AdminService {
     }
 
     @Transactional
-    public AcceptAdminResponse acceptAdmin(Long targetAdminId, SessionAdmin loginAdmin) {
-        if (loginAdmin.getRole() != AdminRole.SUPER_ADMIN) {
-            throw new ServiceErrorException(ERR_ONLY_SUPER_ADMIN_ACCESS);
-        }
-
+    public AcceptAdminResponse acceptAdmin(Long targetAdminId) {
         Admin admin = adminRepository.findById(targetAdminId)
                 .orElseThrow(() -> new ServiceErrorException(ERR_NOT_FOUND_ADMIN));
 

@@ -1,6 +1,5 @@
 package e3i2.ecommerce_backoffice.common.jwt;
 
-import e3i2.ecommerce_backoffice.domain.admin.service.AdminService;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.JwtParser;
@@ -20,11 +19,7 @@ import java.util.Date;
 @Component
 @RequiredArgsConstructor
 public class JwtUtil {
-    // 관리자의 정보 조회용
-    private final AdminService adminService;
-
-    // 기본 설정
-    public static final String BEARER_PREFIX = "Bearer "; // "이 토큰을 가진 자가 인증의 주체다" 를 명시하는 스킴, 이 스킴 이름을 보고 HTTP가 인증 처리 방식을 결정함
+    // 만료 시간 설정
     private static final long TOKEN_TIME = 60 * 60 * 1000L; // 60분
 
     // 설정한 비밀키를 가져오기
@@ -48,8 +43,8 @@ public class JwtUtil {
     public String generateToken(String adminEmail) {
         Date now = new Date();
         return Jwts.builder()
-                .subject(adminEmail)
-                .claim("adminEmail", adminEmail)
+                .subject(adminEmail) // 토큰을 받을 주체
+                .claim("adminEmail", adminEmail) // 다양한 정보를 담을 수 있는 빈 객체 (claim)
                 .issuedAt(now)
                 .expiration(new Date(now.getTime() + TOKEN_TIME))
                 .signWith(key, Jwts.SIG.HS256)
@@ -73,5 +68,9 @@ public class JwtUtil {
     // 토큰 복호화
     private Claims extractAllClaims(String token) {
         return parser.parseSignedClaims(token).getPayload(); // 토큰을 서명키로 파싱, 그 후 페이로드 반환
+    }
+
+    public String getEmail(String token) {
+        return extractAllClaims(token).get("adminEmail", String.class);
     }
 }

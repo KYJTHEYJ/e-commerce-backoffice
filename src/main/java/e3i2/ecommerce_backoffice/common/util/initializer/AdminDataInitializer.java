@@ -1,6 +1,5 @@
 package e3i2.ecommerce_backoffice.common.util.initializer;
 
-import e3i2.ecommerce_backoffice.common.config.PasswordEncoder;
 import e3i2.ecommerce_backoffice.domain.admin.entity.Admin;
 import e3i2.ecommerce_backoffice.domain.admin.entity.AdminRole;
 import e3i2.ecommerce_backoffice.domain.admin.entity.AdminStatus;
@@ -11,6 +10,7 @@ import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.context.annotation.Profile;
 import org.springframework.core.annotation.Order;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
