@@ -17,6 +17,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -269,6 +270,8 @@ public class AdminService {
         );
     }
 
+    // TODO 메서드 제어까지 해보기
+    @PreAuthorize("hasRole('SUPER_ADMIN')")
     @Transactional
     public void deleteAdmin(Long adminId, SessionAdmin loginAdmin) {
         if (loginAdmin.getRole() != AdminRole.SUPER_ADMIN) {
@@ -287,8 +290,8 @@ public class AdminService {
     }
 
     @Transactional(readOnly = true)
-    public GetMyProfileResponse getMyProfile(Long adminId) {
-        Admin admin = adminRepository.findByAdminIdAndDeletedFalse(adminId).orElseThrow(
+    public GetMyProfileResponse getMyProfile(UserDetails loginAdminInfo) {
+        Admin admin = adminRepository.findByEmailAndDeletedFalse(loginAdminInfo.getUsername()).orElseThrow(
                 () -> new ServiceErrorException(ERR_NOT_FOUND_ADMIN)
         );
 

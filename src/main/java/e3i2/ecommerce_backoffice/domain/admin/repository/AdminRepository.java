@@ -17,6 +17,8 @@ public interface AdminRepository extends JpaRepository<Admin, Long> {
 
     boolean existsByEmailAndAdminIdNot(String email, Long adminId);
 
+    Optional<Admin> findByEmailAndDeletedFalse(String email);
+
     Optional<Admin> findByAdminIdAndDeletedFalse(Long adminId);
 
     @Query("""

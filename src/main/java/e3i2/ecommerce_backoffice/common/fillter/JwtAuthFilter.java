@@ -79,14 +79,14 @@ public class JwtAuthFilter extends OncePerRequestFilter {
             String email = jwtUtil.getEmail(token);
 
             // UserDetailService로 정보 조회
-            UserDetails adminDetail = adminDetailService.loadUserByUsername(email);
+            UserDetails loginAdminInfo = adminDetailService.loadUserByUsername(email);
 
             // 인증 객체 생성
             UsernamePasswordAuthenticationToken authentication
                     = new UsernamePasswordAuthenticationToken(
-                            adminDetail // principal (누구인지)
+                            loginAdminInfo // principal (누구인지)
                             , null // credentials (비밀번호, 저장 하지 않는다)
-                            , adminDetail.getAuthorities()); // 권한 정보
+                            , loginAdminInfo.getAuthorities()); // 권한 정보
 
             // SecurityContext에 인증 객체 저장
             SecurityContextHolder.getContext().setAuthentication(authentication);

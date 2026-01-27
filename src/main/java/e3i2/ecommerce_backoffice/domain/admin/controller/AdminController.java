@@ -155,9 +155,9 @@ public class AdminController {
 
     @GetMapping("/me")
     public ResponseEntity<DataResponse<GetMyProfileResponse>> getMyProfile(
-            @SessionAttribute(value = ADMIN_SESSION_NAME, required = false) SessionAdmin loginAdmin
+            @AuthenticationPrincipal UserDetails loginAdminInfo
     ) {
-        GetMyProfileResponse response = adminService.getMyProfile(loginAdmin.getAdminId());
+        GetMyProfileResponse response = adminService.getMyProfile(loginAdminInfo);
 
         return ResponseEntity.status(HttpStatus.OK).body(DataResponse.success(HttpStatus.OK.name(), response));
     }
